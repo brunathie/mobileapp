@@ -1,5 +1,6 @@
 ﻿﻿using Toggl.Daneel.Binding;
 using UIKit;
+using Toggl.Daneel.Views;
 
 namespace Toggl.Daneel.Extensions
 {  
@@ -32,6 +33,9 @@ namespace Toggl.Daneel.Extensions
 
         public static string BindTextFieldInfo(this UITextView self)
             => TextViewTextInfoTargetBinding.BindingName;
+
+        public static string BindCountedText(this TextViewWithCounter self)
+            => TextViewWithCounterCountedTextTargetBinding.BindingName;
 
         public static string BindAnimatedBackground(this UIView self)
             => ViewAnimatedBackgroundTargetBinding.BindingName;

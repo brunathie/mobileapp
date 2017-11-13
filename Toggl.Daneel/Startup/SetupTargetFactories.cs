@@ -2,6 +2,7 @@
 using MvvmCross.iOS.Platform;
 using Toggl.Daneel.Binding;
 using UIKit;
+using Toggl.Daneel.Views;
 
 namespace Toggl.Daneel
 {
@@ -54,6 +55,11 @@ namespace Toggl.Daneel
             registry.RegisterCustomBindingFactory<UITextView>(
                 TextViewTextInfoTargetBinding.BindingName,
                 view => new TextViewTextInfoTargetBinding(view)
+            );
+
+            registry.RegisterCustomBindingFactory<TextViewWithCounter>(
+                TextViewWithCounterCountedTextTargetBinding.BindingName,
+                view => new TextViewWithCounterCountedTextTargetBinding(view)
             );
 
             registry.RegisterCustomBindingFactory<UIView>(

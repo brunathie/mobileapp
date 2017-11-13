@@ -4,6 +4,7 @@
 #><#@ import namespace="System.Linq"
 #>using Toggl.Daneel.Binding;
 using UIKit;
+using Toggl.Daneel.Views;
 
 namespace Toggl.Daneel.Extensions
 {  

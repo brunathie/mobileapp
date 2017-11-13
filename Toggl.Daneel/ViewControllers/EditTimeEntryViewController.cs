@@ -1,6 +1,5 @@
 ﻿using System;
 using CoreGraphics;
-using Foundation;
 using MvvmCross.Binding.BindingContext;
 using MvvmCross.Binding.iOS;
 using MvvmCross.iOS.Views;
@@ -10,11 +9,11 @@ using Toggl.Daneel.Combiners;
 using Toggl.Daneel.Extensions;
 using Toggl.Daneel.Presentation.Attributes;
 using Toggl.Daneel.Presentation.Transition;
-using Toggl.Foundation;
 using Toggl.Foundation.MvvmCross.Converters;
 using Toggl.Foundation.MvvmCross.Helper;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using UIKit;
+using static Toggl.Foundation.Helper.Constants;
 
 namespace Toggl.Daneel.ViewControllers
 {
@@ -88,6 +87,7 @@ namespace Toggl.Daneel.ViewControllers
 
             // Text
             bindingSet.Bind(DescriptionTextView)
+                      .For(v => v.BindCountedText())
                       .To(vm => vm.Description);
 
             bindingSet.Bind(BillableSwitch)
@@ -201,8 +201,8 @@ namespace Toggl.Daneel.ViewControllers
         {
             DurationLabel.Font = DurationLabel.Font.GetMonospacedDigitFont();
             PreferredContentSize = View.Frame.Size;
-            DescriptionTextView.Delegate = this;
             BillableSwitch.Resize(switchHeight);
+            DescriptionTextView.MaxLengthInBytes = MaxTimeEntryDescriptionLengthInBytes;
             prepareDescriptionField();
         }
 
@@ -210,20 +210,5 @@ namespace Toggl.Daneel.ViewControllers
         {
             DescriptionTextView.TintColor = Color.StartTimeEntry.Cursor.ToNativeColor();
         }
-
-        [Export("textView:shouldChangeTextInRange:replacementText:")]
-        public bool ShouldChangeText(UITextView textView, NSRange range, string text)
-        {
-            if (text == "\n")
-            {
-                textView.ResignFirstResponder();
-                return false;
-            }
-            return true;
-        }
-
-        [Export("textViewDidChange:")]
-        public void Changed(UITextView textView)
-            => textView.Text = textView.Text.Replace('\n', ' ');
     }
 }

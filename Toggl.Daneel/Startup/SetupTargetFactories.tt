@@ -6,6 +6,7 @@
 using MvvmCross.iOS.Platform;
 using Toggl.Daneel.Binding;
 using UIKit;
+using Toggl.Daneel.Views;
 
 namespace Toggl.Daneel
 {

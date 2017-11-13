@@ -593,6 +593,8 @@
     <Compile Include="Views\ColorSelectionViewCell.designer.cs">
       <DependentUpon>ColorSelectionViewCell.cs</DependentUpon>
     </Compile>
+    <Compile Include="Binding\TextViewWithCounterCountedTextTargetBinding.cs" />
+    <Compile Include="Views\TextViewWithCounter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation.MvvmCross\Toggl.Foundation.MvvmCross.csproj">
