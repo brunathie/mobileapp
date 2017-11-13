@@ -48,10 +48,10 @@ namespace Toggl.Multivac.Extensions
             return sb.ToString();
         }
 
-        public static int GraphemeCount(this string self)
+        public static int LengthInGraphemes(this string self)
             => new StringInfo(self).LengthInTextElements;
 
-        public static int Utf8ByteCount(this string self)
+        public static int LengthInUtf8Bytes(this string self)
             => Encoding.UTF8.GetByteCount(self);
     }
 }
