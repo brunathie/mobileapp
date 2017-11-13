@@ -54,16 +54,16 @@ namespace Toggl.Daneel.ViewSources
             return cell;
         }
 
-        public sealed override nint NumberOfSections(UITableView tableView)
+        public override nint NumberOfSections(UITableView tableView)
             => ItemsSource.Count();
 
-        public sealed override nint RowsInSection(UITableView tableview, nint section)
+        public override nint RowsInSection(UITableView tableview, nint section)
             => GetGroupAt(section).Count();
 
         protected IEnumerable<T> GetGroupAt(nint section)
             => GroupedItems.ElementAtOrDefault((int)section) ?? new MvxObservableCollection<T>();
 
-        protected sealed override object GetItemAt(NSIndexPath indexPath)
+        protected override object GetItemAt(NSIndexPath indexPath)
             => GroupedItems.ElementAtOrDefault(indexPath.Section)?.ElementAtOrDefault((int)indexPath.Item);
 
         public override void HeaderViewDisplayingEnded(UITableView tableView, UIView headerView, nint section)

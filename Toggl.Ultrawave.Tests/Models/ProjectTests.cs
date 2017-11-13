@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using Toggl.Ultrawave.Models;
+using Toggl.Ultrawave.Serialization;
 using Xunit;
 
 namespace Toggl.Ultrawave.Tests.Models
@@ -18,7 +19,7 @@ namespace Toggl.Ultrawave.Tests.Models
             IsPrivate = false,
             Active = true,
             At = new DateTimeOffset(2016, 5, 20, 17, 28, 0, TimeSpan.Zero),
-            Color = "#f61d38",
+            Color = "#F61D38",
             Billable = false,
             Template = false,
             AutoEstimates = false,
@@ -44,6 +45,16 @@ namespace Toggl.Ultrawave.Tests.Models
         public void CanBeSerialized()
         {
             SerializationHelper.CanBeSerialized(validJson, validProject);
+        }
+
+        [Fact]
+        public void ColorIsAlwaysLowercaseWhenSerialized()
+        {
+            var serializer = new JsonSerializer();
+            var json = serializer.Serialize(validProject);
+
+            json.Should().MatchRegex("^.*\"color\":\"#f61d38\".*$");
+            json.Should().NotMatchRegex("^.*\"color\":\"#F61D38\".*$");
         }
     }
 }

@@ -1,25 +1,19 @@
 ﻿using System;
-using System.Text;
 using Toggl.PrimeRadiant;
-using static Toggl.Foundation.Helper.Constants;
 
 namespace Toggl.Foundation.Models
 {
-    internal partial class Project
+    internal partial class Client
     {
         internal sealed class Builder
         {
-            private const string errorMessage = "You need to set the {0} before building a project";
+            private const string errorMessage = "You need to set the {0} before building a client";
 
             public static Builder Create(long id) => new Builder(id);
 
             public long Id { get; }
 
             public string Name { get; private set; }
-
-            public string Color { get; private set; }
-
-            public bool? Billable { get; private set; }
 
             public SyncStatus SyncStatus { get; private set; }
 
@@ -31,17 +25,15 @@ namespace Toggl.Foundation.Models
 
             public bool IsDeleted { get; private set; }
 
-            public long? ClientId { get; private set; }
-
             private Builder(long id)
             {
                 Id = id;
             }
 
-            public Project Build()
+            public Client Build()
             {
                 ensureValidity();
-                return new Project(this);
+                return new Client(this);
             }
 
             public Builder SetSyncStatus(SyncStatus syncStatus)
@@ -53,24 +45,6 @@ namespace Toggl.Foundation.Models
             public Builder SetWorkspaceId(long workspaceId)
             {
                 WorkspaceId = workspaceId;
-                return this;
-            }
-
-            internal Builder SetClientId(long? clientId)
-            {
-                ClientId = clientId;
-                return this;
-            }
-
-            internal Builder SetBillable(bool? billable)
-            {
-                Billable = billable;
-                return this;
-            }
-
-            internal Builder SetColor(string color)
-            {
-                Color = color;
                 return this;
             }
 
@@ -103,28 +77,19 @@ namespace Toggl.Foundation.Models
                 if (string.IsNullOrEmpty(Name))
                     throw new InvalidOperationException(string.Format(errorMessage, "name"));
 
-                if (string.IsNullOrEmpty(Color))
-                    throw new InvalidOperationException(string.Format(errorMessage, "color"));
-
                 if (WorkspaceId == null || WorkspaceId == 0)
                     throw new InvalidOperationException(string.Format(errorMessage, "workspace id"));
 
                 if (At == null)
                     throw new InvalidOperationException(string.Format(errorMessage, "at"));
-
-                if (Encoding.UTF8.GetByteCount(Name) > MaxClientNameLengthInBytes)
-                    throw new InvalidOperationException("Client name must have less than {MaxClientNameLengthInBytes} bytes");
             }
         }
 
-        private Project(Builder builder)
+        private Client(Builder builder)
         {
             Id = builder.Id;
             Name = builder.Name;
             At = builder.At.Value;
-            Color = builder.Color;
-            Billable = builder.Billable;
-            ClientId = builder.ClientId;
             IsDeleted = builder.IsDeleted;
             SyncStatus = builder.SyncStatus;
             WorkspaceId = builder.WorkspaceId.Value;

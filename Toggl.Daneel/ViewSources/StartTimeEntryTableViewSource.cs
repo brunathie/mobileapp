@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using Foundation;
+using MvvmCross.Binding.ExtensionMethods;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Plugins.Color.iOS;
 using Toggl.Daneel.Views;
@@ -16,9 +18,16 @@ namespace Toggl.Daneel.ViewSources
         private const string headerCellIdentifier = nameof(WorkspaceHeaderViewCell);
         private const string timeEntryCellIdentifier = nameof(StartTimeEntryViewCell);
         private const string projectCellIdentifier = nameof(ProjectSuggestionViewCell);
+        private const string createEntityCellIdentifier = nameof(CreateEntityViewCell);
         private const string emptySuggestionIdentifier = nameof(StartTimeEntryEmptyViewCell);
 
         public bool UseGrouping { get; set; }
+
+        public string CurrentQuery { get; set; }
+
+        public bool IsSuggestingProjects { get; set; }
+
+        public IMvxCommand<string> CreateProjectCommand { get; set; }
 
         public IMvxCommand<ProjectSuggestion> ToggleTasksCommand { get; set; }
 
@@ -31,6 +40,7 @@ namespace Toggl.Daneel.ViewSources
             tableView.RegisterNibForCellReuse(TagSuggestionViewCell.Nib, tagCellIdentifier);
             tableView.RegisterNibForCellReuse(TaskSuggestionViewCell.Nib, taskCellIdentifier);
             tableView.RegisterNibForCellReuse(StartTimeEntryViewCell.Nib, timeEntryCellIdentifier);
+            tableView.RegisterNibForCellReuse(CreateEntityViewCell.Nib, createEntityCellIdentifier);
             tableView.RegisterNibForCellReuse(ProjectSuggestionViewCell.Nib, projectCellIdentifier);
             tableView.RegisterNibForCellReuse(StartTimeEntryEmptyViewCell.Nib, emptySuggestionIdentifier);
             tableView.RegisterNibForHeaderFooterViewReuse(WorkspaceHeaderViewCell.Nib, headerCellIdentifier);
@@ -63,6 +73,26 @@ namespace Toggl.Daneel.ViewSources
             return cell;
         }
 
+        public override nint RowsInSection(UITableView tableview, nint section)
+        {
+            var rows = base.RowsInSection(tableview, section);
+            return rows == 0 && IsSuggestingProjects ? 1 : rows;
+        }
+
+        public override nint NumberOfSections(UITableView tableView)
+        {
+            var sections = base.NumberOfSections(tableView);
+            return sections == 0 && IsSuggestingProjects ? 1 : sections;
+        }
+
+        protected override object GetItemAt(NSIndexPath indexPath)
+        {
+            if (ItemsSource.Count() == 0 && IsSuggestingProjects)
+                return $"Create project \"{CurrentQuery}\"";
+
+            return base.GetItemAt(indexPath);
+        }
+
         protected override UITableViewHeaderFooterView GetOrCreateHeaderViewFor(UITableView tableView)
             => tableView.DequeueReusableHeaderFooterView(headerCellIdentifier);
 
@@ -74,8 +104,22 @@ namespace Toggl.Daneel.ViewSources
 
         public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath) => 48;
 
+        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+        {
+            if (ItemsSource.Count() == 0)
+            {
+                CreateProjectCommand.Execute(CurrentQuery);
+                return;
+            }
+
+            base.RowSelected(tableView, indexPath);
+        }
+
         private string getIdentifier(object item)
         {
+            if (item is string)
+                return createEntityCellIdentifier;
+
             if (item is ProjectSuggestion)
                 return projectCellIdentifier;
 

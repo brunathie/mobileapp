@@ -60,6 +60,18 @@ namespace Toggl.Daneel.ViewControllers
                       .For(v => v.SelectionChangedCommand)
                       .To(vm => vm.SelectSuggestionCommand);
 
+            bindingSet.Bind(source)
+                      .For(v => v.CreateProjectCommand)
+                      .To(vm => vm.CreateProjectCommand);
+            
+            bindingSet.Bind(source)
+                      .For(v => v.IsSuggestingProjects)
+                      .To(vm => vm.IsSuggestingProjects);
+            
+            bindingSet.Bind(source)
+                      .For(v => v.CurrentQuery)
+                      .To(vm => vm.CurrentQuery);
+            
             //Text
             bindingSet.Bind(TimeLabel)
                       .To(vm => vm.ElapsedTime)

@@ -149,7 +149,10 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ViewModel.Text = text;
 
-                await autocompleteProvider.Received().Query(Arg.Is(text), Arg.Is(AutocompleteSuggestionType.Tags));
+                await autocompleteProvider.Received()
+                    .Query(Arg.Is<QueryInfo>(info
+                        => info.Text == text
+                        && info.SuggestionType == AutocompleteSuggestionType.Tags));
             }
         }
 
@@ -192,7 +195,9 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 workspaces.ForEach(workspace
                     => tags.AddRange(getTagSuggestions(5, workspace)));
                 var autocompleteProvider = Substitute.For<IAutocompleteProvider>();
-                autocompleteProvider.Query(Arg.Any<string>(), Arg.Is(AutocompleteSuggestionType.Tags))
+                autocompleteProvider
+                    .Query(Arg.Is<QueryInfo>(
+                        arg => arg.SuggestionType == AutocompleteSuggestionType.Tags))
                     .Returns(Observable.Return(tags));
                 DataSource.AutocompleteProvider.Returns(autocompleteProvider);
                 var targetWorkspace = workspaces[1];
@@ -215,7 +220,9 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 var tagSuggestions = getTagSuggestions(10, workspace);
                 var tagIds = tagSuggestions.Select(tag => tag.TagId).ToArray();
                 var autocompleteProvider = Substitute.For<IAutocompleteProvider>();
-                autocompleteProvider.Query(Arg.Any<string>(), Arg.Is(AutocompleteSuggestionType.Tags))
+                autocompleteProvider
+                    .Query(Arg.Is<QueryInfo>(
+                        arg => arg.SuggestionType == AutocompleteSuggestionType.Tags))
                     .Returns(Observable.Return(tagSuggestions));
                 DataSource.AutocompleteProvider.Returns(autocompleteProvider);
                 DataSource.Workspaces.GetById(Arg.Is(workspace.Id))
@@ -237,8 +244,10 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 var selectedTagIds = new[] { tagSuggestions[0].TagId, tagSuggestions[2].TagId };
 
                 var autocompleteProvider = Substitute.For<IAutocompleteProvider>();
-                autocompleteProvider.Query(Arg.Any<string>(), Arg.Is(AutocompleteSuggestionType.Tags))
-                                    .Returns(Observable.Return(shuffledTags));
+                autocompleteProvider
+                    .Query(Arg.Is<QueryInfo>(
+                        arg => arg.SuggestionType == AutocompleteSuggestionType.Tags))
+                    .Returns(Observable.Return(shuffledTags));
 
                 DataSource.AutocompleteProvider.Returns(autocompleteProvider);
                 DataSource.Workspaces.GetById(Arg.Is(workspace.Id))
@@ -268,10 +277,14 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 var newSuggestions = getTagSuggestions(1, workspace);
                 var oldTagIds = oldSuggestions.Select(tag => tag.TagId).ToArray();
                 var autocompleteProvider = Substitute.For<IAutocompleteProvider>();
-                var queryText = "Query text";
-                autocompleteProvider.Query(Arg.Any<string>(), Arg.Is(AutocompleteSuggestionType.Tags))
-                    .Returns(Observable.Return(oldSuggestions));
-                autocompleteProvider.Query(Arg.Is(queryText), Arg.Is(AutocompleteSuggestionType.Tags))
+                        var queryText = "Query text";
+                autocompleteProvider
+                    .Query(Arg.Is<QueryInfo>(
+                        arg => arg.SuggestionType == AutocompleteSuggestionType.Tags))
+                            .Returns(Observable.Return(oldSuggestions));
+                autocompleteProvider
+                    .Query(Arg.Is<QueryInfo>(
+                        arg => arg.Text == queryText && arg.SuggestionType == AutocompleteSuggestionType.Tags))
                     .Returns(Observable.Return(newSuggestions));
                 DataSource.AutocompleteProvider.Returns(autocompleteProvider);
                 DataSource.Workspaces.GetById(Arg.Is(workspace.Id))

@@ -110,6 +110,34 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             }
         }
 
+        public sealed class TheCreateProjectCommand : StartTimeEntryViewModelTest
+        {
+            private const string currentQuery = "My awesome Toggl project";
+
+            public TheCreateProjectCommand()
+            {
+                ViewModel.TextFieldInfo = TextFieldInfo.Empty.WithTextAndCursor($"Something @{currentQuery}", 15);
+            }
+
+            [Fact]
+            public async Task CallsTheCreateProjectViewModel()
+            {
+                await ViewModel.CreateProjectCommand.ExecuteAsync(currentQuery);
+
+                await NavigationService.Received()
+                    .Navigate<string, long?>(typeof(EditProjectViewModel), Arg.Any<string>());
+            }
+
+            [Fact]
+            public async Task UsesTheCurrentQueryAsTheParameterForTheCreateProjectViewModel()
+            {
+                await ViewModel.CreateProjectCommand.ExecuteAsync(currentQuery);
+
+                await NavigationService.Received()
+                    .Navigate<string, long?>(typeof(EditProjectViewModel), currentQuery);
+            }
+        }
+
         public sealed class TheBackCommand : StartTimeEntryViewModelTest
         {
             [Fact]
@@ -233,7 +261,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     .Returns(Observable.Return(suggestions));
 
                 AutocompleteProvider
-                    .Query(Arg.Any<string>(), Arg.Is(AutocompleteSuggestionType.Projects))
+                    .Query(Arg.Is<QueryInfo>(
+                        arg => arg.SuggestionType == AutocompleteSuggestionType.Projects))
                     .Returns(Observable.Return(suggestions));
             }
 

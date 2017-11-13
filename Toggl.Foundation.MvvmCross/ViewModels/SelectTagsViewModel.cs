@@ -6,6 +6,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
+using Toggl.Foundation.Autocomplete;
 using Toggl.Foundation.Autocomplete.Suggestions;
 using Toggl.Foundation.DataSources;
 using Toggl.Multivac;
@@ -61,7 +62,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
             textSubject.AsObservable()
                        .StartWith(Text)
-                       .SelectMany(text => dataSource.AutocompleteProvider.Query(text, AutocompleteSuggestionType.Tags))
+                       .SelectMany(text => dataSource.AutocompleteProvider.Query(new QueryInfo(text, AutocompleteSuggestionType.Tags)))
                        .Select(suggestions => suggestions.Cast<TagSuggestion>())
                        .Select(suggestions => suggestions.Where(s => s.WorkspaceId == workspaceId))
                        .Subscribe(onTags);

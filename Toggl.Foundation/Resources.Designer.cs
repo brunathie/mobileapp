@@ -322,5 +322,11 @@ namespace Toggl.Foundation {
                 return ResourceManager.GetString("AddClient", resourceCulture);
             }
         }
+        
+        public static string NoClient {
+            get {
+                return ResourceManager.GetString("NoClient", resourceCulture);
+            }
+        }
     }
 }

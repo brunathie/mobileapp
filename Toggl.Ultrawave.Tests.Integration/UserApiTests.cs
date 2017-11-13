@@ -5,6 +5,7 @@ using FluentAssertions;
 using Toggl.Multivac.Models;
 using Toggl.Ultrawave.Network;
 using Toggl.Ultrawave.Tests.Integration.BaseTests;
+using Toggl.Ultrawave.Tests.Integration.Helper;
 using Xunit;
 
 namespace Toggl.Ultrawave.Tests.Integration
@@ -103,6 +104,36 @@ namespace Toggl.Ultrawave.Tests.Integration
                 var uri = new Uri(userFromApi.ImageUrl);
                 var uriIsAbsolute = uri.IsAbsoluteUri;
                 uriIsAbsolute.Should().BeTrue();
+            }
+        }
+
+        public sealed class TheUpdateMethod : AuthenticatedPutEndpointBaseTests<IUser>
+        {
+            [Fact, LogTestInfo]
+            public async Task ChangesDefaultWorkspace()
+            {
+                var (togglClient, user) = await SetupTestUser();
+                var secondWorkspace = await WorkspaceHelper.CreateFor(user);
+
+                var userWithUpdates = new Ultrawave.Models.User(user);
+                userWithUpdates.DefaultWorkspaceId = secondWorkspace.Id;
+
+                var updatedUser = await togglClient.User.Update(userWithUpdates);
+
+                updatedUser.Id.Should().Be(user.Id);
+                updatedUser.DefaultWorkspaceId.Should().NotBe(user.DefaultWorkspaceId);
+                updatedUser.DefaultWorkspaceId.Should().Be(secondWorkspace.Id);
+            }
+
+            protected override IObservable<IUser> PrepareForCallingUpdateEndpoint(ITogglApi api)
+                => api.User.Get();
+
+            protected override IObservable<IUser> CallUpdateEndpoint(ITogglApi api, IUser entityToUpdate)
+            {
+                var entityWithUpdates = new Ultrawave.Models.User(entityToUpdate);
+                entityWithUpdates.Fullname = entityToUpdate.Fullname == "Test" ? "Different name" : "Test";
+
+                return api.User.Update(entityWithUpdates);
             }
         }
     }

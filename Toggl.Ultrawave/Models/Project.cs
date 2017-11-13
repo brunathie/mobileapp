@@ -23,7 +23,12 @@ namespace Toggl.Ultrawave.Models
         [IgnoreWhenPosting]
         public DateTimeOffset? ServerDeletedAt { get; set; }
 
-        public string Color { get; set; }
+        private string color;
+        public string Color
+        {
+            get => color;
+            set => color = value.ToLower(); 
+        }
 
         [IgnoreWhenPosting]
         public bool? Billable { get; set; }

@@ -394,6 +394,9 @@
     <InterfaceDefinition Include="ViewControllers\EditProjectViewController.xib" />
     <InterfaceDefinition Include="ViewControllers\SelectColorViewController.xib" />
     <InterfaceDefinition Include="Views\ColorSelectionViewCell.xib" />
+    <InterfaceDefinition Include="Views\CreateEntityViewCell.xib" />
+    <InterfaceDefinition Include="Views\ClientViewCell.xib" />
+    <InterfaceDefinition Include="ViewControllers\SelectClientViewController.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -595,6 +598,19 @@
     </Compile>
     <Compile Include="Binding\TextViewWithCounterCountedTextTargetBinding.cs" />
     <Compile Include="Views\TextViewWithCounter.cs" />
+    <Compile Include="Views\CreateEntityViewCell.cs" />
+    <Compile Include="Views\CreateEntityViewCell.designer.cs">
+      <DependentUpon>CreateEntityViewCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewSources\ClientTableViewSource.cs" />
+    <Compile Include="Views\ClientViewCell.cs" />
+    <Compile Include="Views\ClientViewCell.designer.cs">
+      <DependentUpon>ClientViewCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\SelectClientViewController.cs" />
+    <Compile Include="ViewControllers\SelectClientViewController.designer.cs">
+      <DependentUpon>SelectClientViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation.MvvmCross\Toggl.Foundation.MvvmCross.csproj">

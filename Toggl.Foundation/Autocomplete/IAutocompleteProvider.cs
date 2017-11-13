@@ -6,8 +6,10 @@ namespace Toggl.Foundation.Autocomplete
 {
     public interface IAutocompleteProvider
     {
+        QueryInfo ParseFieldInfo(TextFieldInfo info);
+
         IObservable<IEnumerable<AutocompleteSuggestion>> Query(TextFieldInfo info);
 
-        IObservable<IEnumerable<AutocompleteSuggestion>> Query(string queryText, AutocompleteSuggestionType suggestionType);
+        IObservable<IEnumerable<AutocompleteSuggestion>> Query(QueryInfo queryInfo);
     }
 }

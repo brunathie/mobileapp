@@ -76,6 +76,7 @@
     <Compile Include="ViewModels\EditProjectViewModel.cs" />
     <Compile Include="ViewModels\SelectColorViewModel.cs" />
     <Compile Include="ViewModels\SelectableColorViewModel.cs" />
+    <Compile Include="ViewModels\SelectClientViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Reactive.Interfaces">

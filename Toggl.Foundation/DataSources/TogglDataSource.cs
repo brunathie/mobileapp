@@ -26,6 +26,7 @@ namespace Toggl.Foundation.DataSources
             Tags = new TagsDataSource(database.Tags);
             Tasks = new TasksDataSource(database.Tasks);
             Workspaces = new WorkspacesDataSource(database);
+            Clients = new ClientsDataSource(database.IdProvider, database.Clients, timeService);
             Projects = new ProjectsDataSource(database.IdProvider, database.Projects, timeService);
             TimeEntries = new TimeEntriesDataSource(database.IdProvider, database.TimeEntries, timeService);
 
@@ -36,7 +37,7 @@ namespace Toggl.Foundation.DataSources
         public IUserSource User { get; }
         public ITagsSource Tags { get; }
         public ITasksSource Tasks { get; }
-        public IClientsSource Clients => throw new NotImplementedException();
+        public IClientsSource Clients { get; }
         public IProjectsSource Projects { get; }
         public IWorkspacesSource Workspaces { get; }
         public ITimeEntriesSource TimeEntries { get; }

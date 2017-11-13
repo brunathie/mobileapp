@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -50,6 +49,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public bool UseGrouping { get; set; }
 
+        public string CurrentQuery { get; private set; }
+
         public bool IsEditingDuration { get; private set; }
 
         public bool IsEditingStartDate { get; private set; }
@@ -91,6 +92,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public IMvxCommand ToggleProjectSuggestionsCommand { get; }
 
+        public IMvxAsyncCommand<string> CreateProjectCommand { get; }
+
         public IMvxAsyncCommand<AutocompleteSuggestion> SelectSuggestionCommand { get; }
 
         public IMvxCommand<ProjectSuggestion> ToggleTaskSuggestionsCommand { get; }
@@ -116,6 +119,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             ToggleBillableCommand = new MvxCommand(toggleBillable);
             ChangeDurationCommand = new MvxAsyncCommand(changeDuration);
             ChangeStartTimeCommand = new MvxAsyncCommand(changeStartTime);
+            CreateProjectCommand = new MvxAsyncCommand<string>(createProject);
             ToggleTagSuggestionsCommand = new MvxCommand(toggleTagSuggestions);
             ToggleProjectSuggestionsCommand = new MvxCommand(toggleProjectSuggestions);
             SelectSuggestionCommand = new MvxAsyncCommand<AutocompleteSuggestion>(selectSuggestion);
@@ -208,6 +212,17 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             }
         }
 
+        private async Task createProject(string projectName)
+        {
+            var projectId = await navigationService.Navigate<EditProjectViewModel, string, long?>(projectName);
+            if (projectId == null) return;
+
+            var project = await dataSource.Projects.GetById(projectId.Value);
+            var projectSuggestion = new ProjectSuggestion(project);
+
+            await SelectSuggestionCommand.ExecuteAsync(projectSuggestion);
+        }
+
         private void setProject(ProjectSuggestion projectSuggestion)
         {
             clearTagsIfNeeded(workspaceId, projectSuggestion.WorkspaceId);
@@ -256,11 +271,13 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             var queryByTypeObservable =
                 queryByTypeSubject
                     .AsObservable()
-                    .SelectMany(type => dataSource.AutocompleteProvider.Query("", type));
+                    .SelectMany(type => dataSource.AutocompleteProvider.Query(new QueryInfo("", type)));
 
             queryDisposable =
                 infoSubject.AsObservable()
                     .StartWith(TextFieldInfo)
+                    .Select(dataSource.AutocompleteProvider.ParseFieldInfo)
+                    .Do(queryInfo => CurrentQuery = queryInfo.Text)
                     .SelectMany(dataSource.AutocompleteProvider.Query)
                     .Merge(queryByTypeObservable)
                     .Subscribe(onSuggestions);

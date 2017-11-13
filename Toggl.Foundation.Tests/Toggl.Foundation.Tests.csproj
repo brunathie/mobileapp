@@ -276,6 +276,7 @@
     <Compile Include="Sync\States\Push\TimeEntries\UpdateTimeEntryStateTests.cs" />
     <Compile Include="MvvmCross\ViewModels\SelectColorViewModelTests.cs" />
     <Compile Include="MvvmCross\ViewModels\EditProjectViewModelTests.cs" />
+    <Compile Include="MvvmCross\ViewModels\SelectClientViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MvvmCross\ViewModels\StartTimeEntryViewModelTests.cs" />

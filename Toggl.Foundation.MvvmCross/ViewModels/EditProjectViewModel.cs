@@ -15,7 +15,7 @@ using static Toggl.Foundation.Helper.Constants;
 namespace Toggl.Foundation.MvvmCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public sealed class EditProjectViewModel : MvxViewModelResult<long?>
+    public sealed class EditProjectViewModel : MvxViewModel<string, long?>
     {
         private readonly ITogglDataSource dataSource;
         private readonly IMvxNavigationService navigationService;
@@ -66,8 +66,10 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             PickWorkspaceCommand = new MvxAsyncCommand(pickWorkspace);
         }
 
-        public override void Prepare()
+        public override void Prepare(string parameter)
         {
+            Name = parameter;
+
             var random = new Random();
             var randomColorIndex = random.Next(0, Helper.Color.DefaultProjectColors.Length);
             Title = Resources.NewProject;
@@ -117,7 +119,21 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private Task pickWorkspace()
             => throw new NotImplementedException();
 
-        private Task pickClient()
-            => throw new NotImplementedException();
+        private async Task pickClient()
+        {
+            var selectedClientId = await navigationService.Navigate<SelectClientViewModel, long, long?>(workspaceId);
+            if (selectedClientId == null) return;
+
+            if (selectedClientId.Value == 0)
+            {
+                selectedClientId = null;
+                ClientName = "";
+                return;
+            }
+
+            var client = await dataSource.Clients.GetById(selectedClientId.Value);
+            clientId = client.Id;
+            ClientName = client.Name;
+        }
     }
 }

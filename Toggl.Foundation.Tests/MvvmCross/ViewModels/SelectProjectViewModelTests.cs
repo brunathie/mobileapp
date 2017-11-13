@@ -154,7 +154,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                         parameter => parameter.TaskId == task.Id));
             }
 
-            [Fact] 
+            [Fact]
             public async Task ReturnsNoProjectIfNoProjectWasSelected()
             {
                 ViewModel.SelectProjectCommand
@@ -235,7 +235,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 );
             }
 
-            [Fact] 
+            [Fact]
             public async Task ReturnsWorkspaceIdOfTheProjectIfProjectWasSelected()
             {
                 var project = Substitute.For<IDatabaseProject>();
@@ -300,7 +300,11 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ViewModel.Text = text;
 
-                await autocompleteProvider.Received().Query(Arg.Is(text), Arg.Is(AutocompleteSuggestionType.Projects));
+                await autocompleteProvider.Received()
+                    .Query(Arg.Is<QueryInfo>(info 
+                        => info.Text == text 
+                        && info.SuggestionType == AutocompleteSuggestionType.Projects)
+                );
             }
         }
 
@@ -319,7 +323,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     yield return new ProjectSuggestion(project);
                 }
             }
-            
+
             [Fact]
             public async Task IsClearedWhenTextIsChanged()
             {
@@ -327,9 +331,12 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 var newSuggestions = getProjectSuggestions(1, 1);
                 var autocompleteProvider = Substitute.For<IAutocompleteProvider>();
                 var queryText = "Query text";
-                autocompleteProvider.Query(Arg.Any<string>(), Arg.Is(AutocompleteSuggestionType.Projects))
+                autocompleteProvider
+                    .Query(Arg.Is<QueryInfo>(
+                        info => info.SuggestionType == AutocompleteSuggestionType.Projects))
                     .Returns(Observable.Return(oldSuggestions));
-                autocompleteProvider.Query(Arg.Is(queryText), Arg.Is(AutocompleteSuggestionType.Projects))
+                autocompleteProvider.Query(Arg.Is<QueryInfo>(
+                        info => info.Text == queryText && info.SuggestionType == AutocompleteSuggestionType.Projects))
                     .Returns(Observable.Return(newSuggestions));
                 DataSource.AutocompleteProvider.Returns(autocompleteProvider);
                 await ViewModel.Initialize();
@@ -346,10 +353,12 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 var projectSuggestions = getProjectSuggestions(10, 0);
                 var suggestionsObservable = Observable.Return(projectSuggestions);
                 var autocompleteProvider = Substitute.For<IAutocompleteProvider>();
-                autocompleteProvider.Query(Arg.Any<string>(), Arg.Is(AutocompleteSuggestionType.Projects))
+                autocompleteProvider
+                    .Query(Arg.Is<QueryInfo>(
+                        info => info.SuggestionType == AutocompleteSuggestionType.Projects))
                     .Returns(suggestionsObservable);
                 DataSource.AutocompleteProvider.Returns(autocompleteProvider);
-                
+
                 await ViewModel.Initialize();
 
                 ViewModel.Suggestions.Should().HaveCount(1);
@@ -366,7 +375,9 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 suggestions.AddRange(getProjectSuggestions(10, 54));
                 var suggestionsObservable = Observable.Return(suggestions);
                 var autocompleteProvider = Substitute.For<IAutocompleteProvider>();
-                autocompleteProvider.Query(Arg.Any<string>(), Arg.Is(AutocompleteSuggestionType.Projects))
+                autocompleteProvider
+                    .Query(Arg.Is<QueryInfo>(
+                        info => info.SuggestionType == AutocompleteSuggestionType.Projects))
                     .Returns(suggestionsObservable);
 
                 await ViewModel.Initialize();
@@ -389,7 +400,9 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 var suggestionsObservable = Observable.Return(suggestions);
                 var autocompleteProvider = Substitute.For<IAutocompleteProvider>();
                 DataSource.AutocompleteProvider.Returns(autocompleteProvider);
-                autocompleteProvider.Query(Arg.Any<string>(), Arg.Is(AutocompleteSuggestionType.Projects))
+                autocompleteProvider
+                    .Query(Arg.Is<QueryInfo>(
+                        info => info.SuggestionType == AutocompleteSuggestionType.Projects))
                     .Returns(suggestionsObservable);
 
                 await ViewModel.Initialize();
@@ -451,7 +464,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                         return new ProjectSuggestion(project);
                     });
                 DataSource.AutocompleteProvider
-                    .Query(Arg.Any<string>(), Arg.Is(AutocompleteSuggestionType.Projects))
+                    .Query(Arg.Is<QueryInfo>(
+                        arg => arg.SuggestionType == AutocompleteSuggestionType.Projects))
                     .Returns(Observable.Return(projects));
             }
         }

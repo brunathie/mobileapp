@@ -159,4 +159,7 @@ time entries will appear here.</value>
     <data name="AddClient">
         <value>Add client</value>
     </data>
+    <data name="NoClient">
+        <value>No client</value>
+    </data>
 </root>

@@ -22,21 +22,18 @@ namespace Toggl.Foundation.Autocomplete
         }
 
         public IObservable<IEnumerable<AutocompleteSuggestion>> Query(TextFieldInfo info)
+            => Query(ParseFieldInfo(info));
+
+        public IObservable<IEnumerable<AutocompleteSuggestion>> Query(QueryInfo queryInfo)
         {
-            var (queryText, suggestionType) = parseQuery(info);
-            return Query(queryText, suggestionType);
+            var wordsToQuery = queryInfo.Text.Split(' ').Where(word => !string.IsNullOrEmpty(word)).Distinct();
+            return querySuggestions(wordsToQuery, queryInfo.SuggestionType);
         }
 
-        public IObservable<IEnumerable<AutocompleteSuggestion>> Query(string queryText, AutocompleteSuggestionType suggestionType)
-        {
-            var wordsToQuery = queryText.Split(' ').Where(word => !string.IsNullOrEmpty(word)).Distinct();
-            return querySuggestions(wordsToQuery, suggestionType);
-        }
-
-        private (string, AutocompleteSuggestionType) parseQuery(TextFieldInfo info)
+        public QueryInfo ParseFieldInfo(TextFieldInfo info)
         {
             if (string.IsNullOrEmpty(info.Text))
-                return (info.Text, AutocompleteSuggestionType.TimeEntries);
+                return new QueryInfo(info.Text, AutocompleteSuggestionType.TimeEntries);
 
             var querySymbols = info.ProjectId != null ? QuerySymbols.ProjectSelected : QuerySymbols.All;
 
@@ -51,10 +48,10 @@ namespace Toggl.Foundation.Autocomplete
                     ? AutocompleteSuggestionType.Projects
                     : AutocompleteSuggestionType.Tags;
 
-                return (info.Text.Substring(startingIndex, stringLength), suggestion);
+                return new QueryInfo(info.Text.Substring(startingIndex, stringLength), suggestion);
             }
 
-            return (info.Text, AutocompleteSuggestionType.TimeEntries);
+            return new QueryInfo(info.Text, AutocompleteSuggestionType.TimeEntries);
         }
 
         private IObservable<IEnumerable<AutocompleteSuggestion>> querySuggestions(
