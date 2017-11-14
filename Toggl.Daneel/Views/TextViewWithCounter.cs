@@ -108,6 +108,7 @@ namespace Toggl.Daneel.Views
         [Export("textViewDidChange:")]
         public new void Changed(UITextView textView)
         {
+            //Replace all newlines with spaces in pasted text
             CountedText = Text.Replace('\n', ' ');
             SelectedRange = selectedRange;
         }
