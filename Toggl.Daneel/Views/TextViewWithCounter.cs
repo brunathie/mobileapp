@@ -1,5 +1,6 @@
 ﻿using System;
 using Foundation;
+using MvvmCross.Platform.Core;
 using MvvmCross.Plugins.Color.iOS;
 using Toggl.Foundation.MvvmCross.Helper;
 using UIKit;
@@ -23,7 +24,7 @@ namespace Toggl.Daneel.Views
                 if (countedText == value) return;
                 countedText = getTextWithoutCounter(value);
                 setAttributedText(countedText);
-                CountedTextChanged?.Invoke(this, EventArgs.Empty);
+                CountedTextChanged.Raise(this);
             }
         }
 
