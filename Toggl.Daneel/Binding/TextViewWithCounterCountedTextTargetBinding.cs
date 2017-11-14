@@ -22,6 +22,14 @@ namespace Toggl.Daneel.Binding
             Target.CountedText = value;
         }
 
+        protected override void Dispose(bool isDisposing)
+        {
+            base.Dispose(isDisposing);
+
+            if (!isDisposing) return;
+            Target.CountedTextChanged -= onCountedTextChanged;
+        }
+
         private void onCountedTextChanged(object sender, EventArgs e)
         {
             FireValueChanged(Target.CountedText);
