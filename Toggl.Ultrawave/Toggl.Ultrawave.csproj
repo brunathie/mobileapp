@@ -55,6 +55,7 @@
     <Compile Include="Exceptions\UnauthorizedException.cs" />
     <Compile Include="Exceptions\UnknownApiErrorException.cs" />
     <Compile Include="Helpers\ApiExceptions.cs" />
+    <Compile Include="Helpers\PricingPlans.cs" />
     <Compile Include="Models\TimeEntry.cs" />
     <Compile Include="Models\WorkspaceFeature.cs" />
     <Compile Include="Models\WorkspaceFeatureCollection.cs" />

@@ -1,4 +1,4 @@
-﻿namespace Toggl.Ultrawave.Tests.Integration
+﻿namespace Toggl.Ultrawave.Helpers
 {
     public enum PricingPlans
     {

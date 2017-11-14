@@ -1,4 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Toggl.Multivac
 {
@@ -20,6 +23,11 @@ namespace Toggl.Multivac
 
         public override string ToString() => email;
 
+        public string ToFullName()
+            => !IsValid
+                ? String.Empty
+                : String.Join(" ", split(email)?.Select(capitalize) ?? new string[0]);
+
         public static Email FromString(string email)
         {
             if (!CheckEmailStringValidity(email)) return Invalid;
@@ -28,5 +36,16 @@ namespace Toggl.Multivac
 
         public static bool CheckEmailStringValidity(string email)
             => email != null && regex.Match(email).Length > 0;
+
+        private IEnumerable<string> split(string email)
+            => email?.Split('@')?.First()?.Replace("\"", "").Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+
+        private string capitalize(string name)
+        {
+            if (String.IsNullOrEmpty(name))
+                throw new ArgumentException(nameof(name));
+
+            return name[0].ToString().ToUpper() + name.Substring(1);
+        }
     }
 }

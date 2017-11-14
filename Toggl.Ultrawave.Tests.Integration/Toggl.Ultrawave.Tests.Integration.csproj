@@ -172,7 +172,6 @@
     <Compile Include="LogTestInfoAttribute.cs" />
     <Compile Include="Helper\Configuration.cs" />
     <Compile Include="BaseTests\AuthenticatedPutEndpointBaseTests.cs" />
-    <Compile Include="Helper\PricingPlans.cs" />
     <Compile Include="TasksApiTests.cs" />
     <Compile Include="BaseTests\AuthenticatedDeleteEndpointBaseTests.cs" />
   </ItemGroup>

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Toggl.Multivac.Models;
+using Toggl.Ultrawave.Helpers;
 
 namespace Toggl.Ultrawave.Tests.Integration.Helper
 {

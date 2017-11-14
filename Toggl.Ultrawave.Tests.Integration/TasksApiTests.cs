@@ -8,6 +8,7 @@ using Toggl.Ultrawave.Models;
 using Toggl.Ultrawave.Exceptions;
 using Toggl.Ultrawave.Tests.Integration.BaseTests;
 using Toggl.Multivac.Models;
+using Toggl.Ultrawave.Helpers;
 using Toggl.Ultrawave.Tests.Integration.Helper;
 
 namespace Toggl.Ultrawave.Tests.Integration
