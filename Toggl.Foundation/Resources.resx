@@ -86,7 +86,7 @@ Please try again.</value>
         <value>We're syncing your data</value>
     </data>
     <data name="SettingsSyncInProgressMessage">
-        <value>You may loose your data when you sign out before the sync is complete.</value>
+        <value>You may lose your data when you sign out before the sync is complete.</value>
     </data>
     <data name="SettingsUnsyncedTitle">
         <value>Unsynced data</value>
