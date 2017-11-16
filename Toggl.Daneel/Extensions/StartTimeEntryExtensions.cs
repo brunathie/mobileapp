@@ -22,8 +22,8 @@ namespace Toggl.Daneel.Extensions
         {
             paragraphStyle = new NSMutableParagraphStyle
             {
-                MinimumLineHeight = 24,
-                MaximumLineHeight = 24
+                MinimumLineHeight = 30,
+                MaximumLineHeight = 30
             };
         }
 
@@ -45,13 +45,12 @@ namespace Toggl.Daneel.Extensions
         {
             if (string.IsNullOrEmpty(self.ProjectName)) return "";
 
-            var builder = new StringBuilder($"      {self.ProjectName}");
-            if (self.TaskId != null)
-                builder.Append($": {self.TaskName}");
-            builder.Append("   ");
-            builder.Replace(" ", nbs);
+            var projectName = self.TaskId != null ? $"{self.ProjectName}: {self.TaskName}" : self.ProjectName;
+            var needsTruncation = projectName.Length >= 30;
+            var projectString = needsTruncation ? $"{projectName.Substring(0, 27)}..." : projectName;
 
-            return builder.ToString();
+            var result = $"      {projectString}   ".Replace(" ", nbs);
+            return result;
         }
 
         public static string TagsText(this TextFieldInfo self)
@@ -62,7 +61,12 @@ namespace Toggl.Daneel.Extensions
                    .ToString();
 
         public static string PaddedTagName(string tagName)
-            => $" {nbs}{nbs}{nbs}{tagName.Replace(" ", nbs)}{nbs}{nbs}{nbs}";
+        {
+            var needsTruncation = tagName.Length >= 30;
+            var tagString = needsTruncation ? $"{tagName.Substring(0, 27)}..." : tagName;
+            var result = $" {nbs}{nbs}{nbs}{tagString.Replace(" ", nbs)}{nbs}{nbs}{nbs}";
+            return result;
+        }
 
         public static NSAttributedString GetAttributedText(this TextFieldInfo self)
         {
@@ -92,7 +96,7 @@ namespace Toggl.Daneel.Extensions
 
             for (int i = 0; i < self.Tags.Length; i++)
             {
-                var tagLength = self.Tags[i].Name.Length + spacesForTagToken;
+                var tagLength = PaddedTagName(self.Tags[i].Name).Length;
 
                 var attributes = new UIStringAttributes
                 {
@@ -101,17 +105,17 @@ namespace Toggl.Daneel.Extensions
                     Font = UIFont.SystemFontOfSize(12, UIFontWeight.Regular),
                 };
                 attributes.Dictionary[TimeEntryTagsTextView.RoundedBorders] = strokeColor;
-                result.AddAttributes(attributes, new NSRange(startingPosition + 1, tagLength));
+                result.AddAttributes(attributes, new NSRange(startingPosition + 1, tagLength - 1));
                 result.AddAttribute(
-                    TimeEntryTagsTextView.TagIndex, new NSNumber(i), 
-                    new NSRange(startingPosition, tagLength + 1)
+                    TimeEntryTagsTextView.TagIndex, new NSNumber(i),
+                    new NSRange(startingPosition, tagLength)
                 );
 
-                startingPosition += tagLength + 1;
+                startingPosition += tagLength;
             }
         }
 
-        private static void addProjectAttributesIfNeeded(TextFieldInfo self, string projectName, 
+        private static void addProjectAttributesIfNeeded(TextFieldInfo self, string projectName,
             NSMutableAttributedString resultString, int baselineOffset)
         {
             if (string.IsNullOrEmpty(self.ProjectColor)) return;
