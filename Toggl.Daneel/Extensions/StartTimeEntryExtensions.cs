@@ -12,7 +12,9 @@ namespace Toggl.Daneel.Extensions
 {
     public static class StartTimeEntryExtensions
     {
-        private const string space = "\u00A0";
+        // Non Breakable space
+        private const string nbs = "\u00A0";
+        private const byte spacesForTagToken = 6;
         private static readonly NSParagraphStyle paragraphStyle;
         private static readonly UIColor strokeColor = Color.StartTimeEntry.ProjectTokenBorder.ToNativeColor();
 
@@ -47,7 +49,7 @@ namespace Toggl.Daneel.Extensions
             if (self.TaskId != null)
                 builder.Append($": {self.TaskName}");
             builder.Append("   ");
-            builder.Replace(" ", space);
+            builder.Replace(" ", nbs);
 
             return builder.ToString();
         }
@@ -57,11 +59,10 @@ namespace Toggl.Daneel.Extensions
                    self.Tags.Aggregate(
                        new StringBuilder(""),
                        (builder, tag) => builder.Append(PaddedTagName(tag.Name)))
-                   .ToString()
-                   .Replace(" ", space);
+                   .ToString();
 
         public static string PaddedTagName(string tagName)
-            => $"   {tagName}   ".Replace(" ", space);
+            => $" {nbs}{nbs}{nbs}{tagName.Replace(" ", nbs)}{nbs}{nbs}{nbs}";
 
         public static NSAttributedString GetAttributedText(this TextFieldInfo self)
         {
@@ -77,46 +78,58 @@ namespace Toggl.Daneel.Extensions
                 Font = UIFont.SystemFontOfSize(16, UIFontWeight.Regular),
             }, new NSRange(0, self.Text.Length));
 
-            if (!string.IsNullOrEmpty(self.ProjectColor))
+            addProjectAttributesIfNeeded(self, projectName, result, baselineOffset);
+            addTagAttributesIfNeeded(self, projectName, tags, result, baselineOffset);
+
+            return result;
+        }
+
+        private static void addTagAttributesIfNeeded(TextFieldInfo self, string projectName, string tags, NSMutableAttributedString result, int baselineOffset)
+        {
+            if (string.IsNullOrEmpty(tags)) return;
+
+            var startingPosition = self.Text.Length + projectName.Length;
+
+            for (int i = 0; i < self.Tags.Length; i++)
             {
-                var color = MvxColor.ParseHexString(self.ProjectColor).ToNativeColor();
+                var tagLength = self.Tags[i].Name.Length + spacesForTagToken;
 
                 var attributes = new UIStringAttributes
                 {
-                    ForegroundColor = color,
-                    StrokeColor = strokeColor,
                     BaselineOffset = baselineOffset,
                     ParagraphStyle = paragraphStyle,
                     Font = UIFont.SystemFontOfSize(12, UIFontWeight.Regular),
                 };
-                attributes.Dictionary[TimeEntryTagsTextView.RoundedBackground] = color.ColorWithAlpha(0.12f);
+                result.AddAttribute(
+                    TimeEntryTagsTextView.RoundedBorders,
+                    strokeColor, new NSRange(startingPosition + 1, tagLength));
+                
+                result.AddAttribute(
+                    TimeEntryTagsTextView.TagIndex,
+                    new NSNumber(i), new NSRange(startingPosition, tagLength + 1));
 
-                result.AddAttributes(attributes, new NSRange(self.Text.Length, projectName.Length));
+                startingPosition += tagLength + 1;
             }
+        }
 
-            if (!string.IsNullOrEmpty(tags))
+        private static void addProjectAttributesIfNeeded(TextFieldInfo self, string projectName, 
+            NSMutableAttributedString resultString, int baselineOffset)
+        {
+            if (string.IsNullOrEmpty(self.ProjectColor)) return;
+
+            var color = MvxColor.ParseHexString(self.ProjectColor).ToNativeColor();
+
+            var attributes = new UIStringAttributes
             {
-                var startingPosition = self.Text.Length + projectName.Length;
+                ForegroundColor = color,
+                StrokeColor = strokeColor,
+                BaselineOffset = baselineOffset,
+                ParagraphStyle = paragraphStyle,
+                Font = UIFont.SystemFontOfSize(12, UIFontWeight.Regular),
+            };
+            attributes.Dictionary[TimeEntryTagsTextView.RoundedBackground] = color.ColorWithAlpha(0.12f);
 
-                for (int i = 0; i < self.Tags.Length; i++)
-                {
-                    var tagLength = self.Tags[i].Name.Length + 6;
-
-                    var attributes = new UIStringAttributes
-                    {
-                        BaselineOffset = baselineOffset,
-                        ParagraphStyle = paragraphStyle,
-                        Font = UIFont.SystemFontOfSize(12, UIFontWeight.Regular),
-                    };
-                    attributes.Dictionary[TimeEntryTagsTextView.TagIndex] = new NSNumber(i);
-                    attributes.Dictionary[TimeEntryTagsTextView.RoundedBorders] = strokeColor;
-                    result.AddAttributes(attributes, new NSRange(startingPosition, tagLength));
-
-                    startingPosition += tagLength;
-                }
-            }
-
-            return result;
+            resultString.AddAttributes(attributes, new NSRange(self.Text.Length, projectName.Length));
         }
     }
 }
