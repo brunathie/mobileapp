@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -48,15 +49,26 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" text="What are you working on?" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="R8W-w1-sEf" customClass="TimeEntryTagsTextView">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A27-Kh-SFQ">
                     <rect key="frame" x="16" y="44" width="343" height="68"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <subviews>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" text="What are you working on?" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="R8W-w1-sEf" customClass="TimeEntryTagsTextView">
+                            <rect key="frame" x="0.0" y="0.0" width="343" height="408"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no" keyboardType="twitter"/>
+                        </textView>
+                    </subviews>
                     <constraints>
-                        <constraint firstAttribute="height" constant="68" id="u0i-Qv-oYj"/>
+                        <constraint firstItem="R8W-w1-sEf" firstAttribute="height" secondItem="A27-Kh-SFQ" secondAttribute="height" multiplier="6" id="7fY-wF-xCp"/>
+                        <constraint firstAttribute="trailing" secondItem="R8W-w1-sEf" secondAttribute="trailing" id="E7M-ML-Kfv"/>
+                        <constraint firstItem="R8W-w1-sEf" firstAttribute="leading" secondItem="A27-Kh-SFQ" secondAttribute="leading" id="Rtg-Uh-8uy"/>
+                        <constraint firstItem="R8W-w1-sEf" firstAttribute="top" secondItem="A27-Kh-SFQ" secondAttribute="top" id="T0H-7c-MYc"/>
+                        <constraint firstAttribute="bottom" secondItem="R8W-w1-sEf" secondAttribute="bottom" id="Zzu-ta-hfa"/>
+                        <constraint firstAttribute="height" constant="68" id="dcX-fo-hTj"/>
+                        <constraint firstItem="R8W-w1-sEf" firstAttribute="width" secondItem="A27-Kh-SFQ" secondAttribute="width" id="xHz-F4-ShH"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no" keyboardType="twitter"/>
-                </textView>
+                </scrollView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dU3-s1-ELa">
                     <rect key="frame" x="0.0" y="617" width="375" height="50"/>
                     <subviews>
@@ -149,18 +161,18 @@
             <constraints>
                 <constraint firstItem="3I4-ki-f8o" firstAttribute="top" secondItem="2" secondAttribute="top" constant="12" id="1Du-It-obb"/>
                 <constraint firstItem="04s-S8-twa" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="4RY-Xr-C7o"/>
+                <constraint firstAttribute="trailing" secondItem="A27-Kh-SFQ" secondAttribute="trailing" constant="16" id="5Yd-gB-hvG"/>
                 <constraint firstItem="dU3-s1-ELa" firstAttribute="top" secondItem="04s-S8-twa" secondAttribute="bottom" id="Ed3-WO-VAz"/>
                 <constraint firstAttribute="bottom" secondItem="dU3-s1-ELa" secondAttribute="bottom" id="HKM-yE-bqT"/>
-                <constraint firstItem="04s-S8-twa" firstAttribute="top" secondItem="R8W-w1-sEf" secondAttribute="bottom" id="LWu-ay-Tlz"/>
+                <constraint firstItem="A27-Kh-SFQ" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="JOd-j2-m8L"/>
                 <constraint firstItem="MAa-jq-GXB" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="SKA-G6-SAk"/>
                 <constraint firstItem="MAa-jq-GXB" firstAttribute="top" secondItem="2" secondAttribute="top" id="bZl-x7-d8h"/>
-                <constraint firstAttribute="trailing" secondItem="R8W-w1-sEf" secondAttribute="trailing" constant="16" id="eWS-Ri-de5"/>
                 <constraint firstItem="3I4-ki-f8o" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="fZz-5n-hvI"/>
                 <constraint firstItem="dU3-s1-ELa" firstAttribute="width" secondItem="2" secondAttribute="width" id="gyJ-IK-KRo"/>
-                <constraint firstItem="R8W-w1-sEf" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="kgJ-RZ-uY1"/>
+                <constraint firstItem="A27-Kh-SFQ" firstAttribute="top" secondItem="MAa-jq-GXB" secondAttribute="bottom" constant="4" id="hOx-pF-Ysp"/>
                 <constraint firstItem="dU3-s1-ELa" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="leF-ji-hIr"/>
+                <constraint firstItem="04s-S8-twa" firstAttribute="top" secondItem="A27-Kh-SFQ" secondAttribute="bottom" id="mPX-OT-1Zq"/>
                 <constraint firstAttribute="trailing" secondItem="04s-S8-twa" secondAttribute="trailing" id="nQ2-A6-IBf"/>
-                <constraint firstItem="R8W-w1-sEf" firstAttribute="top" secondItem="MAa-jq-GXB" secondAttribute="bottom" constant="4" id="wV7-6B-WWt"/>
             </constraints>
         </view>
     </objects>
