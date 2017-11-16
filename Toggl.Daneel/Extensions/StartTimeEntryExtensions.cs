@@ -100,13 +100,12 @@ namespace Toggl.Daneel.Extensions
                     ParagraphStyle = paragraphStyle,
                     Font = UIFont.SystemFontOfSize(12, UIFontWeight.Regular),
                 };
+                attributes.Dictionary[TimeEntryTagsTextView.RoundedBorders] = strokeColor;
+                result.AddAttributes(attributes, new NSRange(startingPosition + 1, tagLength));
                 result.AddAttribute(
-                    TimeEntryTagsTextView.RoundedBorders,
-                    strokeColor, new NSRange(startingPosition + 1, tagLength));
-                
-                result.AddAttribute(
-                    TimeEntryTagsTextView.TagIndex,
-                    new NSNumber(i), new NSRange(startingPosition, tagLength + 1));
+                    TimeEntryTagsTextView.TagIndex, new NSNumber(i), 
+                    new NSRange(startingPosition, tagLength + 1)
+                );
 
                 startingPosition += tagLength + 1;
             }

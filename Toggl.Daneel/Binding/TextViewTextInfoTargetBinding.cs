@@ -6,6 +6,7 @@ using MvvmCross.Platform.Core;
 using Toggl.Daneel.Extensions;
 using Toggl.Daneel.Views;
 using Toggl.Foundation.Autocomplete;
+using Toggl.Multivac.Extensions;
 using UIKit;
 
 namespace Toggl.Daneel.Binding
@@ -108,12 +109,13 @@ namespace Toggl.Daneel.Binding
                 return;
             }
 
-            var attributes = Target.AttributedText.GetAttributes(newCursorPosition, out var effectiveRange);
+            var maxLength = (int)(Target.AttributedText.Length == 0 ? 0 : Target.AttributedText.Length - 1);
+            var attributes = Target.AttributedText.GetAttributes(newCursorPosition.Clamp(0, maxLength), out var effectiveRange);
 
             var oldCursorPosition = textFieldInfo.CursorPosition;
             var isMovingForward = newCursorPosition >= oldCursorPosition;
 
-            var actualCursorPosition = (int)effectiveRange.Location + (int)(isMovingForward ? effectiveRange.Length : 0);
+            var actualCursorPosition = (int)effectiveRange.Location + (int)(isMovingForward ? effectiveRange.Length : -1);
             onTextFieldInfoChanged(textFieldInfo.WithTextAndCursor(newDescription, actualCursorPosition));
         }
 

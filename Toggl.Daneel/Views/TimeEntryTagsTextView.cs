@@ -30,10 +30,13 @@ namespace Toggl.Daneel.Views
         {
             var framesetter = new CTFramesetter(AttributedText);
 
-            var path = new CGPath();
-            path.AddRect(new CGRect(0, 0, Bounds.Size.Width, Bounds.Size.Height));
+            var xOffset = TextContainer.LineFragmentPadding + TextContainerInset.Right;
+            var yOffset = TextContainerInset.Top;
 
-            var totalFrame = framesetter.GetFrame(new NSRange(0, 0), path, null);
+            var path = new CGPath();
+            path.AddRect(rect.Inset(xOffset, yOffset));
+
+            var totalFrame = framesetter.GetFrame(new NSRange(0, AttributedText.Length), path, null);
 
             var context = UIGraphics.GetCurrentContext();
             context.TextMatrix = CGAffineTransform.MakeIdentity();
@@ -59,7 +62,7 @@ namespace Toggl.Daneel.Views
                     if (backgroundColor == null && borderColor == null) continue;
 
                     var x = line.GetOffsetForStringIndex(run.StringRange.Location, out var _) + whiteSpaceOffset;
-                    var y = origins[index].Y - (tokenHeight * 0.7);
+                    var y = origins[index].Y;
 
                     var tokenPath = UIBezierPath.FromRoundedRect(new CGRect(
                         x: x, y: y,
