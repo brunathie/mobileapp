@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Net;
-using System.Net.Http;
-using System.Text;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Toggl.Multivac;
+using Toggl.Multivac.Extensions;
 using Toggl.Ultrawave.Network;
+using Toggl.Ultrawave.Tests.Integration.Helper;
 
 namespace Toggl.Ultrawave.Tests.Integration
 {
@@ -21,19 +22,13 @@ namespace Toggl.Ultrawave.Tests.Integration
         {
             ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
-            var email = $"{Guid.NewGuid()}@mocks.toggl.com";
+            var email = $"{Guid.NewGuid()}@mocks.toggl.com".ToEmail();
             var password = "123456";
 
-            using (var client = new HttpClient())
-            {
-                var json = $"{{\"user\":{{\"email\":\"{email}\",\"password\":\"{password}\"}}}}";
-                var url = new Uri("https://toggl.space/api/v8/signups");
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var api = new TogglApi(new ApiConfiguration(ApiEnvironment.Staging, Credentials.None, Configuration.UserAgent));
+            await api.User.SignUp(email, password);
 
-                await client.PostAsync(url, content);
-            }
-
-            return (Email.FromString(email), password);
+            return (email, password);
         }
     }
 }
