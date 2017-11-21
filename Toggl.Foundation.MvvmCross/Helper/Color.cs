@@ -71,7 +71,9 @@ namespace Toggl.Foundation.MvvmCross.Helper
 
             public static readonly MvxColor SeparatorColor = new MvxColor(181, 188, 192);
 
-            public static readonly MvxColor ProjectTokenBorder = new MvxColor(232, 232, 232);
+            public static readonly MvxColor TokenText = new MvxColor(94, 91, 91);
+
+            public static readonly MvxColor TokenBorder = new MvxColor(232, 232, 232);
 
             public static readonly MvxColor AddIconColor = new MvxColor(75, 200, 0);
         }

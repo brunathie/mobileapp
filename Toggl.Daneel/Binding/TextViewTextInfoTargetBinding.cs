@@ -44,7 +44,7 @@ namespace Toggl.Daneel.Binding
 
             Target.AttributedText = value.GetAttributedText();
 
-            if (!Target.IsFirstResponder || Target.BeginningOfDocument == null) return;
+            if (isSelectingText || !Target.IsFirstResponder || Target.BeginningOfDocument == null) return;
 
             var positionToSet = Target.GetPosition(Target.BeginningOfDocument, value.CursorPosition);
             Target.SelectedTextRange = Target.GetTextRange(positionToSet, positionToSet);
@@ -73,80 +73,37 @@ namespace Toggl.Daneel.Binding
 
         private void onProjectDeleted(object sender, EventArgs e)
         {
-            var description = Target.GetDescription(textFieldInfo);
-
             onTextFieldInfoChanged(
                 textFieldInfo
                     .RemoveProjectInfo()
-                    .WithTextAndCursor(description, description.Length));
+                    .WithTextAndCursor(textFieldInfo.Text, textFieldInfo.Text.Length));
         }
 
         private void onTagDeleted(object sender, TextViewInfoDelegate.TagDeletedEventArgs e)
         {
-            var currentIndex = textFieldInfo.Text.Length + textFieldInfo.PaddedProjectAndTaskName().Length;
-            foreach (var tag in textFieldInfo.Tags)
-            {
-                var tagTextLength = tag.Name.Length + 6;
-                var tagStart = currentIndex;
-                var tagEnd = currentIndex + tagTextLength;
-                currentIndex = tagEnd;
-
-                var cursorIsInsideTag = e.Index <= currentIndex;
-                if (!cursorIsInsideTag) continue;
-
-                var description = Target.GetDescription(textFieldInfo);
-
-                onTextFieldInfoChanged(
-                    textFieldInfo
-                        .RemoveTag(tag)
-                        .WithTextAndCursor(description, tagStart));
-                return;
-            }
+            onTextFieldInfoChanged(
+                textFieldInfo
+                    .RemoveTag(textFieldInfo.Tags[e.TagIndex])
+                    .WithTextAndCursor(textFieldInfo.Text, e.CursorPosition));
         }
+
+        private bool isSelectingText;
 
         private void queueValueChange()
         {
             var selectedRangeStart = Target.SelectedTextRange?.Start;
             if (selectedRangeStart == null) return;
 
-            var newDescription = Target.GetDescription(textFieldInfo);
+            isSelectingText = Target.TextInRange(Target.SelectedTextRange).Length > 0;
+            var reportedCursorPosition = (int)Target.GetOffsetFromPosition(Target.BeginningOfDocument, selectedRangeStart);
+
+            var newDescription = Target.GetDescription();
             var descriptionLength = newDescription.Length;
 
-            var newCursorPosition = (int)Target.GetOffsetFromPosition(Target.BeginningOfDocument, selectedRangeStart);
+            var isEditingInTokenRegion = newDescription != textFieldInfo.Text && reportedCursorPosition > newDescription.Length;
+            var newCursorPosition = isEditingInTokenRegion ? newDescription.Length : reportedCursorPosition;
 
-            var isInsideDescriptionBounds = newCursorPosition <= descriptionLength;
-            if (isInsideDescriptionBounds)
-            {
-                onTextFieldInfoChanged(textFieldInfo.WithTextAndCursor(newDescription, newCursorPosition));
-                return;
-            }
-
-            var oldCursorPosition = textFieldInfo.CursorPosition;
-            var isMovingForward = newCursorPosition >= oldCursorPosition;
-
-            var paddedProjectLength = textFieldInfo.PaddedProjectAndTaskName().Length;
-            var cursorIsInsideProjectToken = newCursorPosition <= descriptionLength + paddedProjectLength;
-            if (cursorIsInsideProjectToken)
-            {
-                var actualCursorPosition = descriptionLength + (isMovingForward ? paddedProjectLength : 0);
-
-                onTextFieldInfoChanged(textFieldInfo.WithTextAndCursor(newDescription, actualCursorPosition));
-                return;
-            }
-
-            var currentIndex = descriptionLength + paddedProjectLength;
-            foreach (var tag in textFieldInfo.Tags)
-            {
-                var tagTextLength = tag.Name.Length + 6;
-                currentIndex += tagTextLength;
-                var cursorIsInsideTag = newCursorPosition <= currentIndex;
-                if (!cursorIsInsideTag) continue;
-
-                var actualCursorPosition = currentIndex - (isMovingForward ? 0 : tagTextLength);
-
-                onTextFieldInfoChanged(textFieldInfo.WithTextAndCursor(newDescription, actualCursorPosition));
-                return;
-            }
+            onTextFieldInfoChanged(textFieldInfo.WithTextAndCursor(newDescription, newCursorPosition));
         }
 
         private void onTextFieldInfoChanged(TextFieldInfo info)
@@ -169,12 +126,15 @@ namespace Toggl.Daneel.Binding
         {
             public class TagDeletedEventArgs : EventArgs
             {
-                public TagDeletedEventArgs(nint index)
-                {
-                    Index = index;
-                }
+                public int CursorPosition { get; }
 
-                public nint Index { get; }
+                public int TagIndex { get; }
+
+                public TagDeletedEventArgs(nint cursorPosition, nint tagIndex)
+                {
+                    TagIndex = (int)tagIndex;
+                    CursorPosition = (int)cursorPosition;
+                }
             }
 
             public event EventHandler TextChanged;
@@ -194,17 +154,18 @@ namespace Toggl.Daneel.Binding
                 var cursorPosition = range.Location;
                 var attrs = textView.AttributedText.GetAttributes(cursorPosition, out var attrRange);
 
-                var isDeletingProject = attrs.ObjectForKey(TimeEntryTagsTextView.RoundedBackground) != null;
+                var isDeletingProject = attrs.ObjectForKey(TokenExtensions.Project) != null;
                 if (isDeletingProject)
                 {
                     ProjectDeleted.Raise(this);
                     return false;
                 }
 
-                var isDeletingTag = attrs.ObjectForKey(TimeEntryTagsTextView.RoundedBorders) != null;
+                var tagIndex = attrs.ObjectForKey(TokenExtensions.TagIndex) as NSNumber;
+                var isDeletingTag = tagIndex != null;
                 if (isDeletingTag)
                 {
-                    TagDeleted?.Invoke(this, new TagDeletedEventArgs(cursorPosition));
+                    TagDeleted?.Invoke(this, new TagDeletedEventArgs(cursorPosition, tagIndex.Int32Value));
                     return false;
                 }
 

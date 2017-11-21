@@ -48,13 +48,20 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" text="What are you working on?" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="R8W-w1-sEf" customClass="TimeEntryTagsTextView">
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R8W-w1-sEf">
                     <rect key="frame" x="16" y="44" width="343" height="68"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="68" id="u0i-Qv-oYj"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <attributedString key="attributedText">
+                        <fragment content="What are you working on?">
+                            <attributes>
+                                <font key="NSFont" metaFont="system" size="16"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="2" minimumLineHeight="24" maximumLineHeight="24" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no" keyboardType="twitter"/>
                 </textView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dU3-s1-ELa">
@@ -144,18 +151,28 @@
                     <rect key="frame" x="0.0" y="112" width="375" height="505"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vbp-dw-DYK">
+                    <rect key="frame" x="0.0" y="111" width="375" height="1"/>
+                    <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="bo4-Gl-gIw"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="3I4-ki-f8o" firstAttribute="top" secondItem="2" secondAttribute="top" constant="12" id="1Du-It-obb"/>
                 <constraint firstItem="04s-S8-twa" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="4RY-Xr-C7o"/>
+                <constraint firstItem="vbp-dw-DYK" firstAttribute="bottom" secondItem="R8W-w1-sEf" secondAttribute="bottom" id="CrT-Ku-Vu3"/>
                 <constraint firstItem="dU3-s1-ELa" firstAttribute="top" secondItem="04s-S8-twa" secondAttribute="bottom" id="Ed3-WO-VAz"/>
                 <constraint firstAttribute="bottom" secondItem="dU3-s1-ELa" secondAttribute="bottom" id="HKM-yE-bqT"/>
                 <constraint firstItem="04s-S8-twa" firstAttribute="top" secondItem="R8W-w1-sEf" secondAttribute="bottom" id="LWu-ay-Tlz"/>
                 <constraint firstItem="MAa-jq-GXB" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="SKA-G6-SAk"/>
                 <constraint firstItem="MAa-jq-GXB" firstAttribute="top" secondItem="2" secondAttribute="top" id="bZl-x7-d8h"/>
+                <constraint firstAttribute="trailing" secondItem="vbp-dw-DYK" secondAttribute="trailing" id="cjr-jJ-VIv"/>
                 <constraint firstAttribute="trailing" secondItem="R8W-w1-sEf" secondAttribute="trailing" constant="16" id="eWS-Ri-de5"/>
                 <constraint firstItem="3I4-ki-f8o" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="fZz-5n-hvI"/>
+                <constraint firstItem="vbp-dw-DYK" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="fxa-Vt-g7e"/>
                 <constraint firstItem="dU3-s1-ELa" firstAttribute="width" secondItem="2" secondAttribute="width" id="gyJ-IK-KRo"/>
                 <constraint firstItem="R8W-w1-sEf" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="kgJ-RZ-uY1"/>
                 <constraint firstItem="dU3-s1-ELa" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="leF-ji-hIr"/>

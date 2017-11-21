@@ -527,7 +527,6 @@
       <DependentUpon>SelectDateTimeViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions\TextExtensions.cs" />
-    <Compile Include="Views\TimeEntryTagsTextView.cs" />
     <Compile Include="Views\MainScrollView.cs" />
     <Compile Include="Views\ResizableView.cs" />
     <Compile Include="ViewControllers\SelectProjectViewController.cs" />
@@ -630,6 +629,8 @@
     <Compile Include="Views\ValueSliderView.cs" />
     <Compile Include="Views\TextViewWithPlaceholder.cs" />
     <Compile Include="Binding\TextViewWithPlaceholderTextTargetBinding.cs" />
+    <Compile Include="Extensions\TokenExtensions.cs" />
+    <Compile Include="TokenTextAttachment.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation.MvvmCross\Toggl.Foundation.MvvmCross.csproj">
