@@ -51,7 +51,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             get
             {
-                if (!IsSuggestingProjects) return false;
+                if (!IsSuggestingProjects || TextFieldInfo.ProjectId.HasValue) return false;
 
                 var text = CurrentQuery.Trim();
                 return !string.IsNullOrEmpty(text)

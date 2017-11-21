@@ -184,6 +184,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await ViewModel.Initialize();
                 ViewModel.TextFieldInfo = TextFieldInfo.Empty
                     .WithProjectInfo(WorkspaceId, ProjectId, ProjectName, ProjectColor);
+                ViewModel.ToggleProjectSuggestionsCommand.Execute();
 
                 ViewModel.TextFieldInfo = ViewModel.TextFieldInfo.WithTextAndCursor("abcde @fgh", 10);
 
