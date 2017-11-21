@@ -41,7 +41,7 @@ namespace Toggl.Daneel.ViewControllers
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		Toggl.Daneel.Views.TimeEntryTagsTextView DescriptionTextView { get; set; }
+		UIKit.UITextView DescriptionTextView { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
