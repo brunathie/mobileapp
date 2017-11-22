@@ -1,3 +1,4 @@
+using System;
 using System.Reactive.Concurrency;
 using Foundation;
 using MvvmCross.Core.Navigation;
@@ -14,6 +15,7 @@ using Toggl.Foundation.Login;
 using Toggl.Foundation.MvvmCross;
 using Toggl.Foundation.MvvmCross.Services;
 using Toggl.Foundation.Suggestions;
+using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Realm;
 using Toggl.Ultrawave;
 using Toggl.Ultrawave.Network;
@@ -74,6 +76,8 @@ namespace Toggl.Daneel
 
             Mvx.RegisterSingleton<ITimeService>(timeService);
             Mvx.RegisterSingleton<IDialogService>(new DialogService());
+            Mvx.RegisterSingleton<IAccessRestrictionStorage>(
+                new UserDataAccessRestrictionStorage(Version.Parse(version.ToString())));
             Mvx.RegisterSingleton<ISuggestionProviderContainer>(
                 new SuggestionProviderContainer(
                     new MostUsedTimeEntrySuggestionProvider(database, timeService)

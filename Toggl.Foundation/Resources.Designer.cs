@@ -334,5 +334,11 @@ namespace Toggl.Foundation {
                 return ResourceManager.GetString("NoClient", resourceCulture);
             }
         }
+        
+        public static string CreateTag {
+            get {
+                return ResourceManager.GetString("CreateTag", resourceCulture);
+            }
+        }
     }
 }

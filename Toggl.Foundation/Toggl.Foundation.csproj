@@ -173,6 +173,7 @@
     <Compile Include="Autocomplete\QueryInfo.cs" />
     <Compile Include="DataSources\ClientsDataSource.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\Tag.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

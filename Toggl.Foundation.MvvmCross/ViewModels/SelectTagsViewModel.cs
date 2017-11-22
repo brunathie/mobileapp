@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Text;
 using System.Threading.Tasks;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
@@ -11,6 +12,7 @@ using Toggl.Foundation.Autocomplete.Suggestions;
 using Toggl.Foundation.DataSources;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
+using static Toggl.Foundation.Helper.Constants;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels
 {
@@ -27,12 +29,25 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public string Text { get; set; } = "";
 
+        public bool SuggestCreation
+        {
+            get
+            {
+                var text = Text.Trim();
+                return !string.IsNullOrEmpty(text)
+                       && !Tags.Any(tag => tag.Name == text.Trim())
+                       && Encoding.UTF8.GetByteCount(Text) <= MaxTagNameLengthInBytes;
+            }
+        }
+
         public MvxObservableCollection<SelectableTagViewModel> Tags { get; }
             = new MvxObservableCollection<SelectableTagViewModel>();
 
         public IMvxAsyncCommand CloseCommand { get; }
 
         public IMvxAsyncCommand SaveCommand { get; }
+
+        public IMvxAsyncCommand<string> CreateTagCommand { get; }
 
         public IMvxCommand<SelectableTagViewModel> SelectTagCommand { get; }
 
@@ -46,6 +61,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
             CloseCommand = new MvxAsyncCommand(close);
             SaveCommand = new MvxAsyncCommand(save);
+            CreateTagCommand = new MvxAsyncCommand<string>(createTag);
             SelectTagCommand = new MvxCommand<SelectableTagViewModel>(selectTag);
         }
 
@@ -70,7 +86,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private void OnTextChanged()
         {
-            textSubject.OnNext(Text);
+            textSubject.OnNext(Text.Trim());
         }
 
         private void onTags(IEnumerable<TagSuggestion> tags)
@@ -100,6 +116,13 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 selectedTagIds.Add(tag.Id);
             else
                 selectedTagIds.Remove(tag.Id);
+        }
+
+        private async Task createTag(string name)
+        {
+            var createdTag = await dataSource.Tags.Create(name.Trim(), workspaceId);
+            selectedTagIds.Add(createdTag.Id);
+            Text = "";
         }
     }
 }

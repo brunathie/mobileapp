@@ -1,4 +1,4 @@
-﻿﻿﻿using System;
+﻿﻿using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
@@ -111,7 +111,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await NavigationService.Received().Navigate(typeof(SettingsViewModel));
             }
         }
-           
+
         public sealed class TheStopTimeEntryCommand : MainViewModelTest
         {
             [Fact]
@@ -278,7 +278,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ProgressSubject.OnError(new ClientDeprecatedException(request, response));
 
-                AccessRestrictionStorage.Received().SetOutdatedClientVersion();
+                AccessRestrictionStorage.Received().SetClientOutdated();
             }
 
             [Fact]
@@ -288,7 +288,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ProgressSubject.OnError(new ApiDeprecatedException(request, response));
 
-                AccessRestrictionStorage.Received().SetOutdatedApiVersion();
+                AccessRestrictionStorage.Received().SetApiOutdated();
             }
 
             [Fact]

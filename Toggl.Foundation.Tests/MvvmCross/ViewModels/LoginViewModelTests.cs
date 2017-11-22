@@ -114,7 +114,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>()).Returns(never);
                     ViewModel.Password = ValidPassword;
                     ViewModel.NextCommand.Execute();
-  
+
                     ViewModel.NextCommand.Execute();
 
                     ViewModel.NextIsEnabled.Should().BeFalse();
@@ -630,7 +630,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 {
                     CallAndThrow(new ClientDeprecatedException(request, response));
 
-                    AccessRestrictionStorage.Received().SetOutdatedClientVersion();
+                    AccessRestrictionStorage.Received().SetClientOutdated();
                 }
 
                 [Fact]
@@ -638,7 +638,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 {
                     CallAndThrow(new ApiDeprecatedException(request, response));
 
-                    AccessRestrictionStorage.Received().SetOutdatedApiVersion();
+                    AccessRestrictionStorage.Received().SetApiOutdated();
                 }
 
                 [Fact]

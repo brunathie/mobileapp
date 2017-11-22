@@ -25,7 +25,7 @@ namespace Toggl.Foundation.DataSources
             this.database = database;
 
             User = new UserDataSource(database.User);
-            Tags = new TagsDataSource(database.Tags);
+            Tags = new TagsDataSource(database.IdProvider, database.Tags, timeService);
             Tasks = new TasksDataSource(database.Tasks);
             Workspaces = new WorkspacesDataSource(database);
             Clients = new ClientsDataSource(database.IdProvider, database.Clients, timeService);

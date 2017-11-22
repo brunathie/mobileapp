@@ -165,4 +165,7 @@ time entries will appear here.</value>
     <data name="NoClient">
         <value>No client</value>
     </data>
+    <data name="CreateTag">
+        <value>Create tag</value>
+    </data>
 </root>

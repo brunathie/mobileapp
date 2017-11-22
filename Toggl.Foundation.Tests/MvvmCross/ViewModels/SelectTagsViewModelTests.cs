@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FsCheck;
 using FsCheck.Xunit;
 using NSubstitute;
+using NSubstitute.Core;
 using Toggl.Foundation.Autocomplete;
 using Toggl.Foundation.Autocomplete.Suggestions;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.Tests.Generators;
 using Toggl.PrimeRadiant.Models;
 using Xunit;
+using static Toggl.Foundation.Helper.Constants;
 using static Toggl.Multivac.Extensions.FunctionalExtensions;
 
 namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
@@ -36,6 +40,20 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                         return false;
                 }
                 return true;
+            }
+
+            protected IEnumerable<TagSuggestion> CreateTags(int count)
+                => Enumerable
+                    .Range(0, count)
+                    .Select(i => CreateTagSubstitute(i, i.ToString()))
+                    .Select(tag => new TagSuggestion(tag));
+
+            protected IDatabaseTag CreateTagSubstitute(long id, string name)
+            {
+                var tag = Substitute.For<IDatabaseTag>();
+                tag.Id.Returns(id);
+                tag.Name.Returns(name);
+                return tag;
             }
         }
 
@@ -371,6 +389,200 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                         Arg.Is<long[]>(ids => EnsureExpectedTagsAreReturned(ids, tagIds))
                     );
             }
+        }
+
+        public sealed class TheCreateTagMethod : SelectTagsViewModelTest
+        {
+            private async Task prepare(long tagId, long workspaceId)
+            {
+                ViewModel.Prepare((new long[0], workspaceId));
+                await ViewModel.Initialize();
+
+                var createdTag = Substitute.For<IDatabaseTag>();
+                createdTag.Id.Returns(tagId);
+                createdTag.WorkspaceId.Returns(workspaceId);
+                DataSource
+                    .Tags
+                    .Create(Arg.Any<string>(), Arg.Any<long>())
+                    .Returns(Observable.Return(createdTag));
+                
+                var observable = Observable
+                    .Return(new AutocompleteSuggestion[] { new TagSuggestion(createdTag) });
+                DataSource
+                    .AutocompleteProvider
+                    .Query(Arg.Any<QueryInfo>())
+                    .Returns(observable);
+            }
+
+            [Property]
+            public void CreatesNewTagWithProvidedName(NonEmptyString nonEmptyString)
+            {
+                var name = nonEmptyString.Get.Trim();
+                prepare(420, 10).Wait();
+                ViewModel.Text = name;
+
+                ViewModel.CreateTagCommand.ExecuteAsync(name).Wait();
+
+                DataSource.Tags
+                    .Received()
+                    .Create(Arg.Is(name), Arg.Any<long>())
+                    .Wait();
+            }
+
+            [Property]
+            public void CreatesNewTagWithWorkspaceOfViewModel(long workspaceId)
+            {
+                prepare(240, workspaceId).Wait();
+                var tagName = "some tag";
+                ViewModel.Text = tagName;
+
+                ViewModel.CreateTagCommand.ExecuteAsync(tagName).Wait();
+
+                DataSource
+                    .Tags
+                    .Received()
+                    .Create(Arg.Any<string>(), Arg.Is(workspaceId))
+                    .Wait();
+            }
+
+            [Property]
+            public void ClearsTheText(NonEmptyString initialText)
+            {
+                prepare(123, 45).Wait();
+                ViewModel.Text = initialText.Get;
+
+                ViewModel.CreateTagCommand.ExecuteAsync("Some text").Wait();
+
+                ViewModel.Text.Should().BeEmpty();
+            }
+
+            [Fact]
+            public void PrependsTheNewTagToTheTagList()
+            {
+                var tagName = "Some Tag";
+                long workspaceId = 123;
+                var initialTags = CreateTags(count: 10);
+                DataSource.AutocompleteProvider.Query(Arg.Any<QueryInfo>())
+                    .Returns(Observable.Return(initialTags));
+                var createdTag = CreateTagSubstitute(0, tagName);
+                createdTag.WorkspaceId.Returns(workspaceId);
+                DataSource.Tags.Create(Arg.Is(tagName), Arg.Any<long>())
+                    .Returns(Observable.Return(createdTag));
+                ViewModel.Prepare((new long[0], workspaceId));
+                ViewModel.Initialize().Wait();
+                //Reconfigure AutocopleteProvider, so it returns the created tag as well
+                var createdTagSuggestion = new TagSuggestion(createdTag);
+                var newTagSuggestions = initialTags
+                    .Concat(new AutocompleteSuggestion[] { createdTagSuggestion });
+                var observable = Observable
+                    .Return(newTagSuggestions);
+                DataSource
+                    .AutocompleteProvider
+                    .Query(Arg.Any<QueryInfo>())
+                    .Returns(observable);
+                ViewModel.Text = tagName;
+
+                ViewModel.CreateTagCommand.ExecuteAsync(tagName).Wait();
+
+                ViewModel.Tags.First().Name.Should().Be(tagName);
+            }
+
+            [Fact]
+            public void SelectsTheNewTag()
+            {
+                prepare(10, 20).Wait();
+                var name = "Tag";
+                ViewModel.Text = name;
+
+                ViewModel.CreateTagCommand.ExecuteAsync(name).Wait();
+
+                ViewModel.Tags.First().Selected.Should().BeTrue();
+            }
+
+            [Theory]
+            [InlineData("   Some tag", "Some tag")]
+            [InlineData("Some tag   ", "Some tag")]
+            [InlineData("   Some tag   ", "Some tag")]
+            [InlineData("\tSome tag", "Some tag")]
+            [InlineData("Some tag\t", "Some tag")]
+            [InlineData("\tSome tag\t", "Some tag")]
+            [InlineData("\t   Some tag  \t  ", "Some tag")]
+            public async Task TrimsTheTagName(string text, string expectedName)
+            {
+                await prepare(12, 13);
+                ViewModel.Text = text;
+
+                await ViewModel.CreateTagCommand.ExecuteAsync(text);
+
+                await DataSource
+                    .Tags
+                    .Received()
+                    .Create(Arg.Is(expectedName), Arg.Any<long>());
+            }
+        }
+
+        public sealed class TheSuggestCreationproperty : SelectTagsViewModelTest
+        {
+            [Theory]
+            [InlineData("")]
+            [InlineData("     ")]
+            [InlineData("\t")]
+            [InlineData("  \t  ")]
+            public void IsFalseWhenTextIsEmptyOrWhiteSpace(string text)
+            {
+                ViewModel.Text = text;
+
+                ViewModel.SuggestCreation.Should().BeFalse();
+            }
+
+            [Theory]
+            [InlineData("1")]
+            [InlineData("4")]
+            [InlineData("  6    ")]
+            [InlineData("\t7  ")]
+            public async Task IsFalseWhenSuchTagAlreadyExists(string text)
+            {
+                var tags = CreateTags(10);
+                DataSource
+                    .AutocompleteProvider
+                    .Query(Arg.Any<QueryInfo>())
+                    .Returns(Observable.Return(tags));
+                ViewModel.Prepare((new long[0], 0));
+                await ViewModel.Initialize();
+
+                ViewModel.Text = text;
+
+                ViewModel.SuggestCreation.Should().BeFalse();
+            }
+
+            [Theory]
+            [InlineData("c", MaxTagNameLengthInBytes + 1)]
+            [InlineData("Ж", MaxTagNameLengthInBytes / 2 + 1)]
+            [InlineData("🍔", MaxTagNameLengthInBytes / 4 + 1)]
+            public void IsFalseWhenTextLengthExceedsMaxLength(string grapheme, int length)
+            {
+                ViewModel.Text = getLongTagName(grapheme, length);
+
+                ViewModel.SuggestCreation.Should().BeFalse();
+            }
+
+            [Theory]
+            [InlineData("Some tag")]
+            [InlineData("  \t Some tag  \t")]
+            public void IsTrueWhenAllConditionsAreMet(string text)
+            {
+                ViewModel.Text = text;
+
+                ViewModel.SuggestCreation.Should().BeTrue();
+            }
+
+            private static string getLongTagName(string grapheme, int length)
+                => Enumerable
+                    .Range(0, length)
+                    .Aggregate(
+                        new StringBuilder(),
+                        (builder, _) => builder.Append(grapheme))
+                    .ToString();
         }
     }
 }

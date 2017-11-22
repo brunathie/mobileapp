@@ -2,10 +2,10 @@
 {
     public interface IAccessRestrictionStorage
     {
-        void SetOutdatedClientVersion();
-        void SetOutdatedApiVersion();
+        void SetClientOutdated();
+        void SetApiOutdated();
         void SetUnauthorizedAccess();
-        bool IsAccessRestricted();
+        void ClearUnauthorizedAccess();
         bool IsClientOutdated();
         bool IsApiOutdated();
         bool IsUnauthorized();
