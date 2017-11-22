@@ -14,6 +14,7 @@ using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.Tests.Generators;
 using Toggl.Foundation.Tests.TestExtensions;
 using Toggl.Multivac;
+using Toggl.PrimeRadiant;
 using Toggl.Ultrawave.Exceptions;
 using Toggl.Ultrawave.Network;
 using Xunit;
@@ -33,22 +34,26 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             protected ILoginManager LoginManager { get; } = Substitute.For<ILoginManager>();
             protected IPasswordManagerService PasswordManagerService { get; } = Substitute.For<IPasswordManagerService>();
 
+            protected IAccessRestrictionStorage AccessRestrictionStorage { get; } =
+                Substitute.For<IAccessRestrictionStorage>();
+
             protected override LoginViewModel CreateViewModel()
-                => new LoginViewModel(LoginManager, NavigationService, PasswordManagerService);
+                => new LoginViewModel(LoginManager, NavigationService, PasswordManagerService, AccessRestrictionStorage);
         }
 
         public sealed class TheConstructor : LoginViewModelTest
         {
             [Theory]
-            [ClassData(typeof(ThreeParameterConstructorTestData))]
-            public void ThrowsIfAnyOfTheArgumentsIsNull(bool userLoginManager, bool userNavigationService, bool usePasswordManagerService)
+            [ClassData(typeof(FourParameterConstructorTestData))]
+            public void ThrowsIfAnyOfTheArgumentsIsNull(bool userLoginManager, bool userNavigationService, bool usePasswordManagerService, bool useAccessRestrictionStorage)
             {
                 var loginManager = userLoginManager ? LoginManager : null;
                 var navigationService = userNavigationService ? NavigationService : null;
                 var passwordManagerService = usePasswordManagerService ? PasswordManagerService : null;
+                var accessRestrictionStorage = useAccessRestrictionStorage ? AccessRestrictionStorage : null;
 
                 Action tryingToConstructWithEmptyParameters =
-                    () => new LoginViewModel(loginManager, navigationService, passwordManagerService);
+                    () => new LoginViewModel(loginManager, navigationService, passwordManagerService, accessRestrictionStorage);
 
                 tryingToConstructWithEmptyParameters
                     .ShouldThrow<ArgumentNullException>();
