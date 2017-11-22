@@ -100,6 +100,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 AppStart.Start();
 
                 NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use "update the app" view model when it is ready
+                NavigationService.DidNotReceive().Navigate(typeof(OnboardingViewModel)); // TODO: use repeat login view model when it is ready
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
