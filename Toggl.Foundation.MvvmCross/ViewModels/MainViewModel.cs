@@ -11,6 +11,7 @@ using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Models;
+using Toggl.Ultrawave.Exceptions;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels
 {
@@ -94,8 +95,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 .Subscribe(setRunningEntry);
 
             var syncManagerDisposable = 
-                dataSource.SyncManager.StateObservable
-                    .Subscribe(syncState => IsSyncing = syncState != SyncState.Sleep);
+                dataSource.SyncManager.ProgressObservable
+                    .Subscribe(progress => IsSyncing = progress == SyncProgress.Syncing, onSyncingError);
             
             var spiderDisposable =
                 dataSource.TimeEntries.IsEmpty
@@ -147,5 +148,26 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private Task editTimeEntry()
             => navigationService.Navigate<EditTimeEntryViewModel, long>(CurrentTimeEntryId.Value);
+
+        private void onSyncingError(Exception e)
+        {
+            switch (e)
+            {
+                case ApiDeprecatedException apiDeprecated:
+                    accessRestrictionStorage.SetOutdatedApiVersion();
+                    navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate to special page which tells user to update the app
+                    return;
+                case ClientDeprecatedException clientDeprecated:
+                    accessRestrictionStorage.SetOutdatedClientVersion();
+                    navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate to special page which tells user to update the app
+                    return;
+                case UnauthorizedException unauthorized:
+                    accessRestrictionStorage.SetUnauthorizedAccess();
+                    navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate to special page which tells user to update the app
+                    return;
+                default:
+                    throw new ArgumentException(nameof(e));
+            }
+        }
     }
 }
