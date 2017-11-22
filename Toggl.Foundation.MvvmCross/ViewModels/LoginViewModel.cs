@@ -9,6 +9,7 @@ using Toggl.Foundation.Login;
 using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Foundation.MvvmCross.Services;
 using Toggl.Multivac;
+using Toggl.PrimeRadiant;
 using Toggl.Ultrawave.Exceptions;
 using EmailType = Toggl.Multivac.Email;
 
@@ -25,6 +26,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private readonly ILoginManager loginManager;
         private readonly IMvxNavigationService navigationService;
         private readonly IPasswordManagerService passwordManagerService;
+        private readonly IAccessRestrictionStorage accessRestrictionStorage;
 
         private LoginType loginType;
         private IDisposable loginDisposable;
@@ -84,15 +86,21 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         public bool IsPasswordManagerAvailable
             => passwordManagerService.IsAvailable;
 
-        public LoginViewModel(ILoginManager loginManager, IMvxNavigationService navigationService, IPasswordManagerService passwordManagerService)
+        public LoginViewModel(
+            ILoginManager loginManager,
+            IMvxNavigationService navigationService,
+            IPasswordManagerService passwordManagerService,
+            IAccessRestrictionStorage accessRestrictionStorage)
         {
             Ensure.Argument.IsNotNull(loginManager, nameof(loginManager));
             Ensure.Argument.IsNotNull(navigationService, nameof(navigationService));
             Ensure.Argument.IsNotNull(passwordManagerService, nameof(passwordManagerService));
+            Ensure.Argument.IsNotNull(accessRestrictionStorage, nameof(accessRestrictionStorage));
 
             this.loginManager = loginManager;
             this.navigationService = navigationService;
             this.passwordManagerService = passwordManagerService;
+            this.accessRestrictionStorage = accessRestrictionStorage;
 
             BackCommand = new MvxCommand(back);
             NextCommand = new MvxCommand(next);
