@@ -4,11 +4,15 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FsCheck.Xunit;
+using MvvmCross.Core.Navigation;
 using NSubstitute;
 using Toggl.Foundation.MvvmCross.ViewModels;
+using Toggl.Foundation.Sync;
 using Toggl.Foundation.Tests.Generators;
 using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Models;
+using Toggl.Ultrawave.Exceptions;
+using Toggl.Ultrawave.Network;
 using Xunit;
 using TimeEntry = Toggl.Foundation.Models.TimeEntry;
 
@@ -20,8 +24,19 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
         {
             protected IAccessRestrictionStorage AccessRestrictionStorage { get; } = Substitute.For<IAccessRestrictionStorage>();
 
+            protected ISubject<SyncProgress> ProgressSubject { get; } = new Subject<SyncProgress>();
+
             protected override MainViewModel CreateViewModel()
                 => new MainViewModel(DataSource, TimeService, NavigationService, AccessRestrictionStorage);
+
+            protected override void AdditionalSetup()
+            {
+                base.AdditionalSetup();
+
+                var syncManager = Substitute.For<ISyncManager>();
+                syncManager.ProgressObservable.Returns(ProgressSubject.AsObservable());
+                DataSource.SyncManager.Returns(syncManager);
+            }
         }
 
         public sealed class TheConstructor : MainViewModelTest
@@ -249,6 +264,72 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             protected override bool ExpectedValue => true;
 
             protected override bool ExpectedEmptyValue => false;
+        }
+
+        public sealed class SyncErrorHandling : MainViewModelTest
+        {
+            private IRequest request => Substitute.For<IRequest>();
+            private IResponse response => Substitute.For<IResponse>();
+
+            [Fact]
+            public async Task SetsTheOutdatedClientVersionFlag()
+            {
+                await ViewModel.Initialize();
+
+                ProgressSubject.OnError(new ClientDeprecatedException(request, response));
+
+                AccessRestrictionStorage.Received().SetOutdatedClientVersion();
+            }
+
+            [Fact]
+            public async Task SetsTheOutdatedApiVersionFlag()
+            {
+                await ViewModel.Initialize();
+
+                ProgressSubject.OnError(new ApiDeprecatedException(request, response));
+
+                AccessRestrictionStorage.Received().SetOutdatedApiVersion();
+            }
+
+            [Fact]
+            public async Task SetsTheUnauthorizedAccessFlag()
+            {
+                await ViewModel.Initialize();
+
+                ProgressSubject.OnError(new UnauthorizedException(request, response));
+
+                AccessRestrictionStorage.Received().SetUnauthorizedAccess();
+            }
+
+            [Fact]
+            public async Task NavigatesToTheOutdatedClientScreen()
+            {
+                await ViewModel.Initialize();
+
+                ProgressSubject.OnError(new ClientDeprecatedException(request, response));
+
+                await NavigationService.Received().Navigate<OnboardingViewModel>(); // TODO: use correct view model
+            }
+
+            [Fact]
+            public async Task NavigatesToTheOutdatedApiScreen()
+            {
+                await ViewModel.Initialize();
+
+                ProgressSubject.OnError(new ApiDeprecatedException(request, response));
+
+                await NavigationService.Received().Navigate<OnboardingViewModel>(); // TODO: use correct view model
+            }
+
+            [Fact]
+            public async Task NavigatesToTheRepeatLoginScreen()
+            {
+                await ViewModel.Initialize();
+
+                ProgressSubject.OnError(new UnauthorizedException(request, response));
+
+                await NavigationService.Received().Navigate<OnboardingViewModel>(); // TODO: use correct view model
+            }
         }
     }
 }
