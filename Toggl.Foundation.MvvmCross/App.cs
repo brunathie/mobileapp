@@ -5,6 +5,7 @@ using Toggl.Foundation.Login;
 using Toggl.Foundation.MvvmCross.Services;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Multivac;
+using Toggl.PrimeRadiant;
 
 namespace Toggl.Foundation.MvvmCross
 {
@@ -15,14 +16,15 @@ namespace Toggl.Foundation.MvvmCross
             
         }
 
-        public void Initialize(ILoginManager loginManager, IMvxNavigationService navigationService)
+        public void Initialize(ILoginManager loginManager, IMvxNavigationService navigationService, IAccessRestrictionStorage accessRestrictionStorage)
         {
             Ensure.Argument.IsNotNull(loginManager, nameof(loginManager));
             Ensure.Argument.IsNotNull(navigationService, nameof(navigationService));
+            Ensure.Argument.IsNotNull(accessRestrictionStorage, nameof(accessRestrictionStorage));
 
             Mvx.RegisterSingleton<IPasswordManagerService>(new StubPasswordManagerService());
 
-            RegisterAppStart(new AppStart(loginManager, navigationService));
+            RegisterAppStart(new AppStart(loginManager, navigationService, accessRestrictionStorage));
         }
     }
 
@@ -30,19 +32,34 @@ namespace Toggl.Foundation.MvvmCross
     {
         private readonly ILoginManager loginManager;
         private readonly IMvxNavigationService navigationService;
+        private readonly IAccessRestrictionStorage accessRestrictionStorage;
 
-        public AppStart(ILoginManager loginManager, IMvxNavigationService navigationService)
+        public AppStart(ILoginManager loginManager, IMvxNavigationService navigationService, IAccessRestrictionStorage accessRestrictionStorage)
         {
             Ensure.Argument.IsNotNull(loginManager, nameof(loginManager));
             Ensure.Argument.IsNotNull(navigationService, nameof(navigationService));
+            Ensure.Argument.IsNotNull(accessRestrictionStorage, nameof(accessRestrictionStorage));
 
             this.loginManager = loginManager;
             this.navigationService = navigationService;
+            this.accessRestrictionStorage = accessRestrictionStorage;
         }
 
         public void Start(object hint = null)
         {
             Mvx.RegisterSingleton(loginManager);
+
+            if (accessRestrictionStorage.IsUnauthorized())
+            {
+                navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate user to the correct screen
+                return;
+            }
+
+            if (accessRestrictionStorage.IsApiOutdated() || accessRestrictionStorage.IsClientOutdated())
+            {
+                navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate user to the correct screen
+                return;
+            }
 
             var dataSource = loginManager.GetDataSourceIfLoggedIn();
             if (dataSource == null)
