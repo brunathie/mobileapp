@@ -18,6 +18,7 @@ using Toggl.PrimeRadiant;
 using Toggl.Ultrawave.Exceptions;
 using Toggl.Ultrawave.Network;
 using Xunit;
+using MvvmCross.Core.Navigation;
 
 namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 {
@@ -614,6 +615,79 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 scheduler.AdvanceTo(1);
 
                 ViewModel.ErrorText.Should().Be(Resources.GenericLoginError);
+            }
+        }
+
+        public sealed class ApiErrorHandling
+        {
+            public abstract class BaseApiErrorHandlingTests : LoginViewModelTest
+            {
+                private IRequest request => Substitute.For<IRequest>();
+                private IResponse response => Substitute.For<IResponse>();
+
+                [Fact]
+                public void SetsTheOutdatedClientVersionFlag()
+                {
+                    CallAndThrow(new ClientDeprecatedException(request, response));
+
+                    AccessRestrictionStorage.Received().SetOutdatedClientVersion();
+                }
+
+                [Fact]
+                public void SetsTheOutdatedApiVersionFlag()
+                {
+                    CallAndThrow(new ApiDeprecatedException(request, response));
+
+                    AccessRestrictionStorage.Received().SetOutdatedApiVersion();
+                }
+
+                [Fact]
+                public void NavigatesToTheOutdatedClientScreen()
+                {
+                    CallAndThrow(new ClientDeprecatedException(request, response));
+
+                    NavigationService.Received().Navigate<OnboardingViewModel>(); // TODO: use correct view model
+                }
+
+                [Fact]
+                public void NavigatesToTheOutdatedApiScreen()
+                {
+                    CallAndThrow(new ApiDeprecatedException(request, response));
+
+                    NavigationService.Received().Navigate<OnboardingViewModel>(); // TODO: use correct view model
+                }
+
+                protected abstract void CallAndThrow(Exception e);
+            }
+
+            public sealed class Login : BaseApiErrorHandlingTests
+            {
+                protected override void CallAndThrow(Exception e)
+                {
+                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
+                        .Returns(_ => Observable.Throw<ITogglDataSource>(e));
+
+                    ViewModel.Prepare(LoginType.Login);
+                    ViewModel.Email = ValidEmail;
+                    ViewModel.NextCommand.Execute();
+                    ViewModel.Password = ValidPassword;
+                    ViewModel.NextCommand.Execute();
+                }
+            }
+
+            public sealed class SignUp : BaseApiErrorHandlingTests
+            {
+                protected override void CallAndThrow(Exception e)
+                {
+                    LoginManager.SignUp(Arg.Any<Email>(), Arg.Any<string>())
+                        .Returns(_ => Observable.Throw<ITogglDataSource>(e));
+
+                    ViewModel.Prepare(LoginType.SignUp);
+                    ViewModel.Email = ValidEmail;
+                    ViewModel.NextCommand.Execute();
+                    ViewModel.Password = ValidPassword;
+                    ViewModel.NextCommand.Execute();
+                }
             }
         }
     }
