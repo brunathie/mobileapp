@@ -9,6 +9,7 @@ using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Sync;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
+using Toggl.PrimeRadiant;
 using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels
@@ -22,6 +23,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private readonly ITimeService timeService;
         private readonly ITogglDataSource dataSource;
         private readonly IMvxNavigationService navigationService;
+        private readonly IAccessRestrictionStorage accessRestrictionStorage;
 
         public TimeSpan CurrentTimeEntryElapsedTime { get; private set; } = TimeSpan.Zero;
 
@@ -55,15 +57,21 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public IMvxCommand RefreshCommand { get; }
 
-        public MainViewModel(ITogglDataSource dataSource, ITimeService timeService, IMvxNavigationService navigationService)
+        public MainViewModel(
+            ITogglDataSource dataSource,
+            ITimeService timeService,
+            IMvxNavigationService navigationService,
+            IAccessRestrictionStorage accessRestrictionStorage)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
             Ensure.Argument.IsNotNull(timeService, nameof(timeService));
             Ensure.Argument.IsNotNull(navigationService, nameof(navigationService));
+            Ensure.Argument.IsNotNull(accessRestrictionStorage, nameof(accessRestrictionStorage));
 
             this.dataSource = dataSource;
             this.timeService = timeService;
             this.navigationService = navigationService;
+            this.accessRestrictionStorage = accessRestrictionStorage;
 
             RefreshCommand = new MvxCommand(refresh);
             OpenSettingsCommand = new MvxAsyncCommand(openSettings);
