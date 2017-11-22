@@ -53,7 +53,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
 
                 AppStart.Start();
 
-                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use correct view model when it is ready
+                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use "update the app" view model when it is ready
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
@@ -64,7 +64,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
 
                 AppStart.Start();
 
-                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use correct view model when it is ready
+                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use "update the app" view model when it is ready
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
@@ -75,7 +75,31 @@ namespace Toggl.Foundation.Tests.MvvmCross
 
                 AppStart.Start();
 
-                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use correct view model when it is ready
+                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use repeat login view model when it is ready
+                LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
+            }
+
+            [Fact]
+            public void ShowsTheOutdatedViewIfTheTokenWasRevokedAndTheAppIsOutdated()
+            {
+                AccessRestrictionStorage.IsUnauthorized().Returns(true);
+                AccessRestrictionStorage.IsClientOutdated().Returns(true);
+
+                AppStart.Start();
+
+                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use "update the app" view model when it is ready
+                LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
+            }
+
+            [Fact]
+            public void ShowsTheOutdatedViewIfTheTokenWasRevokedAndTheApiIsOutdated()
+            {
+                AccessRestrictionStorage.IsUnauthorized().Returns(true);
+                AccessRestrictionStorage.IsApiOutdated().Returns(true);
+
+                AppStart.Start();
+
+                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use "update the app" view model when it is ready
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 

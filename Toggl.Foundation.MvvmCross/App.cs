@@ -13,7 +13,7 @@ namespace Toggl.Foundation.MvvmCross
     {
         public override void Initialize()
         {
-            
+
         }
 
         public void Initialize(ILoginManager loginManager, IMvxNavigationService navigationService, IAccessRestrictionStorage accessRestrictionStorage)
@@ -49,13 +49,13 @@ namespace Toggl.Foundation.MvvmCross
         {
             Mvx.RegisterSingleton(loginManager);
 
-            if (accessRestrictionStorage.IsUnauthorized())
+            if (accessRestrictionStorage.IsApiOutdated() || accessRestrictionStorage.IsClientOutdated())
             {
                 navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate user to the correct screen
                 return;
             }
 
-            if (accessRestrictionStorage.IsApiOutdated() || accessRestrictionStorage.IsClientOutdated())
+            if (accessRestrictionStorage.IsUnauthorized())
             {
                 navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate user to the correct screen
                 return;
