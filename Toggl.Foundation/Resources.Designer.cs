@@ -161,6 +161,12 @@ namespace Toggl.Foundation {
             }
         }
         
+        public static string GenericSignUpError {
+            get {
+                return ResourceManager.GetString("GenericSignUpError", resourceCulture);
+            }
+        }
+        
         public static string StartTimeEntryPlaceholder {
             get {
                 return ResourceManager.GetString("StartTimeEntryPlaceholder", resourceCulture);

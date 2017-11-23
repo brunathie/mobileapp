@@ -76,6 +76,9 @@ will appear here.</value>
         <value>Sorry, we’re having trouble logging you in.
 Please try again.</value>
     </data>
+    <data name="GenericSignUpError">
+        <value>Sorry, we’re having trouble signing you up. Please try again</value>
+    </data>
     <data name="StartTimeEntryPlaceholder">
         <value>What are you working on?</value>
     </data>

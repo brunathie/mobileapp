@@ -593,7 +593,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             }
 
             [Fact]
-            public void IsGenericErrorWhenAnyOtherExceptionIsThrown()
+            public void IsGenericLoginErrorWhenAnyOtherExceptionIsThrown()
             {
                 var scheduler = new TestScheduler();
                 var notification = Notification.CreateOnError<ITogglDataSource>(new Exception());
@@ -609,6 +609,26 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 scheduler.AdvanceTo(1);
 
                 ViewModel.ErrorText.Should().Be(Resources.GenericLoginError);
+            }
+
+            [Fact]
+            public void IsGenericSignUpErrorWhenAnyOtherExceptionIsThrown()
+            {
+                var scheduler = new TestScheduler();
+                var notification = Notification.CreateOnError<ITogglDataSource>(new Exception());
+                var message = new Recorded<Notification<ITogglDataSource>>(0, notification);
+                var observable = scheduler.CreateColdObservable(message);
+                LoginManager.SignUp(Arg.Any<Email>(), Arg.Any<string>())
+                            .Returns(observable);
+                ViewModel.Prepare(LoginType.SignUp);
+                ViewModel.Email = ValidEmail;
+                ViewModel.NextCommand.Execute();
+                ViewModel.Password = ValidPassword;
+
+                ViewModel.NextCommand.Execute();
+                scheduler.AdvanceTo(1);
+
+                ViewModel.ErrorText.Should().Be(Resources.GenericSignUpError);
             }
         }
     }

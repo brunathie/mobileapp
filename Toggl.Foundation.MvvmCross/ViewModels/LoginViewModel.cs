@@ -119,7 +119,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 BrowserParameters.WithUrlAndTitle(TermsOfServiceUrl, Resources.TermsOfService)
             );
 
-        private void openPrivacyPolicyCommand() => 
+        private void openPrivacyPolicyCommand() =>
             navigationService.Navigate<BrowserViewModel, BrowserParameters>(
                 BrowserParameters.WithUrlAndTitle(PrivacyPolicyUrl, Resources.PrivacyPolicy)
             );
@@ -128,12 +128,12 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             if (!NextIsEnabled) return;
 
-            if (IsPasswordPage) 
+            if (IsPasswordPage)
             {
                 if (IsLogin) login();
                 if (IsSignUp) signUp();
             }
-                
+
 
             CurrentPage = PasswordPage;
             ErrorText = "";
@@ -186,7 +186,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             Email = loginInfo.Email;
             if (!NextIsEnabled) return;
- 
+
             CurrentPage = PasswordPage;
             Password = loginInfo.Password;
             if (!NextIsEnabled) return;
@@ -208,11 +208,16 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private void onError(Exception ex)
         {
             ErrorText = ex is ForbiddenException ? Resources.IncorrectEmailOrPassword
-                                                 : Resources.GenericLoginError;
+                                                 : getGenericError();
 
             IsLoading = false;
             onCompleted();
         }
+
+        private string getGenericError()
+            => loginType == LoginType.Login
+                ? Resources.GenericLoginError
+                : Resources.GenericSignUpError;
 
         private void onCompleted()
         {
