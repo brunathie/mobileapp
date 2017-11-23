@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Reactive.Linq;
 using FluentAssertions;
 using NSubstitute;
 using Toggl.Foundation.Sync;
 using Toggl.Foundation.Sync.States;
+using Toggl.Foundation.Tests.Helpers;
 using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
 using Toggl.Ultrawave;
 using Toggl.Ultrawave.Exceptions;
-using Toggl.Ultrawave.Network;
 using Xunit;
 
 namespace Toggl.Foundation.Tests.Sync.States
@@ -29,12 +27,12 @@ namespace Toggl.Foundation.Tests.Sync.States
             => helper.ReturnsFailTransitionWhenEntityIsNull();
 
         [Theory]
-        [MemberData(nameof(ClientExceptions))]
+        [MemberData(nameof(ApiExceptions.ClientExceptionsWhichAreNotReThrownInSyncStates), MemberType = typeof(ApiExceptions))]
         public void ReturnsClientErrorTransitionWhenHttpFailsWithClientErrorException(ClientErrorException exception)
             => helper.ReturnsClientErrorTransitionWhenHttpFailsWithClientErrorException(exception);
 
         [Theory]
-        [MemberData(nameof(ServerExceptions))]
+        [MemberData(nameof(ApiExceptions.ServerExceptions), MemberType = typeof(ApiExceptions))]
         public void ReturnsServerErrorTransitionWhenHttpFailsWithServerErrorException(ServerErrorException reason)
             => helper.ReturnsServerErrorTransitionWhenHttpFailsWithServerErrorException(reason);
 
@@ -54,34 +52,6 @@ namespace Toggl.Foundation.Tests.Sync.States
         public void UpdateIsCalledWithCorrectParameters()
             => helper.UpdateIsCalledWithCorrectParameters();
 
-        public static object[] ClientExceptions()
-            => new[]
-            {
-                new object[] { new BadRequestException(request, response) },
-                new object[] { new UnauthorizedException(request, response) },
-                new object[] { new PaymentRequiredException(request, response) },
-                new object[] { new ForbiddenException(request, response) },
-                new object[] { new NotFoundException(request, response) },
-                new object[] { new ApiDeprecatedException(request, response) },
-                new object[] { new RequestEntityTooLargeException(request, response) },
-                new object[] { new ClientDeprecatedException(request, response) },
-                new object[] { new TooManyRequestsException(request, response) }
-            };
-
-        public static object[] ServerExceptions()
-            => new[]
-            {
-                new object[] { new InternalServerErrorException(request, response) },
-                new object[] { new BadGatewayException(request, response) },
-                new object[] { new GatewayTimeoutException(request, response) },
-                new object[] { new HttpVersionNotSupportedException(request, response) },
-                new object[] { new ServiceUnavailableException(request, response) }
-            };
-
-        private static IRequest request => Substitute.For<IRequest>();
-
-        private static IResponse response => Substitute.For<IResponse>();
-
         public interface IStartMethodTestHelper
         {
             void ReturnsFailTransitionWhenEntityIsNull();
@@ -98,7 +68,7 @@ namespace Toggl.Foundation.Tests.Sync.States
         {
             private ITogglApi api;
             private IRepository<TModel> repository;
-    
+
             public TheStartMethod()
                 : this(Substitute.For<ITogglApi>(), Substitute.For<IRepository<TModel>>())
             {
@@ -160,7 +130,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             private BaseCreateEntityState<TModel> createCreateState(ITogglApi api, IRepository<TModel> repository)
                 => CreateState(api, repository) as BaseCreateEntityState<TModel>;
 
-            protected abstract bool EntitiesHaveSameImportantProperties(TModel a, TModel b);    
+            protected abstract bool EntitiesHaveSameImportantProperties(TModel a, TModel b);
         }
     }
 }

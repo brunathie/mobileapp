@@ -27,12 +27,19 @@ namespace Toggl.Foundation.Sync.States
             => pushedEntity => Repository.Update(entity.Id, pushedEntity).Select(CopyFrom);
 
         protected Func<Exception, IObservable<ITransition>> Fail(TModel entity)
-            => exception =>
-                exception is ServerErrorException
-                    ? Observable.Return(ServerError.Transition((exception, entity)))
-                    : exception is ClientErrorException
-                        ? Observable.Return(ClientError.Transition((exception, entity)))
-                        : Observable.Return(UnknownError.Transition((exception, entity)));
+            => exception => shouldRethrow(exception)
+                ? Observable.Throw<ITransition>(exception)
+                : Observable.Return(failTransition(entity, exception));
+
+        private bool shouldRethrow(Exception e)
+            => e is ApiDeprecatedException || e is ClientDeprecatedException || e is UnauthorizedException || e is OfflineException;
+
+        private ITransition failTransition(TModel entity, Exception e)
+            => e is ServerErrorException
+                ? ServerError.Transition((e, entity))
+                : e is ClientErrorException
+                    ? ClientError.Transition((e, entity))
+                    : UnknownError.Transition((e, entity));
 
         public abstract IObservable<ITransition> Start(TModel entity);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using FluentAssertions;
 using NSubstitute;
@@ -8,6 +9,7 @@ using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
 using Toggl.Ultrawave;
 using Toggl.Ultrawave.Exceptions;
+using Toggl.Ultrawave.Network;
 using Xunit;
 
 namespace Toggl.Foundation.Tests.Sync.States
@@ -91,6 +93,35 @@ namespace Toggl.Foundation.Tests.Sync.States
             transition.Result.Should().Be(state.UnknownError);
             parameter.Reason.Should().BeOfType<TestException>();
         }
+
+        [Theory]
+        [MemberData(nameof(exceptionsWhichCauseRethrow))]
+        public void ThrowsWhenCertainExceptionsAreCaught(Exception exception)
+        {
+            var state = CreateState(api, repository); ;
+            PrepareApiCallFunctionToThrow(exception);
+            Exception caughtException = null;
+
+            try
+            {
+                state.Start(Substitute.For<TModel>());
+            }
+            catch (Exception e)
+            {
+                caughtException = e;
+            }
+
+            caughtException.Should().ShouldBeEquivalentTo(exception);
+        }
+
+        private static IEnumerable<object[]> exceptionsWhichCauseRethrow()
+            => new[]
+            {
+                new object[] { new ClientDeprecatedException(Substitute.For<IRequest>(), Substitute.For<IResponse>()), },
+                new object[] { new ApiDeprecatedException(Substitute.For<IRequest>(), Substitute.For<IResponse>()), },
+                new object[] { new UnauthorizedException(Substitute.For<IRequest>(), Substitute.For<IResponse>()), },
+                new object[] { new OfflineException() }
+            };
 
         protected abstract BasePushEntityState<TModel> CreateState(ITogglApi api, IRepository<TModel> repository);
 
