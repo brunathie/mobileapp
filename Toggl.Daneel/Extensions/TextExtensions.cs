@@ -1,12 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using CoreGraphics;
+﻿using CoreGraphics;
 using Foundation;
-using MvvmCross.Platform.UI;
 using MvvmCross.Plugins.Color.iOS;
-using Toggl.Daneel.Views;
-using Toggl.Foundation.Autocomplete;
 using Toggl.Foundation.MvvmCross.Helper;
 using UIKit;
 
