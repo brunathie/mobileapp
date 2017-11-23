@@ -13,8 +13,6 @@ namespace Toggl.Daneel.ViewControllers
     [ModalCardPresentation]
     public sealed partial class EditProjectViewController : MvxViewController<EditProjectViewModel>
     {
-        private const int switchHeight = 24;
-
         public EditProjectViewController() 
             : base(nameof(EditProjectViewController), null)
         {
@@ -66,7 +64,7 @@ namespace Toggl.Daneel.ViewControllers
 
         private void prepareViews()
         {
-            PrivateProjectSwitch.Resize(switchHeight);
+            PrivateProjectSwitch.Resize();
         }
     }
 }

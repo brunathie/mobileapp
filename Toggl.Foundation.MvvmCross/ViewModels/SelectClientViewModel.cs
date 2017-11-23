@@ -10,6 +10,7 @@ using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant.Models;
 using static Toggl.Foundation.Helper.Constants;
+using static Toggl.Multivac.Extensions.StringExtensions;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels
 {
@@ -31,7 +32,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 var text = Text.Trim();
                 return !string.IsNullOrEmpty(text) 
                     && !Suggestions.Any(s => s == text)
-                    && Encoding.UTF8.GetByteCount(text) <= MaxClientNameLengthInBytes;
+                    && text.LengthInBytes() <= MaxClientNameLengthInBytes;
             }
         }
 

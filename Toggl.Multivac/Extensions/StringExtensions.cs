@@ -19,7 +19,7 @@ namespace Toggl.Multivac.Extensions
             if (length < 0)
                 throw new ArgumentOutOfRangeException(nameof(length));
 
-            var textElementCount = new StringInfo(self).LengthInTextElements;
+            var textElementCount = self.LengthInGraphemes();
 
             if (startIndex < 0 || startIndex > textElementCount)
                 throw new ArgumentOutOfRangeException(nameof(startIndex));
@@ -47,5 +47,11 @@ namespace Toggl.Multivac.Extensions
 
             return sb.ToString();
         }
+
+        public static int LengthInBytes(this string self)
+            => Encoding.UTF8.GetByteCount(self);
+
+        public static int LengthInGraphemes(this string self)
+            => new StringInfo(self).LengthInTextElements;
     }
 }

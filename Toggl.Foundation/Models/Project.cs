@@ -2,6 +2,7 @@
 using System.Text;
 using Toggl.PrimeRadiant;
 using static Toggl.Foundation.Helper.Constants;
+using static Toggl.Multivac.Extensions.StringExtensions;
 
 namespace Toggl.Foundation.Models
 {
@@ -120,7 +121,7 @@ namespace Toggl.Foundation.Models
                 if (At == null)
                     throw new InvalidOperationException(string.Format(errorMessage, "at"));
 
-                if (Encoding.UTF8.GetByteCount(Name) > MaxClientNameLengthInBytes)
+                if (Name.LengthInBytes() > MaxClientNameLengthInBytes)
                     throw new InvalidOperationException("Client name must have less than {MaxClientNameLengthInBytes} bytes");
             }
         }

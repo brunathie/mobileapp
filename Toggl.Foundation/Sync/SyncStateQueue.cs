@@ -32,6 +32,13 @@ namespace Toggl.Foundation.Sync
             return sleep();
         }
 
+        public void Clear()
+        {
+            pulledLast = false;
+            pullSyncQueued = false;
+            pushSyncQueued = false;
+        }
+
         private SyncState pull()
         {
             pullSyncQueued = false;

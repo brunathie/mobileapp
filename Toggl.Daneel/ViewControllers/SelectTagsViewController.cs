@@ -27,6 +27,18 @@ namespace Toggl.Daneel.ViewControllers
             //Table view
             bindingSet.Bind(source).To(vm => vm.Tags);
 
+            bindingSet.Bind(source)
+                      .For(v => v.CurrentQuery)
+                      .To(vm => vm.Text);
+
+            bindingSet.Bind(source)
+                      .For(v => v.CreateTagCommand)
+                      .To(vm => vm.CreateTagCommand);
+
+            bindingSet.Bind(source)
+                      .For(v => v.SuggestCreation)
+                      .To(vm => vm.SuggestCreation);
+                           
             //Text
             bindingSet.Bind(TextField).To(vm => vm.Text);
 

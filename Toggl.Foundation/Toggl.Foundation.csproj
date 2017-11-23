@@ -105,6 +105,7 @@
     <Compile Include="Sync\States\Push\Users\UpdateUserState.cs" />
     <Compile Include="Sync\States\Push\Users\PushUsersState.cs" />
     <Compile Include="Sync\States\Push\Users\UnsyncableUserState.cs" />
+    <Compile Include="Sync\SyncProgress.cs" />
     <Compile Include="Sync\TransitionHandlerProvider.cs" />
     <Compile Include="Sync\SyncManager.cs" />
     <Compile Include="Sync\SyncResult.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Autocomplete\QueryInfo.cs" />
     <Compile Include="DataSources\ClientsDataSource.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\Tag.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

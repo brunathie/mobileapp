@@ -8,7 +8,6 @@ using Toggl.Foundation.DataSources;
 using Toggl.Foundation.MvvmCross.Services;
 using Toggl.Foundation.Sync;
 using Toggl.Multivac;
-using Toggl.PrimeRadiant;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels
 {
@@ -21,7 +20,19 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly IDialogService dialogService;
 
-        public string Title { get; private set; }
+        public string Title { get; private set; } = Resources.Settings;
+
+        public string Email { get; private set; } = "";
+
+        public string Version { get; private set; } = "";
+
+        public string WorkspaceName { get; private set; } = "";
+
+        public string CurrentPlan { get; private set; } = "";
+
+        public bool UseTwentyFourHourClock { get; set; }
+
+        public bool AddMobileTag { get; set; }
 
         public bool IsLoggingOut { get; private set; }
 
@@ -29,9 +40,27 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public bool IsSynced { get; private set; }
 
-        public IMvxAsyncCommand LogoutCommand { get; }
+        public IMvxCommand RateCommand { get; }
+        
+        public IMvxCommand HelpCommand { get; }
+        
+        public IMvxCommand UpdateCommand { get; }
 
         public IMvxAsyncCommand BackCommand { get; }
+
+        public IMvxAsyncCommand LogoutCommand { get; }
+
+        public IMvxCommand EditProfileCommand { get; }
+
+        public IMvxCommand EditWorkspaceCommand { get; }
+
+        public IMvxCommand SubmitFeedbackCommand { get; }
+
+        public IMvxCommand EditSubscriptionCommand { get; }
+
+        public IMvxCommand ToggleAddMobileTagCommand { get; }
+
+        public IMvxCommand ToggleUseTwentyFourHourClockCommand { get; }
 
         public SettingsViewModel(ITogglDataSource dataSource, IMvxNavigationService navigationService, IDialogService dialogService)
         {
@@ -39,29 +68,58 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             Ensure.Argument.IsNotNull(navigationService, nameof(navigationService));
             Ensure.Argument.IsNotNull(dialogService, nameof(dialogService));
 
-            Title = Resources.Settings;
-
             this.dataSource = dataSource;
-            this.navigationService = navigationService;
             this.dialogService = dialogService;
+            this.navigationService = navigationService;
 
-            IsLoggingOut = false;
-            IsSynced = false;
-            IsRunningSync = false;
-
-            var syncDisposable = dataSource.SyncManager
+            disposeBag.Add(dataSource.SyncManager
                 .StateObservable
                 .Subscribe(async state =>
                 {
                     IsRunningSync = IsLoggingOut == false && state != SyncState.Sleep;
                     IsSynced = IsLoggingOut == false && await isSynced();
-                });
+                })
+            );
 
+            RateCommand = new MvxCommand(rate);
+            HelpCommand = new MvxCommand(help);
+            UpdateCommand = new MvxCommand(update);
             BackCommand = new MvxAsyncCommand(back);
             LogoutCommand = new MvxAsyncCommand(maybeLogout);
-
-            disposeBag.Add(syncDisposable);
+            EditProfileCommand = new MvxCommand(editProfile);
+            EditWorkspaceCommand = new MvxCommand(editWorkspace);
+            SubmitFeedbackCommand = new MvxCommand(submitFeedback);
+            EditSubscriptionCommand = new MvxCommand(editSubscription);
+            ToggleAddMobileTagCommand = new MvxCommand(toggleAddMobileTag);
+            ToggleUseTwentyFourHourClockCommand = new MvxCommand(toggleUseTwentyFourHourClock);
         }
+
+        public override async Task Initialize()
+        {
+            var user = await dataSource.User.Current();
+            var workspace = await dataSource.Workspaces.GetDefault();
+
+            Email = user.Email; 
+            WorkspaceName = workspace.Name;
+        }
+
+        public void rate() => throw new NotImplementedException();
+        
+        public void help() => throw new NotImplementedException();
+        
+        public void update() => throw new NotImplementedException();
+        
+        public void editProfile() => throw new NotImplementedException();
+        
+        public void editWorkspace() => throw new NotImplementedException();
+        
+        public void submitFeedback() => throw new NotImplementedException();
+        
+        public void editSubscription() => throw new NotImplementedException();
+
+        public void toggleAddMobileTag() => AddMobileTag = !AddMobileTag;
+
+        public void toggleUseTwentyFourHourClock() => UseTwentyFourHourClock = !UseTwentyFourHourClock;
 
         private Task back() => navigationService.Close(this);
 

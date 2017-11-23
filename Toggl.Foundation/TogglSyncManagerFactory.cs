@@ -111,7 +111,7 @@ namespace Toggl.Foundation
             var create = new CreateTimeEntryState(api, dataSource.TimeEntries);
             var update = new UpdateTimeEntryState(api, dataSource.TimeEntries);
             var delete = new DeleteTimeEntryState(api, database.TimeEntries);
-            var deleteLocal = new DeleteLocalTimeEntryState(dataSource.TimeEntries);
+            var deleteLocal = new DeleteLocalTimeEntryState(database.TimeEntries);
             var unsyncable = new UnsyncableTimeEntryState(dataSource.TimeEntries);
             var checkServerStatus = new CheckServerStatusState(api, scheduler, apiDelay, statusDelay, delayCancellation);
             var finished = new ResetAPIDelayState(apiDelay);

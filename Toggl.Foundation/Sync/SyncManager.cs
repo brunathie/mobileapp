@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
+using Toggl.Ultrawave.Exceptions;
 using static Toggl.Foundation.Sync.SyncState;
 
 namespace Toggl.Foundation.Sync
@@ -14,10 +16,14 @@ namespace Toggl.Foundation.Sync
 
         private bool isFrozen;
 
+        private readonly ISubject<SyncProgress> progress;
+
         public bool IsRunningSync { get; private set; }
 
         public SyncState State => orchestrator.State;
+        [Obsolete]
         public IObservable<SyncState> StateObservable => orchestrator.StateObservable;
+        public IObservable<SyncProgress> ProgressObservable { get; }
 
         public SyncManager(ISyncStateQueue queue, IStateMachineOrchestrator orchestrator)
         {
@@ -26,6 +32,9 @@ namespace Toggl.Foundation.Sync
 
             this.queue = queue;
             this.orchestrator = orchestrator;
+
+            progress = new BehaviorSubject<SyncProgress>(SyncProgress.Unknown);
+            ProgressObservable = progress.AsObservable();
 
             orchestrator.SyncCompleteObservable.Subscribe(syncOperationCompleted);
             isFrozen = false;
@@ -74,12 +83,16 @@ namespace Toggl.Foundation.Sync
                 if (result is Success)
                 {
                     startSyncIfNeeded();
+                    if (IsRunningSync == false)
+                    {
+                        progress.OnNext(SyncProgress.Synced);
+                    }
                     return;
                 }
 
-                if (result is Error)
+                if (result is Error error)
                 {
-                    orchestrator.Start(Sleep);
+                    processError(error.Exception);
                     return;
                 }
 
@@ -87,9 +100,36 @@ namespace Toggl.Foundation.Sync
             }
         }
 
+        private void processError(Exception error)
+        {
+            queue.Clear();
+            orchestrator.Start(Sleep);
+
+            if (error is OfflineException)
+            {
+                progress.OnNext(SyncProgress.OfflineModeDetected);
+            }
+            else
+            {
+                progress.OnNext(SyncProgress.Failed);
+            }
+
+            if (error is ClientDeprecatedException
+                || error is ApiDeprecatedException
+                || error is UnauthorizedException)
+            {
+                progress.OnError(error);
+                Freeze();
+            }
+        }
+
         private IObservable<SyncState> startSyncIfNeededAndObserve()
         {
             startSyncIfNeeded();
+            if (IsRunningSync)
+            {
+                progress.OnNext(SyncProgress.Syncing);
+            }
 
             return syncStatesUntilAndIncludingSleep();
         }
@@ -100,6 +140,7 @@ namespace Toggl.Foundation.Sync
 
             var state = isFrozen ? Sleep : queue.Dequeue();
             IsRunningSync = state != Sleep;
+
             orchestrator.Start(state);
         }
 

@@ -5,9 +5,11 @@ namespace Toggl.Daneel.Extensions
 {
     public static class ViewExtensions
     {
-        public static void Resize(this UISwitch self, int height)
+        private const int switchHeight = 24;
+
+        public static void Resize(this UISwitch self)
         {
-            var scale = height / self.Frame.Height;
+            var scale = switchHeight / self.Frame.Height;
             self.Transform = CGAffineTransform.MakeScale(scale, scale);
         }
     }

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OutdatedAppViewController">
+            <connections>
+                <outlet property="UpdateButton" destination="1425" id="re0-Pm-an2"/>
+                <outlet property="WebsiteButton" destination="1426" id="SfR-ic-Ic7"/>
+                <outlet property="view" destination="2" id="RRd-Eg-VrN"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="2">
+            <rect key="frame" x="0.0" y="0.0" width="288" height="357"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1425">
+                    <rect key="frame" x="16" y="236" width="256" height="40"/>
+                    <color key="backgroundColor" red="0.29803921568627451" green="0.85098039215686272" blue="0.39215686274509803" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="2NS-Om-4hk"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                    <state key="normal" title="Update the app">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Oops!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1427">
+                    <rect key="frame" x="16" y="125" width="49.5" height="21"/>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1428">
+                    <rect key="frame" x="16" y="158" width="246.5" height="54"/>
+                    <string key="text">Seems you haven't updated the app
+for quite some time...
+Please update your app to continue.</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X8x-ZH-j50">
+                    <rect key="frame" x="90" y="300" width="108" height="16"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4PV-6t-jjS">
+                            <rect key="frame" x="0.0" y="-1" width="14" height="17"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="14" id="uVq-s5-2Ag"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1426">
+                            <rect key="frame" x="18" y="0.0" width="90" height="16"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="90" id="618-ks-5fy"/>
+                                <constraint firstAttribute="height" constant="16" id="ULv-kH-tRS"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                            <state key="normal" title="try toggl.com">
+                                <color key="titleColor" red="0.29803921570000003" green="0.85098039219999999" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="1426" firstAttribute="leading" secondItem="4PV-6t-jjS" secondAttribute="trailing" constant="4" id="15Y-vh-rNf"/>
+                        <constraint firstItem="4PV-6t-jjS" firstAttribute="leading" secondItem="X8x-ZH-j50" secondAttribute="leading" id="74w-No-9et"/>
+                        <constraint firstAttribute="width" constant="108" id="SBt-y9-QSb"/>
+                        <constraint firstAttribute="height" constant="16" id="nUb-4l-nH9"/>
+                        <constraint firstItem="4PV-6t-jjS" firstAttribute="centerY" secondItem="X8x-ZH-j50" secondAttribute="centerY" id="oAd-Ki-3SS"/>
+                        <constraint firstItem="1426" firstAttribute="centerY" secondItem="X8x-ZH-j50" secondAttribute="centerY" id="tf2-5z-a8x"/>
+                        <constraint firstAttribute="trailing" secondItem="1426" secondAttribute="trailing" id="vuF-hI-pef"/>
+                    </constraints>
+                </view>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icIllustrationSpider" translatesAutoresizingMaskIntoConstraints="NO" id="129">
+                    <rect key="frame" x="114" y="0.0" width="60" height="100"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="60" id="Pvg-tk-11L"/>
+                        <constraint firstAttribute="height" constant="100" id="yZ1-ru-Y56"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="1427" firstAttribute="top" secondItem="129" secondAttribute="bottom" constant="25" id="2U8-RV-fp4"/>
+                <constraint firstItem="1425" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="9ul-co-6Cd"/>
+                <constraint firstItem="X8x-ZH-j50" firstAttribute="top" secondItem="1425" secondAttribute="bottom" constant="24" id="DzE-Zu-ZJx"/>
+                <constraint firstItem="1425" firstAttribute="top" secondItem="1428" secondAttribute="bottom" constant="24" id="H6W-zI-A8S"/>
+                <constraint firstItem="129" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="PHt-4W-vvV"/>
+                <constraint firstItem="129" firstAttribute="top" secondItem="2" secondAttribute="top" id="XW6-t1-rQh"/>
+                <constraint firstItem="X8x-ZH-j50" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="YML-ix-Iib"/>
+                <constraint firstItem="1427" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="cTE-Wm-Ttx"/>
+                <constraint firstItem="1428" firstAttribute="leading" secondItem="1427" secondAttribute="leading" id="gHu-o0-CTr"/>
+                <constraint firstAttribute="trailing" secondItem="1425" secondAttribute="trailing" constant="16" id="hsz-zq-0Db"/>
+                <constraint firstItem="1428" firstAttribute="top" secondItem="1427" secondAttribute="bottom" constant="12" id="mDN-Ga-dIN"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-101" y="26.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="icIllustrationSpider" width="60" height="205"/>
+    </resources>
+</document>

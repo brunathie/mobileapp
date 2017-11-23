@@ -8,11 +8,12 @@ using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform.UI;
 using PropertyChanged;
 using Toggl.Foundation.DataSources;
-using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Foundation.DTOs;
+using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Multivac;
 using Toggl.PrimeRadiant.Models;
 using static Toggl.Foundation.Helper.Constants;
+using static Toggl.Multivac.Extensions.StringExtensions;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels
 {
@@ -31,7 +32,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         [DependsOn(nameof(Name))]
         public bool SaveEnabled => 
-            !string.IsNullOrWhiteSpace(Name) && Encoding.UTF8.GetByteCount(Name) <= MaxProjectNameLengthInBytes;
+            !string.IsNullOrWhiteSpace(Name) && Name.LengthInBytes() <= MaxProjectNameLengthInBytes;
 
         public string Name { get; set; } = "";
 

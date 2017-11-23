@@ -81,6 +81,8 @@
     <Compile Include="ViewModels\SelectClientViewModel.cs" />
     <Compile Include="Parameters\ColorParameters.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="ViewModels\OutdatedAppViewModel.cs" />
+    <Compile Include="Services\IBrowserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Reactive.Interfaces">

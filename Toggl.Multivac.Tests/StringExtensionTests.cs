@@ -76,7 +76,7 @@ namespace Toggl.Multivac.Tests
                 NonEmptyString nonEmptyString, NonZeroInt startIndexOffset)
             {
                 var str = nonEmptyString.Get;
-                var stringLength = new StringInfo(str).LengthInTextElements;
+                var stringLength = str.LengthInGraphemes();
                 var startIndex = stringLength + Abs(startIndexOffset.Get);
 
                 Action tryingToGetSubstringWithStartIndexGreaterThanStringLength

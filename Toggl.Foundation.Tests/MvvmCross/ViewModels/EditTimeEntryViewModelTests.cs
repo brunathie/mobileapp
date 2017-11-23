@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Text;
 using FluentAssertions;
 using FsCheck;
 using FsCheck.Xunit;
@@ -11,15 +13,14 @@ using Toggl.Foundation.DataSources;
 using Toggl.Foundation.DTOs;
 using Toggl.Foundation.Models;
 using Toggl.Foundation.MvvmCross.Parameters;
+using Toggl.Foundation.MvvmCross.Services;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.Tests.Generators;
 using Toggl.PrimeRadiant.Models;
 using Xunit;
 using static Toggl.Foundation.Helper.Constants;
+using static Toggl.Multivac.Extensions.StringExtensions;
 using Task = System.Threading.Tasks.Task;
-using System.Text;
-using System.Globalization;
-using Toggl.Foundation.MvvmCross.Services;
 
 namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 {
@@ -779,7 +780,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await prepareTest(tagLength, tagGrapheme);
 
                 ViewModel.Tags.Should()
-                    .OnlyContain(tag => lengthInGraphemes(tag) == 33 && tag.EndsWith("..."));
+                    .OnlyContain(tag => tag.LengthInGraphemes() == 33 && tag.EndsWith("..."));
             }
 
             [Theory]
@@ -793,7 +794,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             {
                 await prepareTest(tagLength, tagGrapheme);
 
-                ViewModel.Tags.Should().OnlyContain(tag => lengthInGraphemes(tag) == tagLength);
+                ViewModel.Tags.Should().OnlyContain(tag => tag.LengthInGraphemes() == tagLength);
             }
 
             private async Task prepareTest(int tagLength, string tagGrapheme)
@@ -817,9 +818,6 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     .Range(0, length)
                     .Aggregate(new StringBuilder(), (builder, _) => builder.Append(tagGrapheme))
                     .ToString();
-
-            private int lengthInGraphemes(string str)
-                => new StringInfo(str).LengthInTextElements;
         }
 
         public sealed class TheDescriptionLimitExceededProperty : EditTimeEntryViewModelTest

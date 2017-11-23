@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
+using FsCheck;
 using FsCheck.Xunit;
 using Toggl.Foundation.Sync;
 using static Toggl.Foundation.Sync.SyncState;
@@ -10,12 +12,13 @@ namespace Toggl.Foundation.Tests.Sync
 {
     public sealed class SyncStateQueueTests
     {
-        public sealed class TheStartNextQueuedStateMethod
+        public abstract class BaseStateQueueTests
         {
             private readonly SyncStateQueue queue = new SyncStateQueue();
-            private readonly List<SyncState> dequeuedStates = new List<SyncState>();
 
-            private void queueSyncs(params SyncState[] states)
+            protected List<SyncState> DequeuedStates { get; } = new List<SyncState>();
+
+            protected void QueueSyncs(params SyncState[] states)
             {
                 foreach (var state in states)
                     switch (state)
@@ -31,34 +34,43 @@ namespace Toggl.Foundation.Tests.Sync
                     }
             }
 
-            private SyncState callMethod()
+            protected SyncState Dequeue()
             {
                 var state = queue.Dequeue();
-                dequeuedStates.Add(state);
+                DequeuedStates.Add(state);
                 return state;
             }
 
-            private List<SyncState> callMethodUntilSleep()
+            protected void Clear() => queue.Clear();
+
+            protected List<SyncState> DequeueUntilSleep()
             {
                 var returnValues = new List<SyncState>();
 
                 while (true)
                 {
-                    returnValues.Add(callMethod());
+                    returnValues.Add(Dequeue());
 
-                    if (dequeuedStates.Last() == Sleep)
+                    if (DequeuedStates.Last() == Sleep)
                         break;
                 }
 
                 return returnValues;
             }
 
+            protected SyncState[] BoolToEnumValues(bool[] pushPull)
+                => (pushPull ?? Enumerable.Empty<bool>())
+                    .Select(b => b ? Push : Pull).ToArray();
+        }
+
+        public sealed class TheStartNextQueuedStateMethod : BaseStateQueueTests
+        {
             [Fact]
             public void StartsSleepIfNothingQueued()
             {
-                callMethod();
+                Dequeue();
 
-                dequeuedStates.ShouldBeSameEventsAs(
+                DequeuedStates.ShouldBeSameEventsAs(
                     Sleep
                 );
             }
@@ -66,11 +78,11 @@ namespace Toggl.Foundation.Tests.Sync
             [Fact]
             public void StartsPullIfOnlyPullQueued()
             {
-                queueSyncs(Pull);
+                QueueSyncs(Pull);
 
-                callMethod();
+                Dequeue();
 
-                dequeuedStates.ShouldBeSameEventsAs(
+                DequeuedStates.ShouldBeSameEventsAs(
                     Pull
                 );
             }
@@ -78,11 +90,11 @@ namespace Toggl.Foundation.Tests.Sync
             [Fact]
             public void StartsPushIfOnlyPushQueued()
             {
-                queueSyncs(Push);
+                QueueSyncs(Push);
 
-                callMethod();
+                Dequeue();
 
-                dequeuedStates.ShouldBeSameEventsAs(
+                DequeuedStates.ShouldBeSameEventsAs(
                     Push
                 );
             }
@@ -90,29 +102,27 @@ namespace Toggl.Foundation.Tests.Sync
             [Property]
             public void AlwaysReturnsTheStateItRuns(bool[] pushPull)
             {
-                dequeuedStates.Clear();
-                var states = (pushPull ?? Enumerable.Empty<bool>())
-                    .Select(b => b ? Push : Pull).ToArray();
-                queueSyncs(states);
+                DequeuedStates.Clear();
+                QueueSyncs(BoolToEnumValues(pushPull));
 
-                var returnValues = callMethodUntilSleep();
+                var returnValues = DequeueUntilSleep();
 
-                returnValues.ShouldBeSameEventsAs(dequeuedStates.ToArray());
+                returnValues.ShouldBeSameEventsAs(DequeuedStates.ToArray());
             }
 
             [Property]
             public void RunsFullCycleOnceNoMatterWhatIsQueuedIfPullIsQueued(bool[] pushPull)
             {
-                dequeuedStates.Clear();
+                DequeuedStates.Clear();
                 var states = (pushPull ?? Enumerable.Empty<bool>())
                     .Select(b => b ? Push : Pull).ToArray();
-                queueSyncs(states);
+                QueueSyncs(states);
                 if (!states.Contains(Pull))
-                    queueSyncs(Pull);
+                    QueueSyncs(Pull);
 
-                callMethodUntilSleep();
+                DequeueUntilSleep();
 
-                dequeuedStates.ShouldBeSameEventsAs(
+                DequeuedStates.ShouldBeSameEventsAs(
                     Pull, Push, Sleep
                 );
             }
@@ -120,13 +130,13 @@ namespace Toggl.Foundation.Tests.Sync
             [Fact]
             public void RunsFullCycleIfPullIsQueuedAfterPushStarted()
             {
-                queueSyncs(Push);
-                callMethod();
-                queueSyncs(Pull);
+                QueueSyncs(Push);
+                Dequeue();
+                QueueSyncs(Pull);
 
-                callMethodUntilSleep();
+                DequeueUntilSleep();
 
-                dequeuedStates.ShouldBeSameEventsAs(
+                DequeuedStates.ShouldBeSameEventsAs(
                     Push, Pull, Push, Sleep
                 );
             }
@@ -134,15 +144,52 @@ namespace Toggl.Foundation.Tests.Sync
             [Fact]
             public void RunsTwoFullCyclesIfPullIsQueuedAfterFirstPullStarted()
             {
-                queueSyncs(Pull);
-                callMethod();
-                queueSyncs(Pull);
+                QueueSyncs(Pull);
+                Dequeue();
+                QueueSyncs(Pull);
 
-                callMethodUntilSleep();
+                DequeueUntilSleep();
 
-                dequeuedStates.ShouldBeSameEventsAs(
+                DequeuedStates.ShouldBeSameEventsAs(
                     Pull, Push, Pull, Push, Sleep
                 );
+            }
+        }
+
+        public sealed class TheClearMethod : BaseStateQueueTests
+        {
+            [Fact]
+            public void ClearsPush()
+            {
+                QueueSyncs(Push);
+
+                Clear();
+                var returnValues = DequeueUntilSleep();
+
+                returnValues.ShouldBeSameEventsAs(Sleep);
+            }
+
+            [Fact]
+            public void ClearsPull()
+            {
+                QueueSyncs(Pull);
+
+                Clear();
+                var returnValues = DequeueUntilSleep();
+
+                returnValues.ShouldBeSameEventsAs(Sleep);
+            }
+
+            [Property]
+            public void RetursSleepAfterClearNoMatterWhatWasQueuedPreviously(NonEmptyArray<bool> pushPull)
+            {
+                DequeuedStates.Clear();
+                QueueSyncs(BoolToEnumValues(pushPull.Get));
+
+                Clear();
+                var returnValues = DequeueUntilSleep();
+
+                returnValues.ShouldBeSameEventsAs(Sleep);
             }
         }
     }

@@ -292,9 +292,9 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             {
                 StateObservableSubject.OnNext(SyncState.Pull);
                 DialogService.Confirm(
-                    Arg.Any<string>(), 
-                    Arg.Any<string>(), 
-                    Arg.Any<string>(), 
+                    Arg.Any<string>(),
+                    Arg.Any<string>(),
+                    Arg.Any<string>(),
                     Arg.Any<string>()).Returns(false);
 
                 await ViewModel.LogoutCommand.ExecuteAsync();
@@ -338,6 +338,32 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await ViewModel.BackCommand.ExecuteAsync();
 
                 await NavigationService.Received().Close(ViewModel);
+            }
+        }
+
+        public sealed class TheToggleAddMobileTagCommand : SettingsViewModelTest
+        {
+            [Fact]
+            public void TogglesTheCurrentValueOfTheToggleAddMobileTagProperty()
+            {
+                var expected = !ViewModel.AddMobileTag;
+
+                ViewModel.ToggleAddMobileTagCommand.Execute();
+
+                ViewModel.AddMobileTag.Should().Be(expected);
+            }
+        }
+
+        public sealed class TheToggleUseTwentyFourHourClockCommand : SettingsViewModelTest
+        {
+            [Fact]
+            public void TogglesTheCurrentValueOfTheToggleUseTwentyFourHourClockProperty()
+            {
+                var expected = !ViewModel.UseTwentyFourHourClock;
+
+                ViewModel.ToggleUseTwentyFourHourClockCommand.Execute();
+
+                ViewModel.UseTwentyFourHourClock.Should().Be(expected);
             }
         }
     }

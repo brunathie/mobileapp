@@ -18,6 +18,7 @@ using Toggl.Foundation.MvvmCross.Services;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using static Toggl.Foundation.Helper.Constants;
+using static Toggl.Multivac.Extensions.StringExtensions;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels
 {
@@ -38,7 +39,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         //Properties
         private int DescriptionByteCount
-            => Encoding.UTF8.GetByteCount(TextFieldInfo.Text);
+            => TextFieldInfo.Text.LengthInBytes();
 
         public int DescriptionRemainingBytes
             => MaxTimeEntryDescriptionLengthInBytes - DescriptionByteCount;
@@ -55,7 +56,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 var text = CurrentQuery.Trim();
                 return !string.IsNullOrEmpty(text)
                     && !Suggestions.Any(c => c.Any(s => s is ProjectSuggestion pS && pS.ProjectName == text))
-                    && Encoding.UTF8.GetByteCount(text) <= MaxProjectNameLengthInBytes;
+                    && text.LengthInBytes() <= MaxProjectNameLengthInBytes;
             }
         }
 

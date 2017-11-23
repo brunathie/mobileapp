@@ -18,6 +18,7 @@ using Toggl.PrimeRadiant.Models;
 using Xunit;
 using static Toggl.Foundation.Helper.Constants;
 using static Toggl.Multivac.Extensions.FunctionalExtensions;
+using static Toggl.Multivac.Extensions.StringExtensions;
 using TextFieldInfo = Toggl.Foundation.Autocomplete.TextFieldInfo;
 
 namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
@@ -1114,7 +1115,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             public void IsDecreasedForEachByteInTheText(string text)
             {
                 var expectedRemainingByteCount
-                    = MaxTimeEntryDescriptionLengthInBytes - Encoding.UTF8.GetByteCount(text);
+                    = MaxTimeEntryDescriptionLengthInBytes - text.LengthInBytes();
 
                 ViewModel.TextFieldInfo = TextFieldInfo.Empty.WithTextAndCursor(text, 0);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Toggl.Multivac;
@@ -71,25 +72,37 @@ namespace Toggl.Ultrawave.ApiClients
             var request = new Request(body, endpoint.Url, headers, endpoint.Method);
             return Observable.Create<T>(async observer =>
             {
-                var response = await apiClient.Send(request).ConfigureAwait(false);
-                if (response.IsSuccess)
+                IResponse response;
+                try
                 {
-                    try
-                    {
-                        var data = await process(response.RawData);
-                        observer.OnNext(data);
-                        observer.OnCompleted();
-                    }
-                    catch
-                    {
-                        observer.OnError(new DeserializationException<T>(request, response, response.RawData));
-                    }
+                    response = await apiClient.Send(request).ConfigureAwait(false);
                 }
-                else
+                catch (HttpRequestException)
+                {
+                    observer.OnError(new OfflineException());
+                    return;
+                }
+
+                if (!response.IsSuccess)
                 {
                     var exception = ApiExceptions.For(request, response);
                     observer.OnError(exception);
+                    return;
                 }
+
+                T data;
+                try
+                {
+                    data = await process(response.RawData);
+                }
+                catch
+                {
+                    observer.OnError(new DeserializationException<T>(request, response, response.RawData));
+                    return;
+                }
+
+                observer.OnNext(data);
+                observer.OnCompleted();
             });
         }
     }

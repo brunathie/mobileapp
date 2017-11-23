@@ -46,6 +46,7 @@
     <Compile Include="Exceptions\InternalServerErrorException.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Exceptions\NotImplementedException.cs" />
+    <Compile Include="Exceptions\OfflineException.cs" />
     <Compile Include="Exceptions\PaymentRequiredException.cs" />
     <Compile Include="Exceptions\RequestEntityTooLargeException.cs" />
     <Compile Include="Exceptions\ServerErrorException.cs" />

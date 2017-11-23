@@ -200,6 +200,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ApiExceptions.cs" />
     <Compile Include="MvvmCross\ViewModels\EditDurationViewModelTests.cs" />
     <Compile Include="MvvmCross\ViewModels\SelectDateTimeViewModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -282,6 +283,9 @@
     <Compile Include="MvvmCross\ViewModels\SelectWorkspaceViewModelTests.cs" />
     <Compile Include="MvvmCross\ViewModels\EditProjectViewModelTests.cs" />
     <Compile Include="MvvmCross\ViewModels\SelectClientViewModelTests.cs" />
+    <Compile Include="DataSources\TagsDataSourceTests.cs" />
+    <Compile Include="DataSources\BaseDataSourceTests.cs" />
+    <Compile Include="MvvmCross\ViewModels\OutdatedAppViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MvvmCross\ViewModels\StartTimeEntryViewModelTests.cs" />

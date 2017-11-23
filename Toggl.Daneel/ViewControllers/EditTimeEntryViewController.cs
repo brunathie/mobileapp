@@ -202,7 +202,7 @@ namespace Toggl.Daneel.ViewControllers
         {
             DurationLabel.Font = DurationLabel.Font.GetMonospacedDigitFont();
             PreferredContentSize = View.Frame.Size;
-            BillableSwitch.Resize(switchHeight);
+            BillableSwitch.Resize();
             prepareDescriptionField();
         }
 

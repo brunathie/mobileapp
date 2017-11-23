@@ -73,7 +73,7 @@ namespace Toggl.Foundation.Sync
             if (transitionHandler == null || isFrozen == true)
             {
                 isRunning = false;
-                reachDeadEnd(transition);
+                stateTransitions.OnNext(new StateMachineDeadEnd(transition));
                 return;
             }
 
@@ -83,16 +83,6 @@ namespace Toggl.Foundation.Sync
         private void onError(Exception exception)
         {
             isRunning = false;
-            reportError(exception);
-        }
-
-        private void reachDeadEnd(ITransition transition)
-        {
-            stateTransitions.OnNext(new StateMachineDeadEnd(transition));
-        }
-
-        private void reportError(Exception exception)
-        {
             stateTransitions.OnNext(new StateMachineError(exception));
         }
     }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
@@ -9,13 +11,12 @@ using PropertyChanged;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.DTOs;
 using Toggl.Foundation.MvvmCross.Parameters;
+using Toggl.Foundation.MvvmCross.Services;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant.Models;
-using System.Globalization;
 using static Toggl.Foundation.Helper.Constants;
-using Toggl.Foundation.MvvmCross.Services;
-using System.Text;
+using static Toggl.Multivac.Extensions.StringExtensions;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels
 {
@@ -41,11 +42,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public long Id { get; set; }
 
-        private int descriptionByteCount
-            => Encoding.UTF8.GetByteCount(Description);
-
         public bool DescriptionLimitExceeded
-            => descriptionByteCount > MaxTimeEntryDescriptionLengthInBytes;
+            => Description.LengthInBytes() > MaxTimeEntryDescriptionLengthInBytes;
 
         public string Description { get; set; }
 
@@ -331,7 +329,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private string trimTag(string tag)
         {
-            var tagLength = new StringInfo(tag).LengthInTextElements;
+            var tagLength = tag.LengthInGraphemes();
             if (tagLength <= maxTagLength)
                 return tag;
 

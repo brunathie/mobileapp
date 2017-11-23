@@ -6,5 +6,6 @@
         void QueuePullSync();
 
         SyncState Dequeue();
+        void Clear();
     }
 }

@@ -42,7 +42,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 var text = Text.Trim();
                 return !string.IsNullOrEmpty(text)
                     && !Suggestions.Any(c => c.Any(s => s is ProjectSuggestion pS && pS.ProjectName == text))
-                    && Encoding.UTF8.GetByteCount(text) <= MaxProjectNameLengthInBytes;
+                    && text.LengthInBytes() <= MaxProjectNameLengthInBytes;
             }
         }
 
