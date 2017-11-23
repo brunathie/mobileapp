@@ -639,9 +639,9 @@
     <Compile Include="Views\HueSaturationPickerView.cs" />
     <Compile Include="Views\ValueSliderView.cs" />
     <Compile Include="Views\TextViewWithPlaceholder.cs" />
-    <Compile Include="Binding\TextViewWithPlaceholderTextTargetBinding.cs" />\
+    <Compile Include="Binding\TextViewWithPlaceholderTextTargetBinding.cs" />
     <Compile Include="Extensions\TokenExtensions.cs" />
-    <Compile Include="TokenTextAttachment.cs" />]
+    <Compile Include="TokenTextAttachment.cs" />
     <Compile Include="Binding\TextFieldPlaceholderTargetBinding.cs" />
     <Compile Include="Startup\DebugTrace.cs" />
     <Compile Include="Startup\AppDelegate.cs" />
