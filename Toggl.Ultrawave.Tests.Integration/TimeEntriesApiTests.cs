@@ -152,12 +152,11 @@ namespace Toggl.Ultrawave.Tests.Integration
             public async Task TheTimeEntryReturnedByBackendIsARunningTimeEntryWhenPostingANewRunningTimeEntry()
             {
                 var (togglApi, user) = await SetupTestUser();
-                var start = new DateTimeOffset(2017, 10, 12, 11, 31, 00, TimeSpan.Zero);
                 var timeEntry = new Ultrawave.Models.TimeEntry
                 {
                     Description = Guid.NewGuid().ToString(),
                     WorkspaceId = user.DefaultWorkspaceId,
-                    Start = start,
+                    Start = DateTimeOffset.UtcNow,
                     UserId = user.Id,
                     TagIds = new List<long>(),
                     CreatedWith = "IntegrationTests/0.0"
@@ -172,12 +171,11 @@ namespace Toggl.Ultrawave.Tests.Integration
             public async Task TheTimeEntryStoredInBackendIsARunningTimeEntryWhenFetchingItAfterPostingANewRunningTimeEntry()
             {
                 var (togglApi, user) = await SetupTestUser();
-                var start = new DateTimeOffset(2017, 10, 12, 11, 31, 00, TimeSpan.Zero);
                 var timeEntry = new Ultrawave.Models.TimeEntry
                 {
                     Description = Guid.NewGuid().ToString(),
                     WorkspaceId = user.DefaultWorkspaceId,
-                    Start = start,
+                    Start = DateTimeOffset.UtcNow,
                     UserId = user.Id,
                     TagIds = new List<long>(),
                     CreatedWith = "IntegrationTests/0.0"
