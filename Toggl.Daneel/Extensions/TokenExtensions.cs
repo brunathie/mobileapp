@@ -3,6 +3,7 @@ using CoreGraphics;
 using Foundation;
 using MvvmCross.Platform.UI;
 using MvvmCross.Plugins.Color.iOS;
+using Toggl.Multivac.Extensions;
 using Toggl.Foundation.Autocomplete;
 using Toggl.Foundation.MvvmCross.Helper;
 using UIKit;
@@ -69,7 +70,7 @@ namespace Toggl.Daneel.Extensions
         }
 
         public static string TruncatedAt(this string self, int location)
-            => self.Length <= location ? self : $"{self.Substring(0, location - 3)}...";
+            => self.Length <= location ? self : $"{self.UnicodeSafeSubstring(0, location - 3)}...";
 
         private static void addProjectAttachmentsIfNeeded(TextFieldInfo info, NSMutableAttributedString finalString)
         {
