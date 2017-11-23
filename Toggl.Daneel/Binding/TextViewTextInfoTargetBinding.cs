@@ -42,9 +42,9 @@ namespace Toggl.Daneel.Binding
         {
             setTextFieldInfo(value);
 
-            Target.AttributedText = value.GetAttributedText();
-
             if (isSelectingText || !Target.IsFirstResponder || Target.BeginningOfDocument == null) return;
+
+            Target.AttributedText = value.GetAttributedText();
 
             var positionToSet = Target.GetPosition(Target.BeginningOfDocument, value.CursorPosition);
             Target.SelectedTextRange = Target.GetTextRange(positionToSet, positionToSet);
