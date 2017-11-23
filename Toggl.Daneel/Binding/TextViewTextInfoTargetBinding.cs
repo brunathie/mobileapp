@@ -4,7 +4,6 @@ using MvvmCross.Binding;
 using MvvmCross.Binding.Bindings.Target;
 using MvvmCross.Platform.Core;
 using Toggl.Daneel.Extensions;
-using Toggl.Daneel.Views;
 using Toggl.Foundation.Autocomplete;
 using UIKit;
 
@@ -15,6 +14,7 @@ namespace Toggl.Daneel.Binding
         public const string BindingName = "TextFieldInfo";
         private const string selectedTextRangeChangedKey = "selectedTextRange";
 
+        private bool isSelectingText;
         private TextFieldInfo textFieldInfo = TextFieldInfo.Empty;
 
         private readonly IDisposable selectedTextRangeDisposable;
@@ -87,15 +87,10 @@ namespace Toggl.Daneel.Binding
                     .WithTextAndCursor(textFieldInfo.Text, e.CursorPosition));
         }
 
-        private bool isSelectingText;
-
         private void queueValueChange()
         {
-            var selectedRangeStart = Target.SelectedTextRange?.Start;
-            if (selectedRangeStart == null) return;
-
-            isSelectingText = Target.TextInRange(Target.SelectedTextRange).Length > 0;
-            var reportedCursorPosition = (int)Target.GetOffsetFromPosition(Target.BeginningOfDocument, selectedRangeStart);
+            isSelectingText = Target.SelectedRange.Length > 0;
+            var reportedCursorPosition = (int)Target.SelectedRange.Location;
 
             var newDescription = Target.GetDescription();
             var descriptionLength = newDescription.Length;
