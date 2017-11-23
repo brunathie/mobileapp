@@ -11,6 +11,7 @@ using NSubstitute;
 using NSubstitute.Core;
 using Toggl.Foundation.Autocomplete;
 using Toggl.Foundation.Autocomplete.Suggestions;
+using Toggl.Foundation.DataSources;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.Tests.Generators;
 using Toggl.PrimeRadiant.Models;
@@ -171,6 +172,96 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     .Query(Arg.Is<QueryInfo>(info
                         => info.Text == text
                         && info.SuggestionType == AutocompleteSuggestionType.Tags));
+            }
+        }
+
+        public sealed class TheIsEmptyProperty : SelectTagsViewModelTest
+        {
+            const long workspaceId = 1;
+            const long irrelevantWorkspaceId = 2;
+
+            private void setup(Func<long, long> workspaceIdSelector)
+            {
+                var tags = Enumerable.Range(0, 10)
+                                     .Select(i =>
+                                     {
+                                         var tag = Substitute.For<IDatabaseTag>();
+                                         tag.Name.Returns(Guid.NewGuid().ToString());
+                                         tag.Id.Returns(i);
+                                         tag.WorkspaceId.Returns(workspaceIdSelector(i));
+                                         return tag;
+                                     })
+                                     .ToList();
+
+                var tagsSource = Substitute.For<ITagsSource>();
+                tagsSource.GetAll().Returns(Observable.Return(tags));
+
+                DataSource.Tags.Returns(tagsSource);
+            }
+
+            [Fact]
+            public async Task ReturnsTrueIfHasNoTagsForSelectedWorkspace()
+            {
+                setup(i => irrelevantWorkspaceId);
+
+                ViewModel.Prepare((new long[] { }, workspaceId));
+                await ViewModel.Initialize();
+
+                ViewModel.IsEmpty.Should().BeTrue();
+            }
+
+            [Fact]
+            public async Task ReturnsFalseIfTagsForWorkspaceExist()
+            {
+                setup(i => i % 2 == 0 ? irrelevantWorkspaceId : workspaceId);
+
+                ViewModel.Prepare((new long[] { }, workspaceId));
+                await ViewModel.Initialize();
+
+                ViewModel.IsEmpty.Should().BeFalse();
+            }
+
+            [Fact]
+            public async Task ReturnsFalseIfTagsForWorkspaceExistButFilteredCollectionIsEmpty()
+            {
+                setup(i => i % 2 == 0 ? irrelevantWorkspaceId : workspaceId);
+
+                var autocompleteProvider = Substitute.For<IAutocompleteProvider>();
+
+                autocompleteProvider
+                    .Query(Arg.Is<QueryInfo>(
+                        arg => arg.SuggestionType == AutocompleteSuggestionType.Tags))
+                    .Returns(Observable.Return(new List<TagSuggestion>()));
+
+                ViewModel.Prepare((new long[] { }, workspaceId));
+                await ViewModel.Initialize();
+
+                ViewModel.Text = "Anything";
+
+                ViewModel.IsEmpty.Should().BeFalse();
+            }
+
+            [Fact]
+            public async Task ReturnsFalseIfTagIsCreated()
+            {
+                var tagsSource = Substitute.For<ITagsSource>();
+                tagsSource.GetAll().Returns(Observable.Return(new List<IDatabaseTag>()));
+
+                var newTag = Substitute.For<IDatabaseTag>();
+                newTag.Id.Returns(12345);
+
+                tagsSource
+                    .Create(Arg.Any<string>(), Arg.Any<long>())
+                    .Returns(Observable.Return(newTag));
+
+                DataSource.Tags.Returns(tagsSource);
+
+                ViewModel.Prepare((new long[] { }, workspaceId));
+                await ViewModel.Initialize();
+
+                ViewModel.CreateTagCommand.Execute("some-tag");
+
+                ViewModel.IsEmpty.Should().BeFalse();
             }
         }
 

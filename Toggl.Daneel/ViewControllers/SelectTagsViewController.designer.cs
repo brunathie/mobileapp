@@ -17,6 +17,12 @@ namespace Toggl.Daneel.ViewControllers
 		UIKit.UIButton CloseButton { get; set; }
 
 		[Outlet]
+		UIKit.UIImageView EmptyStateImage { get; set; }
+
+		[Outlet]
+		UIKit.UILabel EmptyStateLabel { get; set; }
+
+		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UIKit.UIButton SaveButton { get; set; }
 
@@ -48,6 +54,16 @@ namespace Toggl.Daneel.ViewControllers
 			if (TextField != null) {
 				TextField.Dispose ();
 				TextField = null;
+			}
+
+			if (EmptyStateImage != null) {
+				EmptyStateImage.Dispose ();
+				EmptyStateImage = null;
+			}
+
+			if (EmptyStateLabel != null) {
+				EmptyStateLabel.Dispose ();
+				EmptyStateLabel = null;
 			}
 		}
 	}
