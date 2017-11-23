@@ -1,5 +1,4 @@
 ﻿using System.Net.Http;
-using ModernHttpClient;
 using Toggl.Multivac;
 using Toggl.Ultrawave.ApiClients;
 using Toggl.Ultrawave.Network;
@@ -14,7 +13,7 @@ namespace Toggl.Ultrawave
         {
             Ensure.Argument.IsNotNull(configuration, nameof(configuration));
 
-            var httpHandler = handler ?? new NativeMessageHandler { AutomaticDecompression = GZip | Deflate };
+            var httpHandler = handler ?? new HttpClientHandler { AutomaticDecompression = GZip | Deflate };
             var httpClient = new HttpClient(httpHandler);
 
             var userAgent = configuration.UserAgent;

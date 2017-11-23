@@ -298,28 +298,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Toggl.Foundation\Toggl.Foundation.csproj">
-      <Project>{7BFE4787-4B5E-4C04-A78E-FA89C187FC3A}</Project>
-      <Name>Toggl.Foundation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toggl.Multivac\Toggl.Multivac.csproj">
-      <Project>{4A9CF7CD-8EB4-435D-958B-98A9FFC14876}</Project>
-      <Name>Toggl.Multivac</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toggl.PrimeRadiant\Toggl.PrimeRadiant.csproj">
-      <Project>{84D4A3E2-A25F-4FEF-B4AA-332DFB2A842D}</Project>
-      <Name>Toggl.PrimeRadiant</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toggl.Foundation.MvvmCross\Toggl.Foundation.MvvmCross.csproj">
-      <Project>{B3FDFBF3-8D73-478F-B10E-9843C8613C87}</Project>
-      <Name>Toggl.Foundation.MvvmCross</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toggl.Ultrawave\Toggl.Ultrawave.csproj">
-      <Project>{B4E4943F-0574-4BEF-9ADC-B19102458754}</Project>
-      <Name>Toggl.Ultrawave</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />

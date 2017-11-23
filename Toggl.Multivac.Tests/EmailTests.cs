@@ -110,7 +110,6 @@ namespace Toggl.Multivac.Tests
             [InlineData(".starts.with.a.dot@domain.at")]
             [InlineData("just an invalid email")]
             [InlineData("@example.com")]
-            [InlineData("emoji.\uD83D\uDE49mail@gmail.com")]
             [InlineData("emoji.🙉mail@gmail.com")]
             public void ReturnsEmtpyStringForInvalidEmails(string emailAddress)
             {
