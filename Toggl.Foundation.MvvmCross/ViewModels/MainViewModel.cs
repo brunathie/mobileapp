@@ -155,15 +155,15 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             {
                 case ApiDeprecatedException apiDeprecated:
                     accessRestrictionStorage.SetApiOutdated();
-                    navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate to special page which tells user to update the app
+                    navigationService.Navigate<OutdatedAppViewModel>();
                     return;
                 case ClientDeprecatedException clientDeprecated:
                     accessRestrictionStorage.SetClientOutdated();
-                    navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate to special page which tells user to update the app
+                    navigationService.Navigate<OutdatedAppViewModel>();
                     return;
                 case UnauthorizedException unauthorized:
                     accessRestrictionStorage.SetUnauthorizedAccess();
-                    navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate to special page which tells user to update the app
+                    navigationService.Navigate<LoginViewModel>(); // TODO: navigate to special page which tells user to update the app
                     return;
                 default:
                     throw new ArgumentException(nameof(e));

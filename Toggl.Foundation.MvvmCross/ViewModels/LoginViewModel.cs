@@ -222,11 +222,11 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             {
                 case ApiDeprecatedException apiDeprecated:
                     accessRestrictionStorage.SetApiOutdated();
-                    navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate to special page which tells user to update the app
+                    navigationService.Navigate<OutdatedAppViewModel>();
                     return;
                 case ClientDeprecatedException clientDeprecated:
                     accessRestrictionStorage.SetClientOutdated();
-                    navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate to special page which tells user to update the app
+                    navigationService.Navigate<OutdatedAppViewModel>();
                     return;
                 case ForbiddenException forbidden:
                     ErrorText = Resources.IncorrectEmailOrPassword;

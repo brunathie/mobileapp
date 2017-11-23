@@ -1,4 +1,5 @@
-﻿using MvvmCross.Core.Navigation;
+﻿using System.Threading.Tasks;
+using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using Toggl.Foundation.Login;
@@ -51,13 +52,14 @@ namespace Toggl.Foundation.MvvmCross
 
             if (accessRestrictionStorage.IsApiOutdated() || accessRestrictionStorage.IsClientOutdated())
             {
-                navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate user to the correct screen
+                navigationService.Navigate<OnboardingViewModel>()
+                    .ContinueWith(_ => navigationService.Navigate<OutdatedAppViewModel>());
                 return;
             }
 
             if (accessRestrictionStorage.IsUnauthorized())
             {
-                navigationService.Navigate<OnboardingViewModel>(); // TODO: navigate user to the correct screen
+                navigationService.Navigate<LoginViewModel>(); // TODO: navigate user to the correct screen
                 return;
             }
 

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
+using MvvmCross.Core.Navigation;
 using NSubstitute;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Login;
@@ -52,8 +54,10 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 AccessRestrictionStorage.IsClientOutdated().Returns(true);
 
                 AppStart.Start();
+                Task.Delay(10).Wait();
 
-                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use "update the app" view model when it is ready
+                NavigationService.Received().Navigate<OnboardingViewModel>();
+                NavigationService.Received().Navigate<OutdatedAppViewModel>();
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
@@ -63,8 +67,10 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 AccessRestrictionStorage.IsApiOutdated().Returns(true);
 
                 AppStart.Start();
+                Task.Delay(10).Wait();
 
-                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use "update the app" view model when it is ready
+                NavigationService.Received().Navigate<OnboardingViewModel>();
+                NavigationService.Received().Navigate<OutdatedAppViewModel>();
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
@@ -75,7 +81,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
 
                 AppStart.Start();
 
-                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use repeat login view model when it is ready
+                NavigationService.Received().Navigate<LoginViewModel>(); // TODO: use repeat login view model when it is ready
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
@@ -86,8 +92,10 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 AccessRestrictionStorage.IsClientOutdated().Returns(true);
 
                 AppStart.Start();
+                Task.Delay(10).Wait();
 
-                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use "update the app" view model when it is ready
+                NavigationService.Received().Navigate<OnboardingViewModel>();
+                NavigationService.Received().Navigate<OutdatedAppViewModel>();
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
@@ -98,9 +106,11 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 AccessRestrictionStorage.IsApiOutdated().Returns(true);
 
                 AppStart.Start();
+                Task.Delay(10).Wait();
 
-                NavigationService.Received().Navigate(typeof(OnboardingViewModel)); // TODO: use "update the app" view model when it is ready
-                NavigationService.DidNotReceive().Navigate(typeof(OnboardingViewModel)); // TODO: use repeat login view model when it is ready
+                NavigationService.Received().Navigate<OnboardingViewModel>();
+                NavigationService.Received().Navigate<OutdatedAppViewModel>();
+                NavigationService.DidNotReceive().Navigate<LoginViewModel>(); // TODO: use repeat login view model when it is ready
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 

@@ -646,7 +646,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 {
                     CallAndThrow(new ClientDeprecatedException(request, response));
 
-                    NavigationService.Received().Navigate<OnboardingViewModel>(); // TODO: use correct view model
+                    NavigationService.Received().Navigate<OutdatedAppViewModel>();
                 }
 
                 [Fact]
@@ -654,7 +654,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 {
                     CallAndThrow(new ApiDeprecatedException(request, response));
 
-                    NavigationService.Received().Navigate<OnboardingViewModel>(); // TODO: use correct view model
+                    NavigationService.Received().Navigate<OutdatedAppViewModel>();
                 }
 
                 protected abstract void CallAndThrow(Exception e);

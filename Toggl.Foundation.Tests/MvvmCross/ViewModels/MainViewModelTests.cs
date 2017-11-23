@@ -308,7 +308,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ProgressSubject.OnError(new ClientDeprecatedException(request, response));
 
-                await NavigationService.Received().Navigate<OnboardingViewModel>(); // TODO: use correct view model
+                await NavigationService.Received().Navigate<OutdatedAppViewModel>();
             }
 
             [Fact]
@@ -318,7 +318,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ProgressSubject.OnError(new ApiDeprecatedException(request, response));
 
-                await NavigationService.Received().Navigate<OnboardingViewModel>(); // TODO: use correct view model
+                await NavigationService.Received().Navigate<OutdatedAppViewModel>();
             }
 
             [Fact]
@@ -328,7 +328,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ProgressSubject.OnError(new UnauthorizedException(request, response));
 
-                await NavigationService.Received().Navigate<OnboardingViewModel>(); // TODO: use correct view model
+                await NavigationService.Received().Navigate<LoginViewModel>(); // TODO: use correct view model
             }
         }
     }
