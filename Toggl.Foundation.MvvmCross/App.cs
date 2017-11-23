@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using MvvmCross.Core.Navigation;
+﻿using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using Toggl.Foundation.Login;
