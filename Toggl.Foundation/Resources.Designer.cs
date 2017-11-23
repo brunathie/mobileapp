@@ -335,9 +335,21 @@ namespace Toggl.Foundation {
             }
         }
         
+        public static string AddFilterProjects {
+            get {
+                return ResourceManager.GetString("AddFilterProjects", resourceCulture);
+            }
+        }
+        
         public static string CreateTag {
             get {
                 return ResourceManager.GetString("CreateTag", resourceCulture);
+            }
+        }
+        
+        public static string AddProject {
+            get {
+                return ResourceManager.GetString("AddProject", resourceCulture);
             }
         }
     }

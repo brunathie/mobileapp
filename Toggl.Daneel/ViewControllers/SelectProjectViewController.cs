@@ -1,4 +1,5 @@
 ﻿using MvvmCross.Binding.BindingContext;
+using MvvmCross.Binding.iOS;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.iOS.Views;
 using Toggl.Daneel.Extensions;
@@ -24,8 +25,16 @@ namespace Toggl.Daneel.ViewControllers
             var source = new SelectProjectTableViewSource(ProjectsTableView);
             ProjectsTableView.Source = source;
             source.ToggleTasksCommand = new MvxCommand<ProjectSuggestion>(toggleTaskSuggestions);
-            
+
             var bindingSet = this.CreateBindingSet<SelectProjectViewController, SelectProjectViewModel>();
+
+            bindingSet.Bind(EmptyStateLabel)
+                      .For(v => v.BindVisible())
+                      .To(vm => vm.IsEmpty);
+
+            bindingSet.Bind(EmptyStateImage)
+                      .For(v => v.BindVisible())
+                      .To(vm => vm.IsEmpty);
 
             //Table view
             bindingSet.Bind(source).To(vm => vm.Suggestions);
@@ -43,7 +52,11 @@ namespace Toggl.Daneel.ViewControllers
             
             //Text
             bindingSet.Bind(TextField).To(vm => vm.Text);
-            
+
+            bindingSet.Bind(TextField)
+                      .For(v => v.BindPlaceholder())
+                      .To(vm => vm.PlaceholderText);
+
             //Commands
             bindingSet.Bind(CloseButton).To(vm => vm.CloseCommand);
             bindingSet.Bind(source)

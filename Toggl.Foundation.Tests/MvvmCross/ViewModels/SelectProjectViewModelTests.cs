@@ -8,6 +8,7 @@ using FsCheck.Xunit;
 using NSubstitute;
 using Toggl.Foundation.Autocomplete;
 using Toggl.Foundation.Autocomplete.Suggestions;
+using Toggl.Foundation.DataSources;
 using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.Tests.Generators;
@@ -558,6 +559,89 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     .Query(Arg.Is<QueryInfo>(
                         arg => arg.SuggestionType == AutocompleteSuggestionType.Projects))
                     .Returns(Observable.Return(projects));
+            }
+        }
+
+        public sealed class TheIsEmptyProperty : SelectProjectViewModelTest
+        {
+            const long workspaceId = 1;
+
+            private IDatabaseProject createArbitraryProject(int id)
+            {
+                var project = Substitute.For<IDatabaseProject>();
+                project.Id.Returns(id);
+                project.WorkspaceId.Returns(workspaceId);
+                project.Name.Returns(Guid.NewGuid().ToString());
+                return project;
+            }
+
+            [Fact]
+            public async Task ReturnsFalseIfHasProjects()
+            {
+                var projects = Enumerable.Range(0, 5)
+                                         .Select(createArbitraryProject)
+                                         .ToList();
+
+                var projectsSource = Substitute.For<IProjectsSource>();
+                projectsSource.GetAll().Returns(Observable.Return(projects));
+
+                DataSource.Projects.Returns(projectsSource);
+
+                ViewModel.Prepare(SelectProjectParameter.WithIds(null, null, workspaceId));
+                await ViewModel.Initialize();
+
+                ViewModel.IsEmpty.Should().BeFalse();
+            }
+
+            [Fact]
+            public async Task ReturnsFalseIfHasProjectsButFilteredProjectCollectionDoesNot()
+            {
+                var projects = Enumerable.Range(0, 5)
+                                         .Select(createArbitraryProject)
+                                         .ToList();
+
+                var projectsSource = Substitute.For<IProjectsSource>();
+                projectsSource.GetAll().Returns(Observable.Return(projects));
+
+                DataSource.Projects.Returns(projectsSource);
+
+                DataSource.AutocompleteProvider
+                          .Query(Arg.Is<QueryInfo>(arg => arg.SuggestionType == AutocompleteSuggestionType.Projects))
+                          .Returns(Observable.Return(new List<ProjectSuggestion>()));
+
+                ViewModel.Prepare(SelectProjectParameter.WithIds(null, null, workspaceId));
+                await ViewModel.Initialize();
+
+                ViewModel.Text = "Anything";
+
+                ViewModel.IsEmpty.Should().BeFalse();
+            }
+
+            [Fact]
+            public async Task ReturnsTrueIfHasNoProjects()
+            {
+                var projectsSource = Substitute.For<IProjectsSource>();
+                projectsSource.GetAll().Returns(Observable.Return(new List<IDatabaseProject>()));
+
+                DataSource.Projects.Returns(projectsSource);
+
+                ViewModel.Prepare(SelectProjectParameter.WithIds(null, null, workspaceId));
+                await ViewModel.Initialize();
+
+                ViewModel.IsEmpty.Should().BeTrue();
+            }
+
+            [Fact]
+            public void ReturnsFalseBeforeLoadingProjectsFromDatabase()
+            {
+                var projectsSource = Substitute.For<IProjectsSource>();
+                projectsSource.GetAll().Returns(Observable.Return(new List<IDatabaseProject>()));
+
+                DataSource.Projects.Returns(projectsSource);
+
+                ViewModel.Prepare(SelectProjectParameter.WithIds(null, null, workspaceId));
+
+                ViewModel.IsEmpty.Should().BeFalse();
             }
         }
     }

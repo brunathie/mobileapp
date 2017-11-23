@@ -48,6 +48,11 @@ namespace Toggl.Daneel
             );
 
             registry.RegisterCustomBindingFactory<UITextField>(
+                TextFieldPlaceholderTargetBinding.BindingName,
+                view => new TextFieldPlaceholderTargetBinding(view)
+            );
+
+            registry.RegisterCustomBindingFactory<UITextField>(
                 TextFieldSecureTextEntryTargetBinding.BindingName,
                 view => new TextFieldSecureTextEntryTargetBinding(view)
             );
