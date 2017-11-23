@@ -19,10 +19,10 @@ namespace Toggl.Daneel.Extensions
         private const float tokenCornerRadius = 6.0f;
         private const int tokenVerticallOffset = (lineHeight - tokenHeight) / 2;
 
-        private const int circlePadding = 6;
-        private const int circleDiameter = 4;
-        private const int circleRadius = circleDiameter / 2;
-        private const int circleYOffset = (lineHeight / 2) - circleRadius;
+        private const int dotPadding = 6;
+        private const int dotDiameter = 4;
+        private const int dotRadius = dotDiameter / 2;
+        private const int dotYOffset = (lineHeight / 2) - dotRadius;
 
         private static readonly nfloat textVerticalOffset;
         private static readonly NSParagraphStyle paragraphStyle;
@@ -116,14 +116,15 @@ namespace Toggl.Daneel.Extensions
 
         private static UIImage getProjectToken(NSAttributedString stringToDraw, UIColor projectColor)
         {
-            const int circleWidth = circleDiameter + circlePadding;
+            const int circleWidth = dotDiameter + dotPadding;
             var totalWidth = stringToDraw.Size.Width + circleWidth + interTokenSpacing + (tokenPadding * 2);
             var size = new CGSize(totalWidth, lineHeight);
             UIGraphics.BeginImageContextWithOptions(size, false, 0.0f);
             using (var context = UIGraphics.GetCurrentContext())
             {
                 var tokenPath = UIBezierPath.FromRoundedRect(new CGRect(
-                    x: interTokenSpacing, y: tokenVerticallOffset,
+                    x: interTokenSpacing, 
+                    y: tokenVerticallOffset,
                     width: totalWidth - interTokenSpacing,
                     height: tokenHeight
                 ), tokenCornerRadius);
@@ -131,12 +132,13 @@ namespace Toggl.Daneel.Extensions
                 context.SetFillColor(projectColor.ColorWithAlpha(0.12f).CGColor);
                 context.FillPath();
 
-                var circle = UIBezierPath.FromRoundedRect(new CGRect(
-                    x: circlePadding + interTokenSpacing, y: circleYOffset,
-                    width: circleDiameter,
-                    height: circleDiameter
-                ), circleRadius);
-                context.AddPath(circle.CGPath);
+                var dot = UIBezierPath.FromRoundedRect(new CGRect(
+                    x: dotPadding + interTokenSpacing, 
+                    y: dotYOffset,
+                    width: dotDiameter,
+                    height: dotDiameter
+                ), dotRadius);
+                context.AddPath(dot.CGPath);
                 context.SetFillColor(projectColor.CGColor);
                 context.FillPath();
 
@@ -155,7 +157,8 @@ namespace Toggl.Daneel.Extensions
             using (var context = UIGraphics.GetCurrentContext())
             {
                 var tokenPath = UIBezierPath.FromRoundedRect(new CGRect(
-                    x: interTokenSpacing, y: tokenVerticallOffset,
+                    x: interTokenSpacing, 
+                    y: tokenVerticallOffset,
                     width: size.Width - interTokenSpacing,
                     height: tokenHeight
                 ), tokenCornerRadius);
