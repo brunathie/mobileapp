@@ -8,7 +8,7 @@ using static System.Net.DecompressionMethods;
 
 namespace Toggl.Ultrawave
 {
-    public class ReportsApi
+    public sealed class ReportsApi : IReportsApi
     {
         public ReportsApi(ApiConfiguration configuration, HttpClientHandler handler = null)
         {
