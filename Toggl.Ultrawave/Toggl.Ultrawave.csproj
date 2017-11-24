@@ -140,6 +140,7 @@
     <Compile Include="ReportsModels\ProjectsSummary.cs" />
     <Compile Include="ReportsApi.cs" />
     <Compile Include="Network\ReportsEndpoints\ReportsEndpoints.cs" />
+    <Compile Include="Helpers\ReportsUrls.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Multivac\Toggl.Multivac.csproj">
