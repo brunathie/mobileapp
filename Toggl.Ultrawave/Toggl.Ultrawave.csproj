@@ -134,9 +134,11 @@
     <Compile Include="Exceptions\DeserializationException.cs" />
     <Compile Include="Network\ReportsEndpoints\ProjectsSummaryEndpoints.cs" />
     <Compile Include="ReportsApiClients\Interfaces\IProjectsSummaryApi.cs" />
+    <Compile Include="IReportsApi.cs" />
     <Compile Include="ReportsApiClients\ProjectsSummaryApi.cs" />
     <Compile Include="ReportsModels\ProjectSummary.cs" />
     <Compile Include="ReportsModels\ProjectsSummary.cs" />
+    <Compile Include="ReportsApi.cs" />
     <Compile Include="Network\ReportsEndpoints\ReportsEndpoints.cs" />
   </ItemGroup>
   <ItemGroup>
