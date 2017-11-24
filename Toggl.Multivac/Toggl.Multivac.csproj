@@ -62,6 +62,8 @@
     <Compile Include="Extensions\ClampExtension.cs" />
     <Compile Include="Extensions\HashSetExtensions.cs" />
     <Compile Include="Extensions\TimeEntryExtensions.cs" />
+    <Compile Include="ReportsModels\IProjectSummary.cs" />
+    <Compile Include="ReportsModels\IProjectsSummary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
