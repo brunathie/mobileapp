@@ -132,6 +132,8 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Exceptions\DeserializationException.cs" />
+    <Compile Include="Network\ReportsEndpoints\ProjectsSummaryEndpoints.cs" />
+    <Compile Include="Network\ReportsEndpoints\ReportsEndpoints.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Multivac\Toggl.Multivac.csproj">
