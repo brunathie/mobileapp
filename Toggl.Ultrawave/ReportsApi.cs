@@ -1,27 +1,20 @@
-﻿using System.Net.Http;
-using ModernHttpClient;
-using Toggl.Multivac;
+﻿using Toggl.Multivac;
 using Toggl.Ultrawave.Network;
 using Toggl.Ultrawave.ReportsApiClients;
 using Toggl.Ultrawave.Serialization;
-using static System.Net.DecompressionMethods;
 
 namespace Toggl.Ultrawave
 {
-    public sealed class ReportsApi : IReportsApi
+    internal sealed class ReportsApi : IReportsApi
     {
-        public ReportsApi(ApiConfiguration configuration, HttpClientHandler handler = null)
+        public ReportsApi(IApiClient apiClient, IJsonSerializer serializer, ApiEnvironment environment, Credentials credentials)
         {
-            Ensure.Argument.IsNotNull(configuration, nameof(configuration));
+            Ensure.Argument.IsNotNull(apiClient, nameof(apiClient));
+            Ensure.Argument.IsNotNull(serializer, nameof(serializer));
+            Ensure.Argument.IsNotNull(environment, nameof(environment));
+            Ensure.Argument.IsNotNull(credentials, nameof(credentials));
 
-            var httpHandler = handler ?? new NativeMessageHandler { AutomaticDecompression = GZip | Deflate };
-            var httpClient = new HttpClient(httpHandler);
-
-            var userAgent = configuration.UserAgent;
-            var credentials = configuration.Credentials;
-            var serializer = new JsonSerializer();
-            var apiClient = new ApiClient(httpClient, userAgent);
-            var endpoints = new ReportsEndpoints(configuration.Environment);
+            var endpoints = new ReportsEndpoints(environment);
 
             ProjectsSummary = new ProjectsSummaryApi(endpoints.ProjectsSummary, apiClient, serializer, credentials);
         }
