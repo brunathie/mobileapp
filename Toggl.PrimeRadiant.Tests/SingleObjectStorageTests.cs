@@ -25,7 +25,7 @@ namespace Toggl.PrimeRadiant.Tests
 
         protected abstract ISingleObjectStorage<TTestModel> Storage { get; }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TheSingleMethodThrowsIfThereIsNoDataInTheRepository()
         {
             Func<Task> callingGetLastInAnEmptyRepository =
@@ -35,7 +35,7 @@ namespace Toggl.PrimeRadiant.Tests
                 .ShouldThrow<EntityNotFoundException>();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public async Task TheSingleMethodAlwaysReturnsASingleElement()
         {
             var testEntity = new TTestModel();
@@ -45,7 +45,7 @@ namespace Toggl.PrimeRadiant.Tests
             element.Should().Be(testEntity);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public async Task TheCreateModelThrowsIfAnItemAlreadyExistsRegardlessOfId()
         {
             var testEntity = new TTestModel();
@@ -58,7 +58,7 @@ namespace Toggl.PrimeRadiant.Tests
                 .ShouldThrow<EntityAlreadyExistsException>();
         }
 
-        [Theory]
+        [Theory, LogIfTooSlow]
         [InlineData(2)]
         [InlineData(5)]
         [InlineData(100)]

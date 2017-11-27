@@ -10,7 +10,7 @@ namespace Toggl.Foundation.Tests.Suggestions
     {
         public sealed class TheConstructor
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfArgumentIsNull()
             {
                 Action tryingToConstructWithEmptyParameters =
@@ -20,7 +20,7 @@ namespace Toggl.Foundation.Tests.Suggestions
                     .ShouldThrow<ArgumentNullException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfNoArgumentsArePassed()
             {
                 Action tryingToConstructWithoutParameters =
@@ -30,7 +30,7 @@ namespace Toggl.Foundation.Tests.Suggestions
                     .ShouldThrow<ArgumentException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void WorksIfAtLeastOneProviderIsPassed()
             {
                 var provider = Substitute.For<ISuggestionProvider>();

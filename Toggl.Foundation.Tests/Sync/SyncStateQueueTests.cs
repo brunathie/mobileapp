@@ -65,7 +65,7 @@ namespace Toggl.Foundation.Tests.Sync
 
         public sealed class TheStartNextQueuedStateMethod : BaseStateQueueTests
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void StartsSleepIfNothingQueued()
             {
                 Dequeue();
@@ -75,7 +75,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void StartsPullIfOnlyPullQueued()
             {
                 QueueSyncs(Pull);
@@ -87,7 +87,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void StartsPushIfOnlyPushQueued()
             {
                 QueueSyncs(Push);
@@ -127,7 +127,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void RunsFullCycleIfPullIsQueuedAfterPushStarted()
             {
                 QueueSyncs(Push);
@@ -141,7 +141,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void RunsTwoFullCyclesIfPullIsQueuedAfterFirstPullStarted()
             {
                 QueueSyncs(Pull);
@@ -158,7 +158,7 @@ namespace Toggl.Foundation.Tests.Sync
 
         public sealed class TheClearMethod : BaseStateQueueTests
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ClearsPush()
             {
                 QueueSyncs(Push);
@@ -169,7 +169,7 @@ namespace Toggl.Foundation.Tests.Sync
                 returnValues.ShouldBeSameEventsAs(Sleep);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ClearsPull()
             {
                 QueueSyncs(Pull);

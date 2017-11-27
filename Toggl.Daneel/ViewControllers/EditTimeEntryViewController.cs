@@ -15,6 +15,7 @@ using Toggl.Foundation.MvvmCross.Converters;
 using Toggl.Foundation.MvvmCross.Helper;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using UIKit;
+using static Toggl.Foundation.Helper.Constants;
 
 namespace Toggl.Daneel.ViewControllers
 {
@@ -87,6 +88,10 @@ namespace Toggl.Daneel.ViewControllers
             }
 
             // Text
+            bindingSet.Bind(DescriptionTextView)
+                      .For(v => v.RemainingLength)
+                      .To(vm => vm.DescriptionRemainingLength);
+
             bindingSet.Bind(DescriptionTextView)
                       .For(v => v.BindText())
                       .To(vm => vm.Description);

@@ -103,7 +103,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 post.ShouldThrow<BadRequestException>();
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(0)]
             [InlineData(998)]
             [InlineData(-998)]
@@ -126,7 +126,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 persistedTimeEntry.Id.Should().BePositive();
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(1000)]
             [InlineData(-1000)]
             public async Task FailsCreatingARunningTimeEntryWhenTheStartTimeIsSetToTheCurrentTimePlusMinusMoreThanNineHundredNinetyNineHours(int hoursOffset)
@@ -148,7 +148,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 creatingTimeEntry.ShouldThrow<BadRequestException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task TheTimeEntryReturnedByBackendIsARunningTimeEntryWhenPostingANewRunningTimeEntry()
             {
                 var (togglApi, user) = await SetupTestUser();
@@ -167,7 +167,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 postedTimeEntry.Duration.Should().BeNull();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task TheTimeEntryStoredInBackendIsARunningTimeEntryWhenFetchingItAfterPostingANewRunningTimeEntry()
             {
                 var (togglApi, user) = await SetupTestUser();
@@ -190,7 +190,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 fetchedTimeEntry.Duration.Should().BeNull();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task BackendStopsPreviousRunningTimeEntryWhenAnotherRunningTimeEntryIsPushed()
             {
                 var (togglApi, user) = await SetupTestUser();

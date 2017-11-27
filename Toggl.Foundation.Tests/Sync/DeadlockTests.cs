@@ -79,7 +79,7 @@ namespace Toggl.Foundation.Tests.Sync
             {
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotGetStuckInADeadlockWhenThereAreNoTransitionHandlersForFullSync()
             {
                 var isLocked = isLockedAfterFullSync();
@@ -87,7 +87,7 @@ namespace Toggl.Foundation.Tests.Sync
                 isLocked.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotGetStuckInADeadlockWhenThereAreNoTransitionHandlersForPushSync()
             {
                 var isLocked = isLockedAfterFullSync();
@@ -165,7 +165,7 @@ namespace Toggl.Foundation.Tests.Sync
             {
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotGetStuckInADeadlockWhenThereIsNoTransitionHandler()
             {
                 var someResult = new StateResult();

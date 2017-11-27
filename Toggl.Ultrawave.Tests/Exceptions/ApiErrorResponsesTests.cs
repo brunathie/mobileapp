@@ -18,7 +18,7 @@ namespace Toggl.Ultrawave.Tests.Exceptions
     {
         public sealed class ClientErrors
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [MemberData(nameof(ClientErrorsList), MemberType = typeof(ApiErrorResponsesTests))]
             public void ReturnsClientErrorException(HttpStatusCode httpStatusCode, Type expectedExceptionType)
             {
@@ -33,7 +33,7 @@ namespace Toggl.Ultrawave.Tests.Exceptions
         
         public sealed class ServerErrors
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [MemberData(nameof(ServerErrorsList), MemberType = typeof(ApiErrorResponsesTests))]
             public void ReturnsServerErrorException(HttpStatusCode httpStatusCode, Type expectedExceptionType)
             {
@@ -48,7 +48,7 @@ namespace Toggl.Ultrawave.Tests.Exceptions
 
         public sealed class UnknownErrors
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [MemberData(nameof(UnknownErrorsList), MemberType = typeof(ApiErrorResponsesTests))]
             public void ReturnsUnknownApiError(HttpStatusCode httpStatusCode)
             {
@@ -64,7 +64,7 @@ namespace Toggl.Ultrawave.Tests.Exceptions
 
         public sealed class Serialization
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CreatesAStringWithBodyAndNoHeaders()
             {
                 string body = "Body.";
@@ -80,7 +80,7 @@ namespace Toggl.Ultrawave.Tests.Exceptions
                 serialized.Should().Be(expectedSerialization);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CreatesAStringWithBodyAndWithHeaders()
             {
                 string body = "Body of a response with headers.";
@@ -97,7 +97,7 @@ namespace Toggl.Ultrawave.Tests.Exceptions
                 serialized.Should().Be(expectedSerialization);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SerializesOneHeaderKeyWithNoValues()
             {
                 var headers = new[] { new KeyValuePair<string, IEnumerable<string>>("abc", new string[0]) };
@@ -108,7 +108,7 @@ namespace Toggl.Ultrawave.Tests.Exceptions
                 serialized.Should().Be(expectedSerialization);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SerializesOneHeaderKeyWithOneValue()
             {
                 var headers = new[] { new KeyValuePair<string, IEnumerable<string>>("abc", new[] { "def" }) };
@@ -119,7 +119,7 @@ namespace Toggl.Ultrawave.Tests.Exceptions
                 serialized.Should().Be(expectedSerialization);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SerializesOneHeaderKeyWithMultipleValues()
             {
                 var headers = new[] { new KeyValuePair<string, IEnumerable<string>>("abc", new[] { "def", "ghi", "jkl" }) };
@@ -130,7 +130,7 @@ namespace Toggl.Ultrawave.Tests.Exceptions
                 serialized.Should().Be(expectedSerialization);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SerializesMultipleHeaderKeyWithZeroOneOrMultipleValues()
             {
                 var headers = new[]

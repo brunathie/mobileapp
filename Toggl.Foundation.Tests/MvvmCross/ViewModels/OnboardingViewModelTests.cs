@@ -18,7 +18,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfTheArgumentsIsNull()
             {
                 Action tryingToConstructWithEmptyParameters =
@@ -31,7 +31,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheCurrentPageProperty : OnboardingViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotAllowUsersToSetItsValueToAValueGreaterThanTheNumberOfPagesMinusOne()
             {
                 ViewModel.CurrentPage = OnboardingViewModel.TrackPage;
@@ -42,7 +42,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.CurrentPage.Should().Be(OnboardingViewModel.TrackPage);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotAllowUsersToSetItsValueToANegativeNumber()
             {
                 ViewModel.CurrentPage = OnboardingViewModel.TrackPage;
@@ -55,7 +55,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheIsFirstPageProperty : OnboardingViewModelTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(OnboardingViewModel.TrackPage)]
             [InlineData(OnboardingViewModel.LogPage)]
             [InlineData(OnboardingViewModel.SummaryPage)]
@@ -71,7 +71,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheIsLastPageProperty : OnboardingViewModelTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(OnboardingViewModel.TrackPage)]
             [InlineData(OnboardingViewModel.LogPage)]
             [InlineData(OnboardingViewModel.SummaryPage)]
@@ -87,7 +87,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheSkipCommand : OnboardingViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void GoesStraightToTheLastPage()
             {
                 ViewModel.SkipCommand.Execute();
@@ -98,7 +98,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheNextCommand : OnboardingViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void AdvancesToTheNextPage()
             {
                 ViewModel.CurrentPage = OnboardingViewModel.TrackPage;
@@ -108,7 +108,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.CurrentPage.Should().Be(OnboardingViewModel.LogPage);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CannotBeExecutedWhenOnTheLastPage()
             {
                 ViewModel.CurrentPage = OnboardingViewModel.LoginPage;
@@ -119,7 +119,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class ThePreviousCommand : OnboardingViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsToThePreviousPage()
             {
                 ViewModel.CurrentPage = OnboardingViewModel.LogPage;
@@ -129,7 +129,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.CurrentPage.Should().Be(OnboardingViewModel.TrackPage);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CannotBeExecutedWhenOnTheFirstPage()
             {
                 ViewModel.CurrentPage = OnboardingViewModel.TrackPage;
@@ -140,7 +140,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheLoginCommand : OnboardingViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task RequestsTheLoginViewModelFromTheNavigationService()
             {
                 await ViewModel.LoginCommand.ExecuteAsync();

@@ -25,7 +25,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
 
         public sealed class TheConstructor : AppStartTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(TwoParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(bool userLoginManager, bool userNavigationService)
             {
@@ -42,7 +42,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
 
         public sealed class TheStartMethod : AppStartTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShowsTheOnboardingViewModelIfTheUserHasNotLoggedInPreviously()
             {
                 ITogglDataSource dataSource = null;
@@ -53,7 +53,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 NavigationService.Received().Navigate(typeof(OnboardingViewModel));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShowsTheTimeEntriesViewModelIfTheUserHasLoggedInPreviously()
             {
                 var dataSource = Substitute.For<ITogglDataSource>();

@@ -26,7 +26,7 @@ namespace Toggl.Ultrawave.Tests.Models
             ActualHours = 277
         };
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void HasConstructorWhichCopiesValuesFromInterfaceToTheNewInstance()
         {
             var clonedObject = new Project(validProject);
@@ -35,19 +35,19 @@ namespace Toggl.Ultrawave.Tests.Models
             clonedObject.ShouldBeEquivalentTo(validProject, options => options.IncludingProperties());
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void CanBeDeserialized()
         {
             SerializationHelper.CanBeDeserialized(validJson, validProject);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void CanBeSerialized()
         {
             SerializationHelper.CanBeSerialized(validJson, validProject);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ColorIsAlwaysLowercaseWhenSerialized()
         {
             var serializer = new JsonSerializer();

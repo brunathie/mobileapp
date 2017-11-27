@@ -12,7 +12,7 @@ namespace Toggl.Multivac.Tests
     {
         public class TheConnectedReplayExtensionMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void Connects()
             {
                 var connected = false;
@@ -26,7 +26,7 @@ namespace Toggl.Multivac.Tests
                 connected.Should().BeTrue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void Replays()
             {
                 var items = new List<string>();

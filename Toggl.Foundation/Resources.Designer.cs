@@ -83,6 +83,12 @@ namespace Toggl.Foundation {
             }
         }
         
+        public static string SignUpPasswordRequirements {
+            get {
+                return ResourceManager.GetString("SignUpPasswordRequirements", resourceCulture);
+            }
+        }
+        
         public static string LoginNextButton {
             get {
                 return ResourceManager.GetString("LoginNextButton", resourceCulture);
@@ -316,7 +322,7 @@ namespace Toggl.Foundation {
                 return ResourceManager.GetString("Delete", resourceCulture);
             }
         }
-                
+        
         public static string NewProject {
             get {
                 return ResourceManager.GetString("NewProject", resourceCulture);
@@ -341,6 +347,12 @@ namespace Toggl.Foundation {
             }
         }
         
+        public static string AddFilterTags {
+            get {
+                return ResourceManager.GetString("AddFilterTags", resourceCulture);
+            }
+        }
+        
         public static string AddFilterProjects {
             get {
                 return ResourceManager.GetString("AddFilterProjects", resourceCulture);
@@ -353,20 +365,45 @@ namespace Toggl.Foundation {
             }
         }
         
-        public static string AddProject {
+        public static string CreateProject {
             get {
-                return ResourceManager.GetString("AddProject", resourceCulture);
+                return ResourceManager.GetString("CreateProject", resourceCulture);
             }
         }
-        public static string AddFilterTags {
+        
+        public static string Workspaces {
             get {
-                return ResourceManager.GetString("AddFilterTags", resourceCulture);
+                return ResourceManager.GetString("Workspaces", resourceCulture);
+            }
+        }
+        
+        public static string SetDefaultWorkspaces {
+            get {
+                return ResourceManager.GetString("SetDefaultWorkspaces", resourceCulture);
             }
         }
         
         public static string AddTags {
             get {
                 return ResourceManager.GetString("AddTags", resourceCulture);
+            }
+        }
+        
+        public static string AddProject {
+            get {
+                return ResourceManager.GetString("AddProject", resourceCulture);
+            }
+        }
+        
+        public static string AreYouSure {
+            get {
+                return ResourceManager.GetString("AreYouSure", resourceCulture);
+            }
+        }
+        
+        public static string IncorrectPassword {
+            get {
+                return ResourceManager.GetString("IncorrectPassword", resourceCulture);
             }
         }
     }

@@ -19,7 +19,7 @@ namespace Toggl.Ultrawave.Tests.ApiClients
     {
         public sealed class TheGetAuthHeaderMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task CreatesRequestWithAppropriateHeaders()
             {
                 var apiClient = Substitute.For<IApiClient>();
@@ -52,7 +52,7 @@ namespace Toggl.Ultrawave.Tests.ApiClients
             private IApiClient apiClient = Substitute.For<IApiClient>();
             private IJsonSerializer serializer = Substitute.For<IJsonSerializer>();
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task CreatesAnObservableThatReturnsASingleValue()
             {
                 apiClient.Send(Arg.Any<Request>()).Returns(x => new Response("It lives", true, "text/plain", new List<KeyValuePair<string, IEnumerable<string>>>(), OK));
@@ -66,7 +66,7 @@ namespace Toggl.Ultrawave.Tests.ApiClients
                 await observable.SingleAsync();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EmitsADeserializationErrorIfTheJsonSerializerThrowsAnException()
             {
                 const string rawResponse = "It lives";

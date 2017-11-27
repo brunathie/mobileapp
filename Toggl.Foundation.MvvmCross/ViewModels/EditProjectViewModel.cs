@@ -124,14 +124,18 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private async Task pickWorkspace()
         {
-            var selectedWorkspaceId = await navigationService.Navigate<SelectWorkspaceViewModel, long?>();
-            if (selectedWorkspaceId == null || selectedWorkspaceId.Value == workspaceId) return;
+            var parameters = WorkspaceParameters.Create(workspaceId, Resources.Workspaces, allowQuerying: true);
+            var selectedWorkspaceId = 
+                await navigationService
+                    .Navigate<SelectWorkspaceViewModel, WorkspaceParameters, long>(parameters);
 
-            var workspace = await dataSource.Workspaces.GetById(selectedWorkspaceId.Value);
+            if (selectedWorkspaceId == workspaceId) return;
+
+            var workspace = await dataSource.Workspaces.GetById(selectedWorkspaceId);
 
             clientId = null;
             ClientName = "";
-            workspaceId = selectedWorkspaceId.Value;
+            workspaceId = selectedWorkspaceId;
             WorkspaceName = workspace.Name;
 
             isPro = await dataSource.Workspaces.WorkspaceHasFeature(workspaceId, WorkspaceFeatureId.Pro);

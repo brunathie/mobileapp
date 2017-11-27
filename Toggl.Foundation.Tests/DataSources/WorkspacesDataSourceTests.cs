@@ -35,7 +35,7 @@ namespace Toggl.Foundation.Tests.DataSources
 
         public sealed class TheConstructor : WorkspaceDataSourceTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfTheArgumentIsNull()
             {
                 Action tryingToConstructWithEmptyParameters =
@@ -48,7 +48,7 @@ namespace Toggl.Foundation.Tests.DataSources
 
         public sealed class TheGetDefaultMethod : WorkspaceDataSourceTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsTheDefaultWorkspaceForTheCurrentUser()
             {
                 Database.User.Single().Returns(Observable.Return(User));
@@ -62,7 +62,7 @@ namespace Toggl.Foundation.Tests.DataSources
 
         public sealed class TheGetByIdMethod : WorkspaceDataSourceTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsTheWorkspaceWithPassedId()
             {
                 Database.Workspaces.GetById(DefaultWorkspaceId).Returns(Observable.Return(DefaultWorkspace));
@@ -75,7 +75,7 @@ namespace Toggl.Foundation.Tests.DataSources
 
         public sealed class TheWorkspaceHasFeatureMethod : WorkspaceDataSourceTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task IndicatesWhetherTheUserHasAFeatureAvailableOrNot()
             {
                 var featureCollection = Substitute.For<IDatabaseWorkspaceFeatureCollection>();

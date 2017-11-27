@@ -1,6 +1,5 @@
 using System;
-using Toggl.Multivac;
-using Toggl.Multivac.Models;
+using System.Reactive;
 using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.DataSources
@@ -8,5 +7,6 @@ namespace Toggl.Foundation.DataSources
     public interface IUserSource
     {
         IObservable<IDatabaseUser> Current();
+        IObservable<IDatabaseUser> UpdateWorkspace(long workspaceId);
     }
 }

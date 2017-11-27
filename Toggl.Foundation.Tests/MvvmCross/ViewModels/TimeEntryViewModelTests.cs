@@ -29,7 +29,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor : TimeEntryViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfTheArgumentIsNull()
             {
                 Action tryingToConstructWithEmptyParameters =
@@ -42,7 +42,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheHasProjectProperty : TimeEntryViewModelTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(true)]
             [InlineData(false)]
             public void ChecksIfTheTimeEntryProvidedHasANonNullProject(bool hasProject)

@@ -136,7 +136,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
 
             CurrentPage = PasswordPage;
-            ErrorText = "";
+            ErrorText = loginType == LoginType.SignUp
+                ? Resources.SignUpPasswordRequirements
+                : "";
         }
 
         private void back()

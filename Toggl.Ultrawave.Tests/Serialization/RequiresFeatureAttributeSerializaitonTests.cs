@@ -13,7 +13,7 @@ namespace Toggl.Ultrawave.Tests.Serialization
 {
     public sealed class RequiresFeatureAttributeSerializaitonTests
     {
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThePropertyIsNotSerializedIfTheFeatureIsNotEnabled()
         {
             var settings = getSettings(getFeatures(false, false));
@@ -23,7 +23,7 @@ namespace Toggl.Ultrawave.Tests.Serialization
             json.Should().Be(serializedWithoutTheProperty);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThePropertyIsSerializedIfTheFeatureIsEnabled()
         {
             var settings = getSettings(getFeatures(true, false));
@@ -33,7 +33,7 @@ namespace Toggl.Ultrawave.Tests.Serialization
             json.Should().Be(serializedWithTheProperty);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThePropertyIsSerializedIfAllRequiredFeaturesAreEnabled()
         {
             var settings = getSettings(getFeatures(true, true));
@@ -43,7 +43,7 @@ namespace Toggl.Ultrawave.Tests.Serialization
             json.Should().Be(serializedWithAllProperties);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThePropertyIsNotSerializedIfTheFeatureIsNotInTheListAtAll()
         {
             var settings = getSettings(new WorkspaceFeatureCollection { Features = new List<WorkspaceFeature>() });
@@ -53,7 +53,7 @@ namespace Toggl.Ultrawave.Tests.Serialization
             json.Should().Be(serializedWithoutTheProperty);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThePropertyIsSerializedIfTheSerializerHasNoKnowledgeOfEnabledFeatures()
         {
             var settings = SerializerSettings.For(new DefaultContractResolver());

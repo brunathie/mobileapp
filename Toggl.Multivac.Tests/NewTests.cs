@@ -41,7 +41,7 @@ namespace Toggl.Multivac.Tests
                 this.oldValue = oldValue;
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsOldValueForDefault()
             {
                 var n = default(New<T>);
@@ -51,7 +51,7 @@ namespace Toggl.Multivac.Tests
                 value.Should().Be(oldValue);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsOldValueForNone()
             {
                 var n = New<T>.None;
@@ -61,7 +61,7 @@ namespace Toggl.Multivac.Tests
                 value.Should().Be(oldValue);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsNewValueForExplicitelyConstructed()
             {
                 var n = New<T>.Value(newValue);
@@ -71,7 +71,7 @@ namespace Toggl.Multivac.Tests
                 value.Should().Be(newValue);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsNewValueForImplicitelyConstructed()
             {
                 var n = (New<T>)newValue;
@@ -81,7 +81,7 @@ namespace Toggl.Multivac.Tests
                 value.Should().Be(newValue);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsNewValueForExplicitelyConstructedWithDefaultValue()
             {
                 var n = New<T>.Value(default(T));
@@ -91,7 +91,7 @@ namespace Toggl.Multivac.Tests
                 value.Should().Be(default(T));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsNewValueForImplicitelyConstructedWithDefaultValue()
             {
                 var n = (New<T>)default(T);
@@ -101,7 +101,7 @@ namespace Toggl.Multivac.Tests
                 value.Should().Be(default(T));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsOldValueForNoneIfOldValueIsDefault()
             {
                 var n = New<T>.None;

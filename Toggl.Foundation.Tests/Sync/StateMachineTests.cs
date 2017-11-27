@@ -18,7 +18,7 @@ namespace Toggl.Foundation.Tests.Sync
     {
         public sealed class TheConstructor
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(TwoParameterConstructorTestData))]
             public void ThrowsIfAnyArgumentIsNull(bool useHandler, bool useScheduler)
             {
@@ -76,7 +76,7 @@ namespace Toggl.Foundation.Tests.Sync
 
         public sealed class TheStartTransitionMethod : StateMachineTestBase
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfArgumentIsNull()
             {
                 Action callWithNull = () => StateMachine.Start(null);
@@ -84,7 +84,7 @@ namespace Toggl.Foundation.Tests.Sync
                 callWithNull.ShouldThrow<ArgumentNullException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void AsksTransitionHandlerProviderForHandler()
             {
                 var transition = MakeTransitionSubstitute();
@@ -94,7 +94,7 @@ namespace Toggl.Foundation.Tests.Sync
                 TransitionHandlers.Received().GetTransitionHandler(transition.Result);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReportsDeadEndIfThereIsNoHandler()
             {
                 var transition = MakeTransitionSubstitute();
@@ -106,7 +106,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReportsDeadEndIfThereIsNoValidHandler()
             {
                 MakeTransitionSubstitute(_ => Observable.Never<ITransition>());
@@ -119,7 +119,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void PerformsTransitionIfThereIsAHandler()
             {
                 var transition = MakeTransitionSubstitute(_ => Observable.Never<ITransition>());
@@ -131,7 +131,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfMachineIsAlreadyRunning()
             {
                 SetTransitionHandler(Arg.Any<IStateResult>(), _ => Observable.Never<ITransition>());
@@ -145,7 +145,7 @@ namespace Toggl.Foundation.Tests.Sync
 
         public sealed class TheStateTransitionsObservable : StateMachineTestBase
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReportsErrorIfTheStateErrors()
             {
                 var transition = MakeTransitionSubstitute(_ => Observable.Throw<ITransition>(new Exception()));
@@ -158,7 +158,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReportsErrorIfTheStateCompletesWithoutTransition()
             {
                 var transition = MakeTransitionSubstitute(_ => Observable.Empty<ITransition>());
@@ -171,7 +171,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReportsErrorIfTheStateCompletesWithMoreThanOneTransition()
             {
                 var transition = MakeTransitionSubstitute(
@@ -186,7 +186,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReportsTransitionIfStateTakesLessThanOneMinute()
             {
                 var stateSubject = new Subject<ITransition>();
@@ -204,7 +204,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotReportErrorIfMultipleStatesTogetherTakeLongerThanOneMinute()
             {
                 var stateSubject = new Subject<ITransition>();
@@ -229,7 +229,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReportsErrorIfStateTakesMoreThanOneMinute()
             {
                 var stateSubject = new Subject<ITransition>();
@@ -247,7 +247,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void GetsNewStateObservableEveryTimeStateIsEntered()
             {
                 var transition = MakeTransitionSubstitute();
@@ -272,7 +272,7 @@ namespace Toggl.Foundation.Tests.Sync
 
         public sealed class TheFreezeMethod : StateMachineTestBase
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReachesDeadEndAfterTheStateMachineIsFrozen()
             {
                 var stateSubject = new Subject<ITransition>();
@@ -295,7 +295,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotPeformTransitionsAfterFreezing()
             {
                 var stateSubject = new Subject<ITransition>();
@@ -319,7 +319,7 @@ namespace Toggl.Foundation.Tests.Sync
                 transition3Performed.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsAnExceptionWhenTheStateMachineIsStartedAfterBeingFrozen()
             {
                 StateMachine.Freeze();
@@ -330,7 +330,7 @@ namespace Toggl.Foundation.Tests.Sync
             }
             
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CancelsDelays()
             {
                 bool cancelled = false;
@@ -341,7 +341,7 @@ namespace Toggl.Foundation.Tests.Sync
                 cancelled.Should().BeTrue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CancelsDelaysOnlyOnceWhenFreezeIsCalledMultipleTimes()
             {
                 int cancelled = 0;

@@ -36,7 +36,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
             state = new CheckServerStatusState(api, scheduler, apiDelay, statusDelay, delayCancellation.AsObservable());
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsTheServerIsAvailableTransitionWhenTheStatusEndpointReturnsOK()
         {
             api.Status.IsAvailable().Returns(Observable.Return(Unit.Default));
@@ -49,7 +49,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
             transition.Result.Should().Be(state.ServerIsAvailable);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void DoesNotResetTheStatusDelayServiceWhenTheStatusEndpointReturnsOKBeforeTheApiSlowDelay()
         {
             api.Status.IsAvailable().Returns(Observable.Return(Unit.Default));
@@ -61,7 +61,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
             statusDelay.DidNotReceive().Reset();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ResetsTheStatusDelayServiceWhenTheStatusEndpointReturnsOKAfterTheApiSlowDelay()
         {
             api.Status.IsAvailable().Returns(Observable.Return(Unit.Default));
@@ -73,7 +73,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
             statusDelay.Received().Reset();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void DelaysTheTransitionByAtLeastTheSlowApiDelayTimeWhenTheStatusEndpointReturnsOK()
         {
             api.Status.IsAvailable().Returns(Observable.Return(Unit.Default));
@@ -91,7 +91,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
             hasCompleted.Should().BeFalse();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void DelaysTheTransitionByAtMostTheSlowApiDelayTimeWhenTheStatusEndpointReturnsOK()
         {
             api.Status.IsAvailable().Returns(Observable.Return(Unit.Default));
@@ -109,7 +109,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
             hasCompleted.Should().BeTrue();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void DelaysTheTransitionAtMostByTheNextSlowDelayTimeFromTheRetryDelayServiceWhenInternalServerErrorOccurs()
         {
             api.Status.IsAvailable().Returns(Observable.Throw<Unit>(new InternalServerErrorException(request, response)));
@@ -125,7 +125,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
             hasCompleted.Should().BeTrue();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void DelaysTheTransitionAtLeastByTheNextSlowDelayTimeFromTheRetryDelayServiceWhenInternalServerErrorOccurs()
         {
             api.Status.IsAvailable().Returns(Observable.Throw<Unit>(new InternalServerErrorException(request, response)));
@@ -141,7 +141,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
             hasCompleted.Should().BeFalse();
         }
 
-        [Theory]
+        [Theory, LogIfTooSlow]
         [MemberData(nameof(ServerExceptionsOtherThanInternalServerErrorException))]
         public void DelaysTheTransitionAtMostByTheNextFastDelayTimeFromTheRetryDelayServiceWhenAServerErrorOtherThanInternalServerErrorOccurs(ServerErrorException exception)
         {
@@ -158,7 +158,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
             hasCompleted.Should().BeTrue();
         }
 
-        [Theory]
+        [Theory, LogIfTooSlow]
         [MemberData(nameof(ServerExceptionsOtherThanInternalServerErrorException))]
         public void DelaysTheTransitionAtLeastByTheNextFastDelayTimeFromTheRetryDelayServiceWhenAServerErrorOtherThanInternalServerErrorOccurs(ServerErrorException exception)
         {
@@ -175,7 +175,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
             hasCompleted.Should().BeFalse();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void CompletesEvenThoughTheDelayIsNotOverButTheCancellationObservableIsNotifiedOfNewValue()
         {
             api.Status.IsAvailable().Returns(Observable.Return(Unit.Default));

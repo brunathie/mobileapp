@@ -31,7 +31,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor : SelectClientViewModelTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(TwoParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(bool useDataSource, bool useNavigationService)
             {
@@ -48,7 +48,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheInitializeMethod : SelectClientViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task AddsAllClientsToTheListOfSuggestions()
             {
                 var clients = GenerateClientList();
@@ -61,7 +61,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Suggestions.Should().HaveCount(11);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task AddsANoClientSuggestion()
             {
                 var clients = GenerateClientList();
@@ -77,7 +77,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheCloseCommand : SelectClientViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ClosesTheViewModel()
             {
                 await ViewModel.Initialize();
@@ -88,7 +88,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     .Close(Arg.Is(ViewModel), Arg.Any<long?>());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsNull()
             {
                 await ViewModel.Initialize();
@@ -113,7 +113,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Prepare(10);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ClosesTheViewModel()
             {
                 await ViewModel.Initialize();
@@ -124,7 +124,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     .Close(Arg.Is(ViewModel), Arg.Any<long?>());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsTheSelectedClientId()
             {
                 const long expectedId = 9;
@@ -138,7 +138,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsZeroWhenNoClientIsSelected()
             {
                 await ViewModel.Initialize();
@@ -154,7 +154,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheTextProperty : SelectClientViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task FiltersTheSuggestionsWhenItChanges()
             {
                 var clients = GenerateClientList();
@@ -183,7 +183,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Prepare(10);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsFalseIfTheTextIsEmpty()
             {
                 await ViewModel.Initialize();
@@ -193,7 +193,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsFalseIfTheTextIsOnlyWhitespace()
             {
                 await ViewModel.Initialize();
@@ -203,7 +203,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsFalseIfTheTextMatchesTheNameOfAnExistingProject()
             {
                 await ViewModel.Initialize();
@@ -213,7 +213,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsFalseIfTheTextIsLongerThanTwoHundredAndFiftyCharacters()
             {
                 await ViewModel.Initialize();
@@ -226,7 +226,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheCreateClientCommand : SelectClientViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task CreatesANewClientWithTheGivenNameInTheCurrentWorkspace()
             {
                 long workspaceId = 123;
@@ -239,7 +239,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await DataSource.Clients.Received().Create(Arg.Is(ViewModel.Text), Arg.Is(workspaceId));
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData("   abcde", "abcde")]
             [InlineData("abcde     ", "abcde")]
             [InlineData("  abcde ", "abcde")]
@@ -255,7 +255,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await DataSource.Clients.Received().Create(Arg.Is(trimmed), Arg.Any<long>());
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(" ")]
             [InlineData("\t")]
             [InlineData("\n")]
@@ -270,7 +270,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(" ")]
             [InlineData("\t")]
             [InlineData("\n")]

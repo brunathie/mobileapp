@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
 using Toggl.Foundation.DataSources;
+using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Foundation.MvvmCross.Services;
 using Toggl.Foundation.Sync;
 using Toggl.Multivac;
@@ -17,8 +18,10 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private readonly CompositeDisposable disposeBag = new CompositeDisposable();
 
         private readonly ITogglDataSource dataSource;
-        private readonly IMvxNavigationService navigationService;
         private readonly IDialogService dialogService;
+        private readonly IMvxNavigationService navigationService;
+
+        private long workspaceId;
 
         public string Title { get; private set; } = Resources.Settings;
 
@@ -52,11 +55,11 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public IMvxCommand EditProfileCommand { get; }
 
-        public IMvxCommand EditWorkspaceCommand { get; }
-
         public IMvxCommand SubmitFeedbackCommand { get; }
 
         public IMvxCommand EditSubscriptionCommand { get; }
+        
+        public IMvxAsyncCommand EditWorkspaceCommand { get; }
 
         public IMvxCommand ToggleAddMobileTagCommand { get; }
 
@@ -87,7 +90,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             BackCommand = new MvxAsyncCommand(back);
             LogoutCommand = new MvxAsyncCommand(maybeLogout);
             EditProfileCommand = new MvxCommand(editProfile);
-            EditWorkspaceCommand = new MvxCommand(editWorkspace);
+            EditWorkspaceCommand = new MvxAsyncCommand(editWorkspace);
             SubmitFeedbackCommand = new MvxCommand(submitFeedback);
             EditSubscriptionCommand = new MvxCommand(editSubscription);
             ToggleAddMobileTagCommand = new MvxCommand(toggleAddMobileTag);
@@ -100,6 +103,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             var workspace = await dataSource.Workspaces.GetDefault();
 
             Email = user.Email; 
+            workspaceId = workspace.Id;
             WorkspaceName = workspace.Name;
         }
 
@@ -111,7 +115,22 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         
         public void editProfile() => throw new NotImplementedException();
         
-        public void editWorkspace() => throw new NotImplementedException();
+        public async Task editWorkspace() 
+        {
+            var parameters = WorkspaceParameters.Create(workspaceId, Resources.SetDefaultWorkspaces, allowQuerying: false);
+            var selectedWorkspaceId = 
+                await navigationService
+                    .Navigate<SelectWorkspaceViewModel, WorkspaceParameters, long>(parameters);
+
+            if (selectedWorkspaceId == workspaceId) return;
+
+            var workspace = await dataSource.Workspaces.GetById(selectedWorkspaceId);
+            workspaceId = selectedWorkspaceId;
+            WorkspaceName = workspace.Name;
+
+            await dataSource.User.UpdateWorkspace(workspaceId);
+            await dataSource.SyncManager.PushSync();
+        }
         
         public void submitFeedback() => throw new NotImplementedException();
         

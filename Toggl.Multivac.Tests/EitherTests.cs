@@ -8,7 +8,7 @@ namespace Toggl.Multivac.Tests
     {
         public sealed class TheLeftProperty
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CannotBeAccessedInAnObjectConstructedWithRight()
             {
                 var either = Either<string, bool>.WithRight(true);
@@ -20,7 +20,7 @@ namespace Toggl.Multivac.Tests
                     .ShouldThrow<InvalidOperationException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CanBeAccessedInAnObjectConstructedWithLeft()
             {
                 var either = Either<string, bool>.WithLeft("");
@@ -34,7 +34,7 @@ namespace Toggl.Multivac.Tests
 
         public sealed class TheIsLeftProperty
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldBeTrueForAnObjectCreatedWithLeft()
             {
                 var either = Either<string, bool>.WithLeft("");
@@ -42,7 +42,7 @@ namespace Toggl.Multivac.Tests
                 either.IsLeft.Should().BeTrue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldBeTrueForAnObjectCreatedWithRight()
             {
                 var either = Either<string, bool>.WithRight(true);
@@ -53,7 +53,7 @@ namespace Toggl.Multivac.Tests
 
         public sealed class TheRightProperty
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CannotBeAccessedInAnObjectConstructedWithLeft()
             {
                 var either = Either<string, bool>.WithLeft("");
@@ -65,7 +65,7 @@ namespace Toggl.Multivac.Tests
                     .ShouldThrow<InvalidOperationException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CanBeAccessedInAnObjectConstructedWithRight()
             {
                 var either = Either<string, bool>.WithRight(true);
@@ -79,7 +79,7 @@ namespace Toggl.Multivac.Tests
 
         public sealed class TheIsRightProperty
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldBeTrueForAnObjectCreatedWithRight()
             {
                 var either = Either<string, bool>.WithRight(true);
@@ -87,7 +87,7 @@ namespace Toggl.Multivac.Tests
                 either.IsRight.Should().BeTrue();
             }
             
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldBeFalseForAnObjectCreatedWithLeft()
             {
                 var either = Either<string, bool>.WithLeft("");
@@ -95,6 +95,5 @@ namespace Toggl.Multivac.Tests
                 either.IsRight.Should().BeFalse();
             }
         }
-
     }
 }

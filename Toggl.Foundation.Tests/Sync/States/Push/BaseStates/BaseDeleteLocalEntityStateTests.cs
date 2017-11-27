@@ -19,7 +19,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             repository = Substitute.For<IRepository<TModel>>();
         }
         
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsFailTransitionWhenEntityIsNull()
         {
             var state = CreateState(repository);
@@ -29,7 +29,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             transition.Result.Should().Be(state.DeletingFailed);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsFailTransitionWhenDatabaseOperationFails()
         {
             var state = CreateState(repository);
@@ -41,7 +41,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             transition.Result.Should().Be(state.DeletingFailed);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsDeletedTransitionWhenEverythingIsOk()
         {
             var state = CreateState(repository);
@@ -53,7 +53,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             transition.Result.Should().Be(state.Deleted);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void DeletesTheEntityFromTheLocalDatabase()
         {
             var state = CreateState(repository);

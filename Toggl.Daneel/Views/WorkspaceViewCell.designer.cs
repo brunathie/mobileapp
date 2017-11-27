@@ -14,12 +14,20 @@ namespace Toggl.Daneel.Views
 	{
 		[Outlet]
 		UIKit.UILabel NameLabel { get; set; }
+
+		[Outlet]
+		UIKit.UIImageView SelectedImage { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
 			if (NameLabel != null) {
 				NameLabel.Dispose ();
 				NameLabel = null;
+			}
+
+			if (SelectedImage != null) {
+				SelectedImage.Dispose ();
+				SelectedImage = null;
 			}
 		}
 	}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive;
 using System.Reactive.Linq;
 using Toggl.Foundation.Models;
 using Toggl.Multivac;
@@ -27,5 +28,11 @@ namespace Toggl.Foundation.DataSources
             
             return storage.Single().Select(User.From).Do(user => cachedUser = user);
         });
+
+        public IObservable<IDatabaseUser> UpdateWorkspace(long workspaceId)
+            => storage
+                .Single()
+                .Select(user => user.With(workspaceId))
+                .SelectMany(storage.Update);
     }
 }

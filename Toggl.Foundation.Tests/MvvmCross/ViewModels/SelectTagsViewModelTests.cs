@@ -60,7 +60,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor : SelectTagsViewModelTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(TwoParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(bool useDataSource, bool useNavigationService)
             {
@@ -77,7 +77,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheCloseCommand : SelectTagsViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ClosesTheViewModel()
             {
                 await ViewModel.CloseCommand.ExecuteAsync();
@@ -85,7 +85,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await EnsureClosesTheViewModel();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsTheSameTagsThatWerePassedToTheViewModel()
             {
                 var tagids = new long[] { 1, 4, 29, 2 };
@@ -101,7 +101,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheSaveCommand : SelectTagsViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ClosesTheViewModel()
             {
                 await ViewModel.SaveCommand.ExecuteAsync();
@@ -109,7 +109,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await EnsureClosesTheViewModel();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsTheSelectedTagIds()
             {
                 var tagIds = Enumerable.Range(0, 20).Select(num => (long)num);
@@ -132,7 +132,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsEmptyArrayIfNoTagsWereSelected()
             {
                 var expectedIds = new long[0];
@@ -158,7 +158,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheTextProperty : SelectTagsViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task WhenChangedQueriesTheAutocompleteProvider()
             {
                 var text = "Some text";
@@ -199,7 +199,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 DataSource.Tags.Returns(tagsSource);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsTrueIfHasNoTagsForSelectedWorkspace()
             {
                 setup(i => irrelevantWorkspaceId);
@@ -210,7 +210,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.IsEmpty.Should().BeTrue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsFalseIfTagsForWorkspaceExist()
             {
                 setup(i => i % 2 == 0 ? irrelevantWorkspaceId : workspaceId);
@@ -221,7 +221,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.IsEmpty.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsFalseIfTagsForWorkspaceExistButFilteredCollectionIsEmpty()
             {
                 setup(i => i % 2 == 0 ? irrelevantWorkspaceId : workspaceId);
@@ -241,7 +241,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.IsEmpty.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsFalseIfTagIsCreated()
             {
                 var tagsSource = Substitute.For<ITagsSource>();
@@ -295,7 +295,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 return workspace;
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task OnlyContainsTagsFromTheSameWorkspaceAsTimeEntry()
             {
                 var tags = new List<TagSuggestion>();
@@ -322,7 +322,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     .OnlyContain(tag => tag.Workspace == targetWorkspace.Name);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task IsPopulatedAfterInitialization()
             {
                 var workspace = createWorkspace(13, "Some workspace");
@@ -343,7 +343,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Tags.Should().HaveCount(tagSuggestions.Count());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task IsSortedBySelectedStatusThenByName()
             {
                 var workspace = createWorkspace(13, "Some workspace");
@@ -378,7 +378,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Tags[3].Selected.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task IsClearedWhenTextIsChanged()
             {
                 var workspace = createWorkspace(13, "Some workspace");
@@ -429,7 +429,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 selectableTag.Selected.Should().Be(!initialValue);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task AppendsTheTagIdToSelectedTagIdsIfNotSelectedAlready()
             {
                 var selectableTag = new SelectableTagViewModel(tagSuggestion, false);
@@ -445,7 +445,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task RemovesTheTagIdFromSelectedTagIdsIfSelectedAlready()
             {
                 var selectableTag = new SelectableTagViewModel(tagSuggestion, true);
@@ -465,7 +465,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class ThePrepareMethod : SelectTagsViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task AddsAllPassedTagsToTheSelectedTags()
             {
                 var tagIds = new long[] { 100, 3, 10, 34, 532 };
@@ -547,7 +547,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Text.Should().BeEmpty();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void PrependsTheNewTagToTheTagList()
             {
                 var tagName = "Some Tag";
@@ -578,7 +578,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Tags.First().Name.Should().Be(tagName);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SelectsTheNewTag()
             {
                 prepare(10, 20).Wait();
@@ -590,7 +590,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Tags.First().Selected.Should().BeTrue();
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData("   Some tag", "Some tag")]
             [InlineData("Some tag   ", "Some tag")]
             [InlineData("   Some tag   ", "Some tag")]
@@ -614,7 +614,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheSuggestCreationproperty : SelectTagsViewModelTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData("")]
             [InlineData("     ")]
             [InlineData("\t")]
@@ -626,7 +626,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData("1")]
             [InlineData("4")]
             [InlineData("  6    ")]
@@ -646,7 +646,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData("c", MaxTagNameLengthInBytes + 1)]
             [InlineData("Ж", MaxTagNameLengthInBytes / 2 + 1)]
             [InlineData("🍔", MaxTagNameLengthInBytes / 4 + 1)]
@@ -657,7 +657,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData("Some tag")]
             [InlineData("  \t Some tag  \t")]
             public void IsTrueWhenAllConditionsAreMet(string text)

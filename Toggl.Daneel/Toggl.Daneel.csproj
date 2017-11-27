@@ -416,6 +416,7 @@
     <InterfaceDefinition Include="Views\ClientViewCell.xib" />
     <InterfaceDefinition Include="ViewControllers\SelectClientViewController.xib" />
     <InterfaceDefinition Include="ViewControllers\OutdatedAppViewController.xib" />
+    <InterfaceDefinition Include="ViewControllers\TokenResetViewController.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -642,6 +643,7 @@
     <Compile Include="Binding\TextViewWithPlaceholderTextTargetBinding.cs" />
     <Compile Include="Extensions\TokenExtensions.cs" />
     <Compile Include="TokenTextAttachment.cs" />
+    <Compile Include="Views\TextViewWithCharacterCounter.cs" />
     <Compile Include="Binding\TextFieldPlaceholderTargetBinding.cs" />
     <Compile Include="Startup\DebugTrace.cs" />
     <Compile Include="Startup\AppDelegate.cs" />
@@ -651,6 +653,10 @@
       <DependentUpon>OutdatedAppViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\BrowserService.cs" />
+    <Compile Include="ViewControllers\TokenResetViewController.cs" />
+    <Compile Include="ViewControllers\TokenResetViewController.designer.cs">
+      <DependentUpon>TokenResetViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation.MvvmCross\Toggl.Foundation.MvvmCross.csproj">

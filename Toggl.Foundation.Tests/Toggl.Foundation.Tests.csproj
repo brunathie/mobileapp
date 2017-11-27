@@ -286,6 +286,7 @@
     <Compile Include="DataSources\TagsDataSourceTests.cs" />
     <Compile Include="DataSources\BaseDataSourceTests.cs" />
     <Compile Include="MvvmCross\ViewModels\OutdatedAppViewModelTests.cs" />
+    <Compile Include="MvvmCross\ViewModels\TokenResetViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MvvmCross\ViewModels\StartTimeEntryViewModelTests.cs" />
@@ -318,6 +319,10 @@
     <ProjectReference Include="..\Toggl.Ultrawave\Toggl.Ultrawave.csproj">
       <Project>{B4E4943F-0574-4BEF-9ADC-B19102458754}</Project>
       <Name>Toggl.Ultrawave</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toggl.Multivac.Tests\Toggl.Multivac.Tests.csproj">
+      <Project>{DEAB771F-ED46-4A27-AD25-F26723820F93}</Project>
+      <Name>Toggl.Multivac.Tests</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

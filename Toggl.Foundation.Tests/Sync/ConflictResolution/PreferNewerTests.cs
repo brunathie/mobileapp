@@ -10,7 +10,7 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
 {
     public sealed class PreferNewerTests
     {
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThrowsWhenIncomingEntityIsNull()
         {
             var existingEntity = new TestModel();

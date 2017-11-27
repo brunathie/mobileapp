@@ -10,7 +10,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Converters
     {
         public sealed class TheConvertMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotAppendUnitIfTimeSpanIsLongerThanOneHour()
             {
                 var converter = new TimeSpanToDurationWithUnitValueConverter();
@@ -22,7 +22,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Converters
                 actual.Should().Be(expected);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void AppendsTheMinuteUnitIfTimeSpanIsNotLongerThanOneHour()
             {
                 var converter = new TimeSpanToDurationWithUnitValueConverter();
@@ -34,7 +34,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Converters
                 actual.Should().Be(expected);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void AppendsTheSecondUnitIfTimeSpanIsLessThanOneMinute()
             {
                 var converter = new TimeSpanToDurationWithUnitValueConverter();
@@ -46,7 +46,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Converters
                 actual.Should().Be(expected);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void WorksIfMinutesAreZero()
             {
                 var converter = new TimeSpanToDurationWithUnitValueConverter();
@@ -58,7 +58,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Converters
                 actual.Should().Be(expected);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotRemoveLeadingZeroFromMinutes()
             {
                 var converter = new TimeSpanToDurationWithUnitValueConverter();
@@ -70,7 +70,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Converters
                 actual.Should().Be(expected);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotRemoveLeadingZeroFromHours()
             {
                 var converter = new TimeSpanToDurationWithUnitValueConverter();
@@ -82,7 +82,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Converters
                 actual.Should().Be(expected);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void WorksForMoreThan24Hours()
             {
                 var converter = new TimeSpanToDurationWithUnitValueConverter();

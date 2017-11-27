@@ -18,23 +18,23 @@ namespace Toggl.Foundation.Tests.Sync.States
             this.helper = new TheStartMethod();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThrowsWhenEntityIsNull()
             => helper.ThrowsWhenEntityIsNull();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsCreateTransitionWhenTheEntityIsNotPublishedAndNotDeleted()
             => helper.ReturnsCreateTransitionWhenTheEntityIsNotPublishedAndNotDeleted();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsUpdateTransitionWhenTheEntityIsPublishedAndNotDeleted()
             => helper.ReturnsUpdateTransitionWhenTheEntityIsPublishedAndNotDeleted();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsDeleteTransitionWhenTheEntityIsPublishedAndIsDeleted()
             => helper.ReturnsDeleteTransitionWhenTheEntityIsPublishedAndIsDeleted();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsDeleteLocallyTransitionWhenTheEntityIsNotPublishedAndIsDeleted()
             => helper.ReturnsDeleteLocallyTransitionWhenTheEntityIsNotPublishedAndIsDeleted();
 

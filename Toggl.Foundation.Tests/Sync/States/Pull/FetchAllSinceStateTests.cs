@@ -33,7 +33,7 @@ namespace Toggl.Foundation.Tests.Sync.States
                 state = new FetchAllSinceState(database, api, timeService);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EmitsTransitionToFetchStartedResult()
             {
                 var transition = state.Start().SingleAsync().Wait();
@@ -41,7 +41,7 @@ namespace Toggl.Foundation.Tests.Sync.States
                 transition.Result.Should().Be(state.FetchStarted);
             }
             
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void MakesNoApiCallsBeforeSubscription()
             {
                 state.Start();
@@ -87,7 +87,7 @@ namespace Toggl.Foundation.Tests.Sync.States
                 api.Tags.Received().GetAllSince(since);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void MakesApiCallsWithoutTheSinceParameterWhenTheThresholdIsMoreThanTwoMonthsInThePast()
             {
                 var now = timeService.CurrentDateTime;
@@ -112,7 +112,7 @@ namespace Toggl.Foundation.Tests.Sync.States
                 api.Tags.Received().GetAll();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void MakesCorrectCallsWithoutSinceThresholds()
             {
                 state.Start().Wait();
@@ -125,7 +125,7 @@ namespace Toggl.Foundation.Tests.Sync.States
                 api.Tags.Received().GetAll();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ConnectsToApiCallObservables()
             {
                 var workspaceCall = false;
@@ -152,7 +152,7 @@ namespace Toggl.Foundation.Tests.Sync.States
                 tagCall.Should().BeTrue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsReplayingApiCallObservables()
             {
                 api.Workspaces.GetAll().Returns(Observable.Return<List<IWorkspace>>(null));
@@ -173,7 +173,7 @@ namespace Toggl.Foundation.Tests.Sync.States
                 observables.Tags.SingleAsync().Wait().Should().BeNull();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsSinceParametersFromDatabase()
             {
                 var transition = (Transition<FetchObservables>)state.Start().SingleAsync().Wait();

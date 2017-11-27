@@ -88,7 +88,7 @@ namespace Toggl.Foundation.Tests.DataSources
 
         public sealed class TheConstructor : TimeEntryDataSourceTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(ThreeParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(bool useIdProvider, bool useRepository, bool useTimeService)
             {
@@ -115,7 +115,7 @@ namespace Toggl.Foundation.Tests.DataSources
                     .Returns(info => Observable.Return(new[] { new CreateResult<IDatabaseTimeEntry>(info.Arg<IEnumerable<(long, IDatabaseTimeEntry Entity)>>().First().Entity) }));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask CreatesANewTimeEntryInTheDatabase()
             {
                 await TimeEntriesSource.Start(CreateDto(ValidTime, ValidDescription, true, ProjectId));
@@ -123,7 +123,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await Repository.ReceivedWithAnyArgs().BatchUpdate(null, null, null);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask CreatesASyncNeededTimeEntry()
             {
                 await TimeEntriesSource.Start(CreateDto(ValidTime, ValidDescription, true, ProjectId));
@@ -134,7 +134,7 @@ namespace Toggl.Foundation.Tests.DataSources
                     Arg.Any<IRivalsResolver<IDatabaseTimeEntry>>());
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(true)]
             [InlineData(false)]
             public async ThreadingTask CreatesATimeEntryWithTheProvidedValueForBillable(bool billable)
@@ -144,7 +144,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await batchUpdateCalledWith(te => te.Billable == billable);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask CreatesATimeEntryWithTheProvidedValueForDescription()
             {
                 await TimeEntriesSource.Start(CreateDto(ValidTime, ValidDescription, true, ProjectId));
@@ -152,7 +152,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await batchUpdateCalledWith(te => te.Description == ValidDescription);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask CreatesATimeEntryWithTheProvidedValueForStartTime()
             {
                 await TimeEntriesSource.Start(CreateDto(ValidTime, ValidDescription, true, ProjectId));
@@ -160,7 +160,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await batchUpdateCalledWith(te => te.Start == ValidTime);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask CreatesATimeEntryWithTheProvidedValueForProjectId()
             {
                 await TimeEntriesSource.Start(CreateDto(ValidTime, ValidDescription, true, ProjectId));
@@ -168,7 +168,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await batchUpdateCalledWith(te => te.ProjectId == ProjectId);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask CreatesATimeEntryWithTheProvidedValueForUserId()
             {
                 await TimeEntriesSource.Start(CreateDto(ValidTime, ValidDescription, true, ProjectId));
@@ -176,7 +176,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await batchUpdateCalledWith(te => te.UserId == UserId);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask CreatesATimeEntryWithTheProvidedValueForTaskId()
             {
                 await TimeEntriesSource.Start(CreateDto(ValidTime, ValidDescription, true, ProjectId, TaskId));
@@ -184,7 +184,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await batchUpdateCalledWith(te => te.TaskId == TaskId);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask CreatesATimeEntryWithTheProvidedValueForWorkspaceId()
             {
                 await TimeEntriesSource.Start(CreateDto(ValidTime, ValidDescription, true, ProjectId));
@@ -192,7 +192,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await batchUpdateCalledWith(te => te.WorkspaceId == WorkspaceId);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask CreatesATimeEntryWithAnIdProvidedByTheIdProvider()
             {
                 await TimeEntriesSource.Start(CreateDto(ValidTime, ValidDescription, true, ProjectId));
@@ -200,7 +200,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await batchUpdateCalledWith(te => te.Id == -1);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask SetstheCreatedTimeEntryAsTheCurrentlyRunningTimeEntry()
             {
                 var observer = TestScheduler.CreateObserver<ITimeEntry>();
@@ -213,7 +213,7 @@ namespace Toggl.Foundation.Tests.DataSources
 
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask EmitsANewEventOnTheTimeEntryCreatedObservable()
             {
                 var observer = TestScheduler.CreateObserver<ITimeEntry>();
@@ -236,7 +236,7 @@ namespace Toggl.Foundation.Tests.DataSources
 
         public sealed class TheGetAllMethod : TimeEntryDataSourceTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask NeverReturnsDeletedTimeEntries()
             {
                 var result = Enumerable
@@ -283,14 +283,14 @@ namespace Toggl.Foundation.Tests.DataSources
                              .Select(x => x.Where(callInfo.Arg<Func<IDatabaseTimeEntry, bool>>())));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask UpdatesTheTimeEntrySettingItsDuration()
             {
                 await TimeEntriesSource.Stop(ValidTime); 
                 await Repository.Received().Update(Arg.Any<long>(), Arg.Is<IDatabaseTimeEntry>(te => te.Duration == (long)(ValidTime - te.Start).TotalSeconds));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask UpdatesTheTimeEntryMakingItSyncNeeded()
             {
                 await TimeEntriesSource.Stop(ValidTime);
@@ -298,7 +298,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await Repository.Received().Update(Arg.Any<long>(), Arg.Is<IDatabaseTimeEntry>(te => te.SyncStatus == SyncStatus.SyncNeeded));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask SetsTheCurrentlyRunningTimeEntryToNull()
             {
                 var observer = TestScheduler.CreateObserver<ITimeEntry>();
@@ -310,7 +310,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 observer.Messages.Single().Value.Value.Should().BeNull();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfThereAreNoRunningTimeEntries()
             {
                 long duration = (long)(DateTimeOffset.UtcNow - DatabaseTimeEntry.Start).TotalSeconds;
@@ -335,7 +335,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 observer.Messages.Single().Value.Exception.Should().BeOfType<NoRunningTimeEntryException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask EmitsANewEventOnTheTimeEntryUpdatedObservable()
             {
                 var observer = TestScheduler.CreateObserver<(long Id, IDatabaseTimeEntry Entity)>();
@@ -350,7 +350,7 @@ namespace Toggl.Foundation.Tests.DataSources
         } 
         public sealed class TheDeleteMethod : TimeEntryDataSourceTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask SetsTheDeletedFlag()
             {
                 await TimeEntriesSource.Delete(DatabaseTimeEntry.Id).LastOrDefaultAsync();
@@ -358,7 +358,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await Repository.Received().Update(Arg.Is(DatabaseTimeEntry.Id), Arg.Is<IDatabaseTimeEntry>(te => te.IsDeleted == true));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask SetsTheSyncNeededStatus()
             {
                 await TimeEntriesSource.Delete(DatabaseTimeEntry.Id).LastOrDefaultAsync();
@@ -366,7 +366,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await Repository.Received().Update(Arg.Is(DatabaseTimeEntry.Id), Arg.Is<IDatabaseTimeEntry>(te => te.SyncStatus == SyncStatus.SyncNeeded));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask UpdatesTheCorrectTimeEntry()
             {
                 await TimeEntriesSource.Delete(DatabaseTimeEntry.Id).LastOrDefaultAsync();
@@ -375,7 +375,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await Repository.Received().Update(Arg.Is(DatabaseTimeEntry.Id), Arg.Is<IDatabaseTimeEntry>(te => te.Id == DatabaseTimeEntry.Id));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EmitsSingleElementBeforeCompleting()
             {
                 var observer = Substitute.For<IObserver<Unit>>();
@@ -386,7 +386,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 observer.Received(1).OnCompleted();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void PropagatesErrorIfUpdateFails()
             {
                 var timeEntry = TimeEntry.Builder.Create(12)
@@ -409,7 +409,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 observer.Received().OnError(Arg.Any<EntityNotFoundException>());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void PropagatesErrorIfTimeEntryIsNotInRepository()
             {
                 var observer = Substitute.For<IObserver<Unit>>();
@@ -421,7 +421,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 observer.Received().OnError(Arg.Any<EntityNotFoundException>());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask RemovesCurrentlyRunningTimeEntryWhenItIsDeleted()
             {
                 var runningTimeEntriesHistory = new List<IDatabaseTimeEntry>();
@@ -474,7 +474,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 && timeEntry.IsDeleted == DatabaseTimeEntry.IsDeleted
                 && timeEntry.ServerDeletedAt == DatabaseTimeEntry.ServerDeletedAt;
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask UpdatesTheDescriptionProperty()
             {
                 var dto = prepareTest();
@@ -484,7 +484,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await Repository.Received().Update(Arg.Is(dto.Id), Arg.Is<IDatabaseTimeEntry>(te => te.Description == dto.Description));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask UpdatesTheSyncStatusProperty()
             {
                 var dto = prepareTest();
@@ -494,7 +494,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await Repository.Received().Update(Arg.Is(dto.Id), Arg.Is<IDatabaseTimeEntry>(te => te.SyncStatus == SyncStatus.SyncNeeded));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask UpdatesTheAtProperty()
             {
                 var dto = prepareTest();
@@ -505,7 +505,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await Repository.Received().Update(Arg.Is(dto.Id), Arg.Is<IDatabaseTimeEntry>(te => te.At > DatabaseTimeEntry.At));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask UpdatesTheProjectId()
             {
                 var dto = prepareTest();
@@ -515,7 +515,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await Repository.Received().Update(Arg.Is(dto.Id), Arg.Is<IDatabaseTimeEntry>(te => te.ProjectId == dto.ProjectId));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask UpdatesTheBillbaleFlag()
             {
                 var dto = prepareTest();
@@ -525,7 +525,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await Repository.Received().Update(Arg.Is(dto.Id), Arg.Is<IDatabaseTimeEntry>(te => te.Billable == dto.Billable));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask UpdatesTheTagIds()
             {
                 var dto = prepareTest();
@@ -535,7 +535,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await Repository.Received().Update(Arg.Is(dto.Id), Arg.Is<IDatabaseTimeEntry>(te => te.TagIds.SequenceEqual(dto.TagIds)));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask UpdatesTheWorkspaceId()
             {
                 var dto = prepareTest();
@@ -547,7 +547,7 @@ namespace Toggl.Foundation.Tests.DataSources
                     Arg.Is<IDatabaseTimeEntry>(te => te.WorkspaceId == dto.WorkspaceId));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask LeavesAllOtherPropertiesUnchanged()
             {
                 var dto = prepareTest();
@@ -557,7 +557,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 await Repository.Received().Update(Arg.Is(dto.Id), Arg.Is<IDatabaseTimeEntry>(te => ensurePropertiesDidNotChange(te)));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask NotifiesAboutTheUpdate()
             {
                 var observable = Observable.Return(DatabaseTimeEntry);
@@ -571,7 +571,7 @@ namespace Toggl.Foundation.Tests.DataSources
                 observer.Received().OnNext(Arg.Is<(long Id, IDatabaseTimeEntry)>(te => te.Id == dto.Id));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask UsesTheUpdatedEntityFromTheRepositoryAndNotTheArgumentToUpdateTheCurrentlyRunningTimeEntry()
             {
                 var observable = Observable.Return(DatabaseTimeEntry);

@@ -20,7 +20,7 @@ namespace Toggl.Foundation.Tests
                 timeService = new TimeService(testScheduler);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsTheSameObjectsRegardlessOfTheTimeTheObserversSubscribed()
             {
                 var firstStep = 500;
@@ -39,7 +39,7 @@ namespace Toggl.Foundation.Tests
                              .And.BeEquivalentTo(firstObserver.Messages);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void PublishesCurrentTimeFlooredToTheCurrentSecond()
             {
                 DateTimeOffset roundedNow = default(DateTimeOffset);
@@ -51,7 +51,7 @@ namespace Toggl.Foundation.Tests
                 roundedNow.Millisecond.Should().Be(0);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsCurrentTimeFlooredToTheCurrentSecond()
             {
                 DateTimeOffset roundedNow = timeService.CurrentDateTime;
@@ -72,7 +72,7 @@ namespace Toggl.Foundation.Tests
                 timeService = new TimeService(testScheduler);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EmitsFirstValueAtTheNearestMidnightInTheLocalTimeZone()
             {
                 reset();
@@ -92,7 +92,7 @@ namespace Toggl.Foundation.Tests
                 lastEmitted.Should().Be(nextLocalMidnight(now));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EmitsSecondValueExcatly24HoursAfterTheNearestMidnight()
             {
                 reset();
@@ -112,7 +112,7 @@ namespace Toggl.Foundation.Tests
                 lastEmitted.Should().Be(nextLocalMidnight(now).AddHours(24));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SubscriberDoesNotReceiveAnyValueEmittedBeforeItSubscribed()
             {
                 reset();
@@ -132,7 +132,7 @@ namespace Toggl.Foundation.Tests
                 firstEmitted.Should().BeAfter(timeBeforeSubscription);
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(2)]
             [InlineData(3)]
             [InlineData(4)]
@@ -156,7 +156,7 @@ namespace Toggl.Foundation.Tests
                     .OnlyContain(midnight => midnight.Hour == 0 && midnight.Minute == 0 && midnight.Second == 0);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SchedulerNowReturnsUtcTime()
             {
                 var utcNow = DateTimeOffset.UtcNow;

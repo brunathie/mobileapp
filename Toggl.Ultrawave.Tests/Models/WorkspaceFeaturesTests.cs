@@ -13,7 +13,7 @@ namespace Toggl.Ultrawave.Tests.Models
     {
         public sealed class TheWorkspaceFeaturesModel
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DeserializationOfOneWorkspace()
             {
                 string arrayJson = $"[{ValidJsonFreeWorkspace}]";
@@ -26,7 +26,7 @@ namespace Toggl.Ultrawave.Tests.Models
                 result.IsEnabled(WorkspaceFeatureId.Pro).Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DeserializationOfTwoWorkspaces()
             {
                 string arrayJson = $"[{ValidJsonFreeWorkspace},{ValidJsonProWorkspace}]";

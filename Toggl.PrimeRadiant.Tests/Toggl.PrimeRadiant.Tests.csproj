@@ -198,6 +198,10 @@
       <Project>{64A8727E-5D39-4EFB-80FA-4510147796BB}</Project>
       <Name>Toggl.PrimeRadiant.Realm</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Toggl.Multivac.Tests\Toggl.Multivac.Tests.csproj">
+      <Project>{DEAB771F-ED46-4A27-AD25-F26723820F93}</Project>
+      <Name>Toggl.Multivac.Tests</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

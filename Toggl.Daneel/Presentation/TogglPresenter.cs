@@ -123,7 +123,7 @@ namespace Toggl.Daneel.Presentation
 
         protected override MvxNavigationController CreateNavigationController(UIViewController viewController)
         {
-            if (viewController is OnboardingViewController)
+            if (viewController is OnboardingViewController || viewController is TokenResetViewController)
                 return new OnboardingFlowNavigationController(viewController);
 
             return new TogglNavigationController(viewController);

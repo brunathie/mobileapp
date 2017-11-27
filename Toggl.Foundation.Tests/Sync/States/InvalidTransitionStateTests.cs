@@ -9,7 +9,7 @@ namespace Toggl.Foundation.Tests.Sync.States
 {
     public sealed class InvalidTransitionStateTests
     {
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThrowsWhenTheConstructorArgumentIsNull()
         {
             Action creatingState = () => new InvalidTransitionState(null);
@@ -17,7 +17,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             creatingState.ShouldThrow<ArgumentNullException>();
         }
 
-        [Theory]
+        [Theory, LogIfTooSlow]
         [InlineData("")]
         [InlineData("          ")]
         public void ThrowsWhenTheConstructorArgumentIsEmpty(string message)
@@ -27,7 +27,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             creatingState.ShouldThrow<ArgumentException>();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void DoesNotThrowWhenNobodySubscribesToTheReturnedObservable()
         {
             var state = new InvalidTransitionState("Error.");
@@ -35,7 +35,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             state.Start();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThrowsInvalidOperationException()
         {
             Exception caughtException = null;

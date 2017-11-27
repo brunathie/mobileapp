@@ -11,7 +11,7 @@ namespace Toggl.Ultrawave.Tests.Models
     {
         public sealed class TheWorkspaceModel
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void HasPublicParameterlessConstructorForSeliasaition()
             {
                 var constructor = typeof(Workspace).GetConstructor(Type.EmptyTypes);
@@ -20,7 +20,7 @@ namespace Toggl.Ultrawave.Tests.Models
                 constructor.IsPublic.Should().BeTrue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void HasConstructorWhichCopiesValuesFromInterfaceToTheNewInstance()
             {
                 var clonedObject = Activator.CreateInstance(typeof(Workspace), completeObject);
@@ -29,7 +29,7 @@ namespace Toggl.Ultrawave.Tests.Models
                 clonedObject.ShouldBeEquivalentTo(completeObject, options => options.IncludingProperties());
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [MemberData("SerializationCases")]
             public void CanBeSerialized(string validJson, object validObject)
             {
@@ -37,7 +37,7 @@ namespace Toggl.Ultrawave.Tests.Models
                 SerializationHelper.CanBeSerialized(validJson, validWorkspace);
             }
             
-            [Theory]
+            [Theory, LogIfTooSlow]
             [MemberData("DeserializationCases")]
             public void CanBeDeserialized(string validJson, object validObject)
             {

@@ -22,7 +22,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public class TheConstructor
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfTheArgumentIsNull()
             {
                 Action tryingToConstructWithEmptyParameter
@@ -65,7 +65,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public class TheCloseCommand : SelectDateTimeDialogViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ClosesTheViewModel()
             {
                 await ViewModel.CloseCommand.ExecuteAsync();
@@ -90,7 +90,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public class TheSaveCommand : SelectDateTimeDialogViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ClosesTheViewModel()
             {
                 await ViewModel.CloseCommand.ExecuteAsync();

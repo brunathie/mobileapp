@@ -14,6 +14,8 @@
                 <outlet property="CloseButton" destination="94q-32-ilW" id="4yA-cp-4sm"/>
                 <outlet property="SearchTextField" destination="pKP-3u-mLF" id="tsl-Fl-JSB"/>
                 <outlet property="SuggestionsTableView" destination="B7I-ux-qEU" id="wgR-bE-slN"/>
+                <outlet property="SuggestionsTableViewConstraint" destination="lba-pA-k6q" id="9uT-u3-cjL"/>
+                <outlet property="TitleLabel" destination="FcU-u4-UiR" id="Wfb-y7-J0F"/>
                 <outlet property="view" destination="2" id="RRd-Eg-VrN"/>
             </connections>
         </placeholder>
@@ -57,11 +59,19 @@
                     <rect key="frame" x="0.0" y="109" width="375" height="558"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fpE-1M-0Da">
+                    <rect key="frame" x="0.0" y="109" width="375" height="1"/>
+                    <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="zal-tM-JOm"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="FcU-u4-UiR" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="5Qa-Xe-zN8"/>
                 <constraint firstItem="pKP-3u-mLF" firstAttribute="top" secondItem="FcU-u4-UiR" secondAttribute="bottom" constant="24" id="6cY-oI-Ovm"/>
+                <constraint firstAttribute="trailing" secondItem="fpE-1M-0Da" secondAttribute="trailing" id="FST-k6-A15"/>
                 <constraint firstItem="pKP-3u-mLF" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="36" id="Fi8-en-udc"/>
                 <constraint firstItem="T4O-ge-wrV" firstAttribute="centerY" secondItem="pKP-3u-mLF" secondAttribute="centerY" id="Gl6-Ye-YAc"/>
                 <constraint firstItem="94q-32-ilW" firstAttribute="top" secondItem="2" secondAttribute="top" id="MIN-0W-JGC"/>
@@ -71,9 +81,12 @@
                 <constraint firstItem="B7I-ux-qEU" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="hS3-w0-NRO"/>
                 <constraint firstItem="94q-32-ilW" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="hYc-Ma-cBC"/>
                 <constraint firstAttribute="trailing" secondItem="pKP-3u-mLF" secondAttribute="trailing" constant="16" id="jia-Gm-5hs"/>
+                <constraint firstItem="fpE-1M-0Da" firstAttribute="top" secondItem="B7I-ux-qEU" secondAttribute="top" id="lIx-VA-QEI"/>
+                <constraint firstItem="B7I-ux-qEU" firstAttribute="top" secondItem="FcU-u4-UiR" secondAttribute="bottom" constant="72" id="lba-pA-k6q"/>
                 <constraint firstAttribute="trailing" secondItem="B7I-ux-qEU" secondAttribute="trailing" id="s3F-H5-6x0"/>
-                <constraint firstItem="B7I-ux-qEU" firstAttribute="top" secondItem="pKP-3u-mLF" secondAttribute="bottom" id="xl2-C8-Ljs"/>
+                <constraint firstItem="fpE-1M-0Da" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="yiT-Fk-Fmp"/>
             </constraints>
+            <point key="canvasLocation" x="25.5" y="52.5"/>
         </view>
     </objects>
     <resources>

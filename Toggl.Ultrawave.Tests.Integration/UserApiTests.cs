@@ -113,7 +113,7 @@ namespace Toggl.Ultrawave.Tests.Integration
 
         public sealed class TheResetPasswordMethod : EndpointTestBase
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfTheEmailIsInvalid()
             {
                 var api = TogglApiWith(Credentials.None);
@@ -123,7 +123,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 resetInvalidEmail.ShouldThrow<BadRequestException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void FailsIfUserDoesNotExist()
             {
                 var api = TogglApiWith(Credentials.None);
@@ -134,7 +134,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 resetInvalidEmail.ShouldThrow<BadRequestException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsUserFriendlyInstructionsInEnglishWhenResetSucceeds()
             {
                 var (_, user) = await SetupTestUser();
@@ -155,7 +155,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 unauthenticatedTogglApi = TogglApiWith(Credentials.None);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfTheEmailIsNotValid()
             {
                 Action signingUp = () => unauthenticatedTogglApi.User.SignUp(Email.Invalid, "dummyButValidPassword").Wait();
@@ -196,7 +196,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 signingUp.ShouldThrow<BadRequestException>();
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData("  \t   ")]
             [InlineData("  \t\n  ")]
             [InlineData("\n\n\n\n\n\n")]
@@ -211,7 +211,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 user.Email.Should().Be(email.ToString());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task CreatesANewUserAccount()
             {
                 var emailAddress = Email.FromString($"{Guid.NewGuid().ToString()}@address.com");
@@ -221,7 +221,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 user.Email.Should().Be(emailAddress.ToString());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task FailsWhenTheEmailIsAlreadyTaken()
             {
                 var email = Email.FromString($"{Guid.NewGuid().ToString()}@address.com");
@@ -232,7 +232,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 secondSigningUp.ShouldThrow<BadRequestException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task FailsWhenSigningUpWithTheSameEmailAndPasswordForTheSecondTime()
             {
                 var email = Email.FromString($"{Guid.NewGuid().ToString()}@address.com");
@@ -244,7 +244,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 secondSigningUp.ShouldThrow<BadRequestException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task EnablesLoginForTheNewlyCreatedUserAccount()
             {
                 var emailAddress = Email.FromString($"{Guid.NewGuid().ToString()}@address.com");
@@ -258,7 +258,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 signedUpUser.Id.Should().Be(user.Id);
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData("daneel.olivaw", "Daneel Olivaw's workspace")]
             [InlineData("john.doe", "John Doe's workspace")]
             [InlineData("žížala", "Žížala's workspace")]

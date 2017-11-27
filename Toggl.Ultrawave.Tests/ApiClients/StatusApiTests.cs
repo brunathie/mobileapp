@@ -27,7 +27,7 @@ namespace Toggl.Ultrawave.Tests.Clients
                 statusApi = new StatusApi(endpoints, apiClient);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotHideThrownExceptions()
             {
                 bool caughtException = false;
@@ -47,7 +47,7 @@ namespace Toggl.Ultrawave.Tests.Clients
                 caughtException.Should().BeTrue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsASingleValueForWorkingApiCalls()
             {
                 apiClient
@@ -57,7 +57,7 @@ namespace Toggl.Ultrawave.Tests.Clients
                 statusApi.IsAvailable().Wait();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsApiExceptionExceptionWhenApiServerIsNotAvailable()
             {
                 apiClient

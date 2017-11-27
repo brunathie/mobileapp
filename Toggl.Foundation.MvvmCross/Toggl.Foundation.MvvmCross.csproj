@@ -66,7 +66,6 @@
     <Compile Include="ViewModels\SelectTagsViewModel.cs" />
     <Compile Include="Collections\WorkspaceGroupedCollection.cs" />
     <Compile Include="Collections\TimeEntryViewModelCollection.cs" />
-    <Compile Include="ViewModels\SelectableTagViewModel.cs" />
     <Compile Include="Helper\AutocompleteExtensions.cs" />
     <Compile Include="Converters\CollectionToStringValueConverter.cs" />
     <Compile Include="Services\IDialogService.cs" />
@@ -75,14 +74,18 @@
     <Compile Include="Parameters\BrowserParameters.cs" />
     <Compile Include="ViewModels\EditProjectViewModel.cs" />
     <Compile Include="ViewModels\SelectColorViewModel.cs" />
-    <Compile Include="ViewModels\SelectableColorViewModel.cs" />
     <Compile Include="ViewModels\SelectWorkspaceViewModel.cs" />
     <Compile Include="Services\MultipleChoiceDialogAction.cs" />
     <Compile Include="ViewModels\SelectClientViewModel.cs" />
     <Compile Include="Parameters\ColorParameters.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Parameters\WorkspaceParameters.cs" />
+    <Compile Include="ViewModels\Selectable\SelectableColorViewModel.cs" />
+    <Compile Include="ViewModels\Selectable\SelectableTagViewModel.cs" />
+    <Compile Include="ViewModels\Selectable\SelectableWorkspaceViewModel.cs" />
     <Compile Include="ViewModels\OutdatedAppViewModel.cs" />
     <Compile Include="Services\IBrowserService.cs" />
+    <Compile Include="ViewModels\TokenResetViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Reactive.Interfaces">

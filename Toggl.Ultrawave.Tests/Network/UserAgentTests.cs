@@ -9,7 +9,7 @@ namespace Toggl.Ultrawave.Tests.Network
     {
         public sealed class TheConstructor
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsWhenTheAgentParameterIsEmpty()
             {
                 Action constructingWithWrongParameteres =
@@ -19,7 +19,7 @@ namespace Toggl.Ultrawave.Tests.Network
                     .ShouldThrow<ArgumentException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsWhenTheVersionParameterIsEmpty()
             {
                 Action constructingWithWrongParameteres =
@@ -29,7 +29,7 @@ namespace Toggl.Ultrawave.Tests.Network
                     .ShouldThrow<ArgumentException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsWhenTheAgentParameterIsNull()
             {
                 Action constructingWithWrongParameteres =
@@ -39,7 +39,7 @@ namespace Toggl.Ultrawave.Tests.Network
                     .ShouldThrow<ArgumentNullException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsWhenTheVersionParameterIsNull()
             {
                 Action constructingWithWrongParameteres =
@@ -52,7 +52,7 @@ namespace Toggl.Ultrawave.Tests.Network
 
         public sealed class TheToStringMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsAProperlyFormattedString()
             {
                 const string agentName = "Test";

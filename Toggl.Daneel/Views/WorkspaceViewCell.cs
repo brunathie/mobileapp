@@ -1,7 +1,9 @@
 ﻿using System;
 using Foundation;
 using MvvmCross.Binding.BindingContext;
+using MvvmCross.Binding.iOS;
 using MvvmCross.Binding.iOS.Views;
+using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.PrimeRadiant.Models;
 using UIKit;
 
@@ -28,9 +30,13 @@ namespace Toggl.Daneel.Views
 
             this.DelayBind(() =>
             {
-                var bindingSet = this.CreateBindingSet<WorkspaceViewCell, IDatabaseWorkspace>();
+                var bindingSet = this.CreateBindingSet<WorkspaceViewCell, SelectableWorkspaceViewModel>();
 
-                bindingSet.Bind(NameLabel).To(vm => vm.Name);
+                bindingSet.Bind(NameLabel).To(vm => vm.WorkspaceName);
+
+                bindingSet.Bind(SelectedImage)
+                          .For(v => v.BindVisible())
+                          .To(vm => vm.Selected);
 
                 bindingSet.Apply();
             });

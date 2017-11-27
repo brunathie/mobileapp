@@ -36,7 +36,7 @@ namespace Toggl.Foundation.Tests.Suggestions
 
         public sealed class TheConstructor : MostUsedTimeEntrySuggestionProviderTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(TwoParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(bool useDatabase, bool useTimeService)
             {
@@ -69,7 +69,7 @@ namespace Toggl.Foundation.Tests.Suggestions
                             .Build()));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsEmptyObservableIfThereAreNoTimeEntries()
             {
                 Database.TimeEntries
@@ -81,7 +81,7 @@ namespace Toggl.Foundation.Tests.Suggestions
                 suggestions.Should().HaveCount(0);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsUpToSevenSuggestions()
             {
                 var timeEntries = getTimeEntries(2, 2, 2, 3, 3, 4, 5);
@@ -95,7 +95,7 @@ namespace Toggl.Foundation.Tests.Suggestions
                 suggestions.Should().HaveCount(7);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task SortsTheSuggestionsByUsage()
             {
                 var timeEntries = getTimeEntries(5, 3, 2, 5, 4, 4, 5, 4, 3).ToArray();
@@ -110,7 +110,7 @@ namespace Toggl.Foundation.Tests.Suggestions
                 suggestions.Should().OnlyContain(suggestion => expectedDescriptions.Contains(suggestion.Description));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task DoesNotReturnTimeEntriesWithoutDescription()
             {
                 var builder = TimeEntry.Builder.Create(12)
