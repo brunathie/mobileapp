@@ -3,13 +3,11 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Toggl.Multivac.Extensions;
 using Toggl.Multivac.Models;
+using Toggl.Multivac.ReportsModels;
 using Toggl.Ultrawave.ApiClients;
-using Toggl.Ultrawave.Exceptions;
 using Toggl.Ultrawave.Helpers;
 using Toggl.Ultrawave.Models;
-using Toggl.Ultrawave.Network;
 using Toggl.Ultrawave.Tests.Integration.BaseTests;
 using Toggl.Ultrawave.Tests.Integration.Helper;
 using Xunit;
@@ -19,30 +17,8 @@ namespace Toggl.Ultrawave.Tests.Integration
 {
     public sealed class ProjectsSummaryReportsApiTests
     {
-        public sealed class TheGetByWorkspaceMethod : EndpointTestBase
+        public sealed class TheGetByWorkspaceMethod : AuthenticatedEndpointBaseTests<IProjectsSummary>
         {
-            [Fact, LogIfTooSlow]
-            public void ThrowsUnauthorizedExceptionWhenTheCredentialsAreInvalid()
-            {
-                var credentials = Credentials.WithPassword($"{Guid.NewGuid().ToString()}@mocks.toggl.com".ToEmail(), "123456");
-                var api = TogglApiWith(credentials);
-
-                Action unauthorizedCall = () => api.ReportsApi.ProjectsSummary.GetByWorkspace(123, DateTimeOffset.Now, null).Wait();
-
-                unauthorizedCall.ShouldThrow<UnauthorizedException>();
-            }
-
-            [Fact, LogIfTooSlow]
-            public async Task ThrowsForbiddenExceptionWhenTheUserDoesNotHaveAccessToTheWorkspace()
-            {
-                var (api, user) = await SetupTestUser();
-                var inaccessibleWorkspaceId = user.DefaultWorkspaceId - 1;
-
-                Action unauthorizedCall = () => api.ReportsApi.ProjectsSummary.GetByWorkspace(inaccessibleWorkspaceId, DateTimeOffset.Now, null).Wait();
-
-                unauthorizedCall.ShouldThrow<ForbiddenException>();
-            }
-
             [Fact, LogIfTooSlow]
             public async Task ReturnsEmptyListWhenTheUserHasNoTimeEntriesInTheSpecifiedRange()
             {
@@ -180,6 +156,15 @@ namespace Toggl.Ultrawave.Tests.Integration
                     Billable = billable,
                     ProjectId = projectId
                 });
+
+            protected override IObservable<IProjectsSummary> CallEndpointWith(ITogglApi togglApi)
+            {
+                var start = new DateTimeOffset(2017, 01, 10, 11, 22, 33, TimeSpan.Zero);
+                var end = start.AddMonths(5);
+                return ValidApi.User.Get()
+                    .SelectMany(user =>
+                        togglApi.ReportsApi.ProjectsSummary.GetByWorkspace(user.DefaultWorkspaceId, start, end));
+            }
         }
     }
 }
