@@ -25,6 +25,10 @@ namespace Toggl.Ultrawave.ReportsApiClients
 
         public IObservable<IProjectsSummary> GetByWorkspace(long workspaceId, DateTimeOffset startDate, DateTimeOffset? endDate)
         {
+            var interval = endDate - startDate;
+            if (interval.HasValue && interval > TimeSpan.FromDays(365))
+                throw new ArgumentOutOfRangeException(nameof(endDate));
+
             var parameters = new ProjectsSummaryParameters(startDate, endDate);
             var json = serializer.Serialize(parameters, SerializationReason.Post, null);
             return Observable.Create<IProjectsSummary>(async observer =>
