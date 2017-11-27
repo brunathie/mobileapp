@@ -20,4 +20,3 @@ namespace Toggl.Ultrawave.Helpers
         }
     }
 }
-

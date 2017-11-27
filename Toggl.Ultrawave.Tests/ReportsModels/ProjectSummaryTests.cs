@@ -1,7 +1,4 @@
-﻿using System;
-using FluentAssertions;
-using Toggl.Ultrawave.Models;
-using Toggl.Ultrawave.ReportsModels;
+﻿using Toggl.Ultrawave.ReportsModels;
 using Xunit;
 
 namespace Toggl.Ultrawave.Tests.Models
