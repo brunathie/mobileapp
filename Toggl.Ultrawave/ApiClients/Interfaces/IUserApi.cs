@@ -7,6 +7,7 @@ namespace Toggl.Ultrawave.ApiClients
     public interface IUserApi
     {
         IObservable<IUser> Get();
+        IObservable<IUser> GetWithGoogle();
         IObservable<string> ResetPassword(Email email);
         IObservable<IUser> SignUp(Email email, string password);
         IObservable<IUser> Update(IUser user);

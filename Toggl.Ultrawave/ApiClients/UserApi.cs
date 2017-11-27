@@ -25,6 +25,9 @@ namespace Toggl.Ultrawave.ApiClients
         public IObservable<IUser> Get()
             => CreateObservable<User>(endPoints.Get, AuthHeader);
 
+        public IObservable<IUser> GetWithGoogle()
+            => CreateObservable<User>(endPoints.GetWithGoogle, AuthHeader);
+
         public IObservable<IUser> Update(IUser user)
             => CreateObservable(endPoints.Put, AuthHeader, user as User ?? new User(user), SerializationReason.Post);
 

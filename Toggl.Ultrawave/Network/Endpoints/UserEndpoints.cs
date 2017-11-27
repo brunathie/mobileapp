@@ -13,6 +13,8 @@ namespace Toggl.Ultrawave.Network
 
         public Endpoint Get => Endpoint.Get(baseUrl, "me");
 
+        public Endpoint GetWithGoogle => Endpoint.Get(baseUrl, "me?app_name=toggl_mobile");
+
         public Endpoint Post => Endpoint.Post(baseUrl, "signup");
 
         public Endpoint Put => Endpoint.Put(baseUrl, "me");

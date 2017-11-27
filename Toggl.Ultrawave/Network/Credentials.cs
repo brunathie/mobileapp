@@ -35,6 +35,15 @@ namespace Toggl.Ultrawave.Network
             return new Credentials(header);
         }
 
+        public static Credentials WithGoogleToken(string googleToken)
+        {
+            Ensure.Argument.IsNotNull(googleToken, nameof(googleToken));
+
+            var header = authorizationHeaderWithValue($"{googleToken}:google_access_token");
+
+            return new Credentials(header);
+        }
+
         private static HttpHeader authorizationHeaderWithValue(string authString)
         {
             Ensure.Argument.IsNotNull(authString, nameof(authString));
