@@ -1,7 +1,7 @@
 ﻿using System;
-using CoreAnimation;
 using CoreGraphics;
 using Foundation;
+using Toggl.Foundation.MvvmCross.Helper;
 using UIKit;
 
 namespace Toggl.Daneel.Views
@@ -9,11 +9,7 @@ namespace Toggl.Daneel.Views
     [Register(nameof(ActivityIndicatorView))]
     public sealed class ActivityIndicatorView : UIImageView
     {
-        private readonly CABasicAnimation animation
-            = CABasicAnimation.FromKeyPath("transform.rotation.z");
-
-        private const string animationKey = "rotationAnimation";
-        private const float animationDuration = 1;
+        private const float animationDuration = 0.5F;
 
         private string imageResource = "icLoader";
         public string ImageResource
@@ -38,16 +34,19 @@ namespace Toggl.Daneel.Views
             Image = UIImage.FromBundle(ImageResource);
             ContentMode = UIViewContentMode.Center;
 
-            animation.Duration = animationDuration;
-            animation.RepeatCount = float.PositiveInfinity;
-            animation.By = NSObject.FromObject(Math.PI * 2);
-            Layer.AddAnimation(animation, animationKey);
+            rotateView();
         }
 
         public override void AwakeFromNib()
         {
             base.AwakeFromNib();
             init();
+        }
+
+        private void rotateView()
+        {
+            UIView.Animate(Animation.Timings.SpiderBro, 0, UIViewAnimationOptions.CurveLinear,
+                () => Transform = CGAffineTransform.Rotate(Transform, (nfloat)Math.PI), rotateView);
         }
     }
 }

@@ -94,8 +94,6 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             this.navigationService = navigationService;
             this.passwordManagerService = passwordManagerService;
 
-            ShouldAlwaysRaiseInpcOnUserInterfaceThread(true);
-
             BackCommand = new MvxCommand(back);
             NextCommand = new MvxCommand(next);
             OpenPrivacyPolicyCommand = new MvxCommand(openPrivacyPolicyCommand);
