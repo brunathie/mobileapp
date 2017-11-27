@@ -153,6 +153,20 @@ namespace Toggl.Ultrawave.Tests.Integration
                 projectSummary.TrackedSeconds.Should().Be(30);
             }
 
+            [Fact, LogIfTooSlow]
+            public async Task IncludesSummariesForArchivedProjects()
+            {
+                var (api, user) = await SetupTestUser();
+                var start = DateTimeOffset.UtcNow.AddDays(-8);
+                var project = await api.Projects.Create(new Project { Active = false, Name = Guid.NewGuid().ToString(), WorkspaceId = user.DefaultWorkspaceId });
+                await createTimeEntry(api.TimeEntries, user, start.AddDays(2), 10, false, project.Id);
+
+                var summary = await api.ReportsApi.ProjectsSummary.GetByWorkspace(user.DefaultWorkspaceId, start, start.AddDays(4));
+                var projectSummary = summary.ProjectsSummaries.Single(s => s.ProjectId == project.Id);
+
+                projectSummary.TrackedSeconds.Should().Be(10);
+            }
+
             private async Task<ITimeEntry> createTimeEntry(ITimeEntriesApi api, IUser user, DateTimeOffset at, long? duration, bool billable = false, long? projectId = null)
                 => await api.Create(new TimeEntry
                 {
