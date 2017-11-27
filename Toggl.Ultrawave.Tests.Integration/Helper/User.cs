@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,8 +18,6 @@ namespace Toggl.Ultrawave.Tests.Integration
 
         public static async Task<(Email email, string password)> CreateEmailPassword()
         {
-            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-
             var email = $"{Guid.NewGuid()}@mocks.toggl.com";
             var password = "123456";
 

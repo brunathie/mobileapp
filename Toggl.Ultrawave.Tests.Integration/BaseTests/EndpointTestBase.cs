@@ -1,3 +1,4 @@
+using System.Net;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Toggl.Multivac.Models;
@@ -8,6 +9,11 @@ namespace Toggl.Ultrawave.Tests.Integration.BaseTests
 {
     public abstract class EndpointTestBase
     {
+        public EndpointTestBase()
+        {
+            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+        }
+
         protected async Task<(ITogglApi togglClient, IUser user)> SetupTestUser()
         {
             var credentials = await User.Create();
