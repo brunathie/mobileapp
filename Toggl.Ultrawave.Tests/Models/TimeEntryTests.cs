@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using FluentAssertions;
 using Toggl.Multivac.Models;
 using Toggl.Ultrawave.Models;
@@ -34,7 +34,7 @@ namespace Toggl.Ultrawave.Tests.Models
                 CreatedWith = "SomeApp"
             };
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void HasConstructorWhichCopiesValuesFromInterfaceToTheNewInstance()
             {
                 var clonedObject = new TimeEntry(validTimeEntry);
@@ -44,19 +44,19 @@ namespace Toggl.Ultrawave.Tests.Models
                     options => options.IncludingProperties().Excluding(te => te.CreatedWith));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CanBeDeserialized()
             {
                 SerializationHelper.CanBeDeserialized(validJson, validTimeEntry);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CanBeSerialized()
             {
                 SerializationHelper.CanBeSerialized(validJson, validTimeEntry);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CanBeSerializedForPosting()
             {
                 SerializationHelper.CanBeSerialized(validJsonPosting, validTimeEntry, SerializationReason.Post);

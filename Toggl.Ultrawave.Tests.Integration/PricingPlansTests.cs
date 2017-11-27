@@ -10,7 +10,7 @@ namespace Toggl.Ultrawave.Tests.Integration
 {
     public sealed class PricingPlansTests : EndpointTestBase
     {
-        [Fact]
+        [Fact, LogIfTooSlow]
         public async void ThePricingPlansEnumsContainsAllAndOnlyTheAvailablePricingPlans()
         {
             var (_, user) = await SetupTestUser();

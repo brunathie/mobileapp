@@ -23,7 +23,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor : EditDurationViewModelTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(TwoParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(bool useNavigationService, bool useTimeService)
             {
@@ -44,7 +44,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             public void WhenChangedWhileUpdatingTheRunningTimeEntryTriggersTheUpdateOfTheStartTime(DateTimeOffset now)
             {
                 var start = now.AddHours(-2);
-                var parameter = DurationParameter.WithStartAndStop(start, null);
+                var parameter = DurationParameter.WithStartAndDuration(start, null);
                 TimeService.CurrentDateTime.Returns(now);
                 ViewModel.Prepare(parameter);
                 
@@ -58,7 +58,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             public void WhenChangedWhileUpdatingFinishedTimeEntryTriggersTheUpdateOfTheStopTime(DateTimeOffset now)
             {
                 var start = now.AddHours(-2);
-                var parameter = DurationParameter.WithStartAndStop(start, now);
+                var parameter = DurationParameter.WithStartAndDuration(start, now - start);
                 TimeService.CurrentDateTime.Returns(now);
                 ViewModel.Prepare(parameter);
                 
@@ -72,7 +72,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             public void IsUpdatedAccordingToTimeServiceForRunningTimeEntries(DateTimeOffset now)
             {
                 var start = now.AddHours(-2);
-                var parameter = DurationParameter.WithStartAndStop(start, null);
+                var parameter = DurationParameter.WithStartAndDuration(start, null);
                 var tickSubject = new Subject<DateTimeOffset>();
                 var tickObservable = tickSubject.AsObservable().Publish();
                 tickObservable.Connect();
@@ -86,13 +86,13 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             }
         }
 
-        public sealed class TheStopTimeProperty : EditDurationViewModelTest
+        public sealed class TheDurationTimeProperty : EditDurationViewModelTest
         {
             [Property]
-            public void IsUpdatedAccordingToTimeServiceForRunningTimeEntries(DateTimeOffset now)
+            public void IsUpdatedAccordingToTimeServiceForRunningTimeEntries(DateTimeOffset now, byte hours)
             {
-                var start = now.AddHours(-2);
-                var parameter = DurationParameter.WithStartAndStop(start, null);
+                var duration = TimeSpan.FromHours(hours);
+                var parameter = DurationParameter.WithStartAndDuration(now, null);
                 var tickSubject = new Subject<DateTimeOffset>();
                 var tickObservable = tickSubject.AsObservable().Publish();
                 tickObservable.Connect();
@@ -100,10 +100,10 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 TimeService.CurrentDateTime.Returns(now);
                 ViewModel.Prepare(parameter);
 
-                var newCurrentTime = now.AddHours(2);
+                var newCurrentTime = now + duration;
                 tickSubject.OnNext(newCurrentTime);
 
-                ViewModel.StopTime.Should().BeSameDateAs(newCurrentTime);
+                ViewModel.Duration.Should().Be(duration);
             }
         }
 
@@ -113,7 +113,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             public void SetsTheStartTime(DateTimeOffset now)
             {
                 var start = now;
-                var parameter = DurationParameter.WithStartAndStop(start, null);
+                var parameter = DurationParameter.WithStartAndDuration(start, null);
 
                 ViewModel.Prepare(parameter);
 
@@ -124,7 +124,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             public void SetsTheStartTimeToCurrentTimeIfParameterDoesNotHaveStartTime(DateTimeOffset now)
             {
                 var start = now.AddHours(-2);
-                var parameter = DurationParameter.WithStartAndStop(start, null);
+                var parameter = DurationParameter.WithStartAndDuration(start, null);
                 TimeService.CurrentDateTime.Returns(now);
 
                 ViewModel.Prepare(parameter);
@@ -137,7 +137,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             {
                 var start = now.AddHours(-4);
                 var stop = start.AddHours(2);
-                var parameter = DurationParameter.WithStartAndStop(start, stop);
+                var parameter = DurationParameter.WithStartAndDuration(start, stop - now);
 
                 ViewModel.Prepare(parameter);
 
@@ -147,7 +147,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             [Property]
             public void SubscribesToCurrentTimeObservableIfParameterDoesNotHaveStopTime(DateTimeOffset now)
             {
-                var parameter = DurationParameter.WithStartAndStop(now, null);
+                var parameter = DurationParameter.WithStartAndDuration(now, null);
 
                 ViewModel.Prepare(parameter);
 
@@ -157,17 +157,17 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheCloseCommand : EditDurationViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ClosesTheViewModel()
             {
                 await ViewModel.CloseCommand.ExecuteAsync();
 
                 await NavigationService.Received().Close(Arg.Is(ViewModel), Arg.Any<DurationParameter>());
             }
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsTheDefaultParameter()
             {
-                var parameter = DurationParameter.WithStartAndStop(DateTimeOffset.UtcNow, null);
+                var parameter = DurationParameter.WithStartAndDuration(DateTimeOffset.UtcNow, null);
                 ViewModel.Prepare(parameter);
 
                 await ViewModel.CloseCommand.ExecuteAsync();
@@ -178,7 +178,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheSaveCommand : EditDurationViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ClosesTheViewModel()
             {
                 await ViewModel.SaveCommand.ExecuteAsync();
@@ -195,13 +195,13 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 TimeService.CurrentDateTime.Returns(now);
                 if (start >= now) return;
 
-                ViewModel.Prepare(DurationParameter.WithStartAndStop(start, stop));
+                ViewModel.Prepare(DurationParameter.WithStartAndDuration(start, stop - start));
                 ViewModel.Duration = TimeSpan.FromMinutes(10);
 
                 ViewModel.SaveCommand.ExecuteAsync().Wait();
 
                 NavigationService.Received().Close(Arg.Is(ViewModel), Arg.Is<DurationParameter>(
-                    p => p.Start == ViewModel.StartTime && p.Stop == ViewModel.StopTime
+                    p => p.Start == ViewModel.StartTime && p.Duration == ViewModel.Duration
                 )).Wait();
             }
 
@@ -210,13 +210,13 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             {
                 if (start > now) return;
                 TimeService.CurrentDateTime.Returns(now);
-                ViewModel.Prepare(DurationParameter.WithStartAndStop(start, null));
+                ViewModel.Prepare(DurationParameter.WithStartAndDuration(start, null));
                 ViewModel.Duration = TimeSpan.FromMinutes(10);
 
                 ViewModel.SaveCommand.ExecuteAsync().Wait();
 
                 NavigationService.Received().Close(Arg.Is(ViewModel), Arg.Is<DurationParameter>(
-                    p => p.Start == ViewModel.StartTime && p.Stop == null
+                    p => p.Start == ViewModel.StartTime && p.Duration == null
                 )).Wait();
             }
         }

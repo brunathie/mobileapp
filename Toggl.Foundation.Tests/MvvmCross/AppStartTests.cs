@@ -30,7 +30,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
 
         public sealed class TheConstructor : AppStartTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(ThreeParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(bool userLoginManager, bool userNavigationService, bool useAccessRestrictionStorage)
             {
@@ -48,7 +48,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
 
         public sealed class TheStartMethod : AppStartTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShowsTheOutdatedViewIfTheCurrentVersionOfTheAppIsOutdated()
             {
                 AccessRestrictionStorage.IsClientOutdated().Returns(true);
@@ -61,7 +61,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShowsTheOutdatedViewIfTheVersionOfTheCurrentlyUsedApiIsOutdated()
             {
                 AccessRestrictionStorage.IsApiOutdated().Returns(true);
@@ -74,7 +74,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShowsTheReLoginViewIfTheUserRevokedTheApiToken()
             {
                 AccessRestrictionStorage.IsUnauthorized().Returns(true);
@@ -85,7 +85,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShowsTheOutdatedViewIfTheTokenWasRevokedAndTheAppIsOutdated()
             {
                 AccessRestrictionStorage.IsUnauthorized().Returns(true);
@@ -99,7 +99,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShowsTheOutdatedViewIfTheTokenWasRevokedAndTheApiIsOutdated()
             {
                 AccessRestrictionStorage.IsUnauthorized().Returns(true);
@@ -114,7 +114,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShowsTheOnboardingViewModelIfTheUserHasNotLoggedInPreviously()
             {
                 ITogglDataSource dataSource = null;
@@ -125,7 +125,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 NavigationService.Received().Navigate(typeof(OnboardingViewModel));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShowsTheTimeEntriesViewModelIfTheUserHasLoggedInPreviously()
             {
                 var dataSource = Substitute.For<ITogglDataSource>();

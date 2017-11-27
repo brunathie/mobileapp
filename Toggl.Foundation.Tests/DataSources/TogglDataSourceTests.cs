@@ -33,7 +33,7 @@ namespace Toggl.Foundation.Tests.DataSources
 
         public sealed class TheLogoutMethod : TogglDataSourceTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ClearsTheDatabase()
             {
                 DataSource.Logout();
@@ -60,7 +60,7 @@ namespace Toggl.Foundation.Tests.DataSources
                     this.unsyncable = unsyncable;
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public async ThreadingTask ReturnsTrueWhenThereIsAnEntityWhichNeedsSync()
                 {
                     var dirtyEntity = dirty(Substitute.For<TModel>());
@@ -72,7 +72,7 @@ namespace Toggl.Foundation.Tests.DataSources
                     hasUnsyncedData.Should().BeTrue();
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public async ThreadingTask ReturnsTrueWhenThereIsAnEntityWhichFailedToSync()
                 {
                     var unsyncableEntity = unsyncable(Substitute.For<TModel>(), "Error message.");
@@ -84,7 +84,7 @@ namespace Toggl.Foundation.Tests.DataSources
                     hasUnsyncedData.Should().BeTrue();
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public async ThreadingTask ReturnsFalseWhenThereIsNoUnsyncedEntityAndAllOtherRepositoriesAreSyncedAsWell()
                 {
                     repository.GetAll(Arg.Any<Func<TDatabaseModel, bool>>())

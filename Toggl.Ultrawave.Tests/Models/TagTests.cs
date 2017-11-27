@@ -19,7 +19,7 @@ namespace Toggl.Ultrawave.Tests.Models
             DeletedAt = new DateTimeOffset(2014, 04, 25, 10, 10, 10, TimeSpan.Zero)
         };
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void HasConstructorWhichCopiesValuesFromInterfaceToTheNewInstance()
         {
             var clonedObject = new Tag(validTag);
@@ -28,13 +28,13 @@ namespace Toggl.Ultrawave.Tests.Models
             clonedObject.ShouldBeEquivalentTo(validTag, options => options.IncludingProperties());
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void CanBeDeserialized()
         {
             SerializationHelper.CanBeDeserialized(validJson, validTag);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void CanBeSerialized()
         {
             SerializationHelper.CanBeSerialized(validJson, validTag);

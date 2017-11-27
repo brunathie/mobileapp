@@ -28,6 +28,9 @@ namespace Toggl.Daneel.Extensions
         public static string BindFocus(this UITextField self)
             => TextFieldFocusTargetBinding.BindingName;
 
+        public static string BindPlaceholder(this UITextField self)
+            => TextFieldPlaceholderTargetBinding.BindingName;
+
         public static string BindSecureTextEntry(this UITextField self)
             => TextFieldSecureTextEntryTargetBinding.BindingName;
 

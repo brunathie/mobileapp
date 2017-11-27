@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -24,7 +24,7 @@ namespace Toggl.PrimeRadiant.Tests
 
         protected abstract IRepository<TTestModel> Repository { get; }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TheGetByIdMethodThrowsIfThereIsNoEntityWithThatIdInTheRepository()
         {
             Func<Task> callingGetByIdInAnEmptyRepository = 
@@ -34,7 +34,7 @@ namespace Toggl.PrimeRadiant.Tests
                 .ShouldThrow<EntityNotFoundException>();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public async Task TheGetByIdMethodAlwaysReturnsASingleElement()
         {
             var testEntity = new TTestModel();
@@ -44,14 +44,14 @@ namespace Toggl.PrimeRadiant.Tests
             element.Should().Be(testEntity);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public async Task TheGetAllMethodReturnsAnEmptyListIfThereIsNothingOnTheRepository()
         {
             var entities = await Repository.GetAll(_ => true);
             entities.Count().Should().Be(0);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public async Task TheGetAllMethodReturnsAllItemsThatMatchTheQuery()
         {
             const int numberOfItems = 5;
@@ -65,7 +65,7 @@ namespace Toggl.PrimeRadiant.Tests
             entities.Count().Should().Be(numberOfItems);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public async Task TheUpdateCanChangeId()
         {
             var oldTestEntity = GetModelWith(123);
@@ -80,7 +80,7 @@ namespace Toggl.PrimeRadiant.Tests
                 .ShouldThrow<EntityNotFoundException>();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public async Task TheUpdateFailsIfCalledWithTheOldIdForTheSecondTimeWhenIdChanges()
         {
             var oldTestEntity = GetModelWith(123);

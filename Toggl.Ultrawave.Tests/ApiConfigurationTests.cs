@@ -13,7 +13,7 @@ namespace Toggl.Ultrawave.Tests
         {
             private static readonly UserAgent correctUserAgent = new UserAgent("Test", "1.0");
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsWhenTheCredentialsParameterIsNull()
             {
                 Action constructingWithWrongParameteres =
@@ -23,7 +23,7 @@ namespace Toggl.Ultrawave.Tests
                     .ShouldThrow<ArgumentNullException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsWhenTheUserAgentIsNull()
             {
                 Action constructingWithWrongParameteres =

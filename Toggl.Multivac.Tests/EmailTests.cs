@@ -8,7 +8,7 @@ namespace Toggl.Multivac.Tests
     {
         public sealed class TheFromStringMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsInvalidEmailIfTheProvidedEmailIsNotValid()
             {
                 var email = Email.FromString("foo@");
@@ -16,7 +16,7 @@ namespace Toggl.Multivac.Tests
                 email.Should().Be(Email.Invalid);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsValidEmailIfTheProvidedEmailIsValid()
             {
                 var email = Email.FromString("susancalvin@psychohistorian.museum");
@@ -27,7 +27,7 @@ namespace Toggl.Multivac.Tests
 
         public sealed class TheIsValidProperty
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsFalseIfTheEmailWasCreatedUsingTheDefaultConstructor()
             {
                 var email = new Email();
@@ -35,7 +35,7 @@ namespace Toggl.Multivac.Tests
                 email.IsValid.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsFalseIfTheEmailIsTheSameInstanceAsTheInvalidStaticProperty()
             {
                 var email = Email.Invalid;
@@ -43,7 +43,7 @@ namespace Toggl.Multivac.Tests
                 email.IsValid.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsFalseForAnEmailCreatedWithAnInvalidEmailString()
             {
                 var email = Email.FromString("foo@");
@@ -51,7 +51,7 @@ namespace Toggl.Multivac.Tests
                 email.IsValid.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsTrueForAProperlyInitializedValidEmail()
             {
                 var email = Email.FromString("susancalvin@psychohistorian.museum");
@@ -62,7 +62,7 @@ namespace Toggl.Multivac.Tests
 
         public sealed class TheToStringMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsNullWhenTheEmailIsInvalid()
             {
                 var email = Email.Invalid;
@@ -70,7 +70,7 @@ namespace Toggl.Multivac.Tests
                 email.ToString().Should().BeNull();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsTheStringUsedForConstructionWhenTheEmailIsValid()
             {
                 var emailString = "susancalvin@psychohistorian.museum";
@@ -82,7 +82,7 @@ namespace Toggl.Multivac.Tests
 
         public sealed class TheToFullNameMethod
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData("john@gmail.com", "John")]
             [InlineData("john123@gmail.com", "John123")]
             [InlineData("john.smith@gmail.com", "John Smith")]
@@ -105,7 +105,7 @@ namespace Toggl.Multivac.Tests
                 fullName.Should().Be(expectedName);
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData("twodots..inarow@gmail.com")]
             [InlineData(".starts.with.a.dot@domain.at")]
             [InlineData("just an invalid email")]

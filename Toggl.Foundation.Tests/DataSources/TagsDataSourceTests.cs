@@ -22,7 +22,7 @@ namespace Toggl.Foundation.Tests.DataSources
 
         public sealed class TheConstructor : TagsDataSourceTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(ThreeParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(
                 bool useIdProvider, bool useRepository, bool useTimeService)

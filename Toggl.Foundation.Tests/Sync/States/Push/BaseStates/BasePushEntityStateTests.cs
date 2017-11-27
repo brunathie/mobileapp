@@ -26,7 +26,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             this.repository = repository;
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsFailTransitionWhenEntityIsNull()
         {
             var state = CreateState(api, repository);
@@ -38,7 +38,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             parameter.Reason.Should().BeOfType<ArgumentNullException>();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsClientErrorTransitionWhenHttpFailsWithClientErrorException(ClientErrorException exception)
         {
             var state = CreateState(api, repository);
@@ -52,7 +52,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             parameter.Reason.Should().BeAssignableTo<ClientErrorException>();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsServerErrorTransitionWhenHttpFailsWithServerErrorException(ServerErrorException exception)
         {
             var state = CreateState(api, repository);
@@ -66,7 +66,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             parameter.Reason.Should().BeAssignableTo<ServerErrorException>();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsUnknownErrorTransitionWhenHttpFailsWithNonApiException()
         {
             var state = CreateState(api, repository);
@@ -80,7 +80,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             parameter.Reason.Should().BeOfType<TestException>();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsFailTransitionWhenDatabaseOperationFails()
         {
             var state = CreateState(api, repository);
@@ -94,7 +94,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             parameter.Reason.Should().BeOfType<TestException>();
         }
 
-        [Theory]
+        [Theory, LogIfTooSlow]
         [MemberData(nameof(exceptionsWhichCauseRethrow))]
         public void ThrowsWhenCertainExceptionsAreCaught(Exception exception)
         {

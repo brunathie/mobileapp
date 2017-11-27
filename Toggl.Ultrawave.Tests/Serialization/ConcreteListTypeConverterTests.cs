@@ -10,7 +10,7 @@ namespace Toggl.Ultrawave.Tests.Serialization
 {
     public sealed class ConcreteListTypeConverterTests
     {
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void SerializationMustUseTheConverter()
         {
             var output = serializer.Serialize(SomeItemsContainer);
@@ -18,7 +18,7 @@ namespace Toggl.Ultrawave.Tests.Serialization
             output.Should().Be(JsonArray);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void DeserializationMustUseTheConverter()
         {
             var output = serializer.Deserialize<OtherClass>(JsonArray);
@@ -26,7 +26,7 @@ namespace Toggl.Ultrawave.Tests.Serialization
             output.ShouldBeEquivalentTo(SomeItemsContainer, options => options.IncludingProperties());
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void DeserializationFailsWithoutTheConverter()
         {
             Action deserialization = () => serializer.Deserialize<DifferentClass>(JsonArray);

@@ -8,7 +8,7 @@ namespace Toggl.Foundation.Tests.Sync
 {
     public sealed class RetryDelayServiceTests
     {
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TheDefaultFastDelayIsTenSeconds()
         {
             var delay = new RetryDelayService(new Random());
@@ -18,7 +18,7 @@ namespace Toggl.Foundation.Tests.Sync
             totalDelay.TotalSeconds.Should().Be(10);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TheDefaultSlowDelayIsSixtySeconds()
         {
             var delay = new RetryDelayService(new Random());

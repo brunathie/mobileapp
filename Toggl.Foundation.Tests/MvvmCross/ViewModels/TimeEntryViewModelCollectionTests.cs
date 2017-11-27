@@ -43,7 +43,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor : TimeEntryViewModelCollectionTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfTheArgumentIsNull()
             {
                 Action tryingToConstructWithEmptyParameters =
@@ -53,7 +53,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     .ShouldThrow<ArgumentNullException>();
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(DateTimeKind.Unspecified)]
             [InlineData(DateTimeKind.Utc)]
             public void ThrowsIfDateKindIsNotLocal(DateTimeKind kind)
@@ -70,7 +70,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheCollection : TimeEntryViewModelCollectionTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void HasTheSameAmountOfItemsAsThePassedGrouping()
             {
                 ViewModel.Should().HaveCount(10);
@@ -79,7 +79,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheTotalTimeProperty : TimeEntryViewModelCollectionTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EqualsTheSumOfTheDurationOfAllTimeEntries()
             {
                 ViewModel.TotalTime.Should().Be(TimeSpan.FromHours(10));

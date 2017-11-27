@@ -7,11 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
+using PropertyChanged;
 using Toggl.Foundation.Autocomplete;
 using Toggl.Foundation.Autocomplete.Suggestions;
 using Toggl.Foundation.DataSources;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
+using Toggl.PrimeRadiant.Models;
 using static Toggl.Foundation.Helper.Constants;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels
@@ -22,6 +24,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly ITogglDataSource dataSource;
         private readonly Subject<string> textSubject = new Subject<string>();
+        private readonly BehaviorSubject<bool> hasTagsSubject = new BehaviorSubject<bool>(false);
         private readonly HashSet<long> selectedTagIds = new HashSet<long>();
 
         private long[] defaultResult;
@@ -42,6 +45,14 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public MvxObservableCollection<SelectableTagViewModel> Tags { get; }
             = new MvxObservableCollection<SelectableTagViewModel>();
+
+        public bool IsEmpty { get; set; } = false;
+
+        [DependsOn(nameof(IsEmpty))]
+        public string PlaceholderText
+            => IsEmpty
+            ? Resources.AddTags
+            : Resources.AddFilterTags;
 
         public IMvxAsyncCommand CloseCommand { get; }
 
@@ -75,6 +86,15 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         public override async Task Initialize()
         {
             await base.Initialize();
+
+
+            var initialHasTags = dataSource.Tags
+                                           .GetAll()
+                                           .Select(tags => tags.Where(tag => tag.WorkspaceId == workspaceId).Any());
+
+            hasTagsSubject.AsObservable()
+                          .Merge(initialHasTags)
+                          .Subscribe(hasTags => IsEmpty = !hasTags);
 
             textSubject.AsObservable()
                        .StartWith(Text)
@@ -123,6 +143,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             var createdTag = await dataSource.Tags.Create(name.Trim(), workspaceId);
             selectedTagIds.Add(createdTag.Id);
             Text = "";
+
+            hasTagsSubject.OnNext(true);
         }
     }
 }

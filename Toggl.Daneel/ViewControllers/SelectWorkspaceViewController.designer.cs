@@ -20,12 +20,23 @@ namespace Toggl.Daneel.ViewControllers
 
 		[Outlet]
 		UIKit.UITableView SuggestionsTableView { get; set; }
+
+		[Outlet]
+		UIKit.NSLayoutConstraint SuggestionsTableViewConstraint { get; set; }
+
+		[Outlet]
+		UIKit.UILabel TitleLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (SuggestionsTableView != null) {
-				SuggestionsTableView.Dispose ();
-				SuggestionsTableView = null;
+			if (SuggestionsTableViewConstraint != null) {
+				SuggestionsTableViewConstraint.Dispose ();
+				SuggestionsTableViewConstraint = null;
+			}
+
+			if (TitleLabel != null) {
+				TitleLabel.Dispose ();
+				TitleLabel = null;
 			}
 
 			if (CloseButton != null) {
@@ -36,6 +47,11 @@ namespace Toggl.Daneel.ViewControllers
 			if (SearchTextField != null) {
 				SearchTextField.Dispose ();
 				SearchTextField = null;
+			}
+
+			if (SuggestionsTableView != null) {
+				SuggestionsTableView.Dispose ();
+				SuggestionsTableView = null;
 			}
 		}
 	}

@@ -54,7 +54,7 @@ namespace Toggl.Foundation.Tests.Sync
 
         public sealed class TheConstructor
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(TwoParameterConstructorTestData))]
             public void ThrowsIfAnyArgumentIsNull(bool useStateMachine, bool useEntryPoints)
             {
@@ -67,7 +67,7 @@ namespace Toggl.Foundation.Tests.Sync
                 constructing.ShouldThrow<ArgumentNullException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SubscribesToStateMachineEvents()
             {
                 var stateMachine = Substitute.For<IStateMachine>();
@@ -83,7 +83,7 @@ namespace Toggl.Foundation.Tests.Sync
 
         public sealed class TheStateProperty : StateMachineOrchestratorBaseTests
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void StartsWithSleep()
             {
                 Orchestrator.State.Should().Be(Sleep);
@@ -97,13 +97,13 @@ namespace Toggl.Foundation.Tests.Sync
 
             private Action callingMethod => CallMethod;
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotThrowIfNotSyncing()
             {
                 callingMethod.ShouldNotThrow();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotThrowIfSleepWasCalledLast()
             {
                 Orchestrator.Start(Sleep);
@@ -111,7 +111,7 @@ namespace Toggl.Foundation.Tests.Sync
                 callingMethod.ShouldNotThrow();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldThrowIfPullSyncing()
             {
                 Orchestrator.Start(Pull);
@@ -119,7 +119,7 @@ namespace Toggl.Foundation.Tests.Sync
                 callingMethod.ShouldThrow<InvalidOperationException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldThrowIfPushSyncing()
             {
                 Orchestrator.Start(Push);
@@ -127,7 +127,7 @@ namespace Toggl.Foundation.Tests.Sync
                 callingMethod.ShouldThrow<InvalidOperationException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldNotThrowIfPullSyncingCompleted()
             {
                 Orchestrator.Start(Pull);
@@ -136,7 +136,7 @@ namespace Toggl.Foundation.Tests.Sync
                 callingMethod.ShouldNotThrow();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldNotThrowIfPushSyncingCompleted()
             {
                 Orchestrator.Start(Push);
@@ -145,7 +145,7 @@ namespace Toggl.Foundation.Tests.Sync
                 callingMethod.ShouldNotThrow();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldNotThrowIfPullSyncingFailed()
             {
                 Orchestrator.Start(Pull);
@@ -154,7 +154,7 @@ namespace Toggl.Foundation.Tests.Sync
                 callingMethod.ShouldNotThrow();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldNotThrowIfPushSyncingFailed()
             {
                 Orchestrator.Start(Push);
@@ -163,7 +163,7 @@ namespace Toggl.Foundation.Tests.Sync
                 callingMethod.ShouldNotThrow();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldResultInExpectedState()
             {
                 CallMethod();
@@ -171,7 +171,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Orchestrator.State.Should().Be(ExpectedState);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldCauseExpectedStateEvent()
             {
                 StateEvents.Clear();
@@ -183,7 +183,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldNotCauseCompletedEvent()
             {
                 CallMethod();
@@ -196,7 +196,7 @@ namespace Toggl.Foundation.Tests.Sync
         {
             protected abstract StateResult EntryPoint { get; }
             
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldStartStateMachineWithCorrectEntryPoint()
             {
                 CallMethod();
@@ -206,7 +206,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldCauseExpectedCompletedEventWhenSyncingCompletes()
             {
                 CallMethod();
@@ -217,7 +217,7 @@ namespace Toggl.Foundation.Tests.Sync
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldReportErrorWhenSyncingFails()
             {
                 var exception = new Exception();
@@ -250,7 +250,7 @@ namespace Toggl.Foundation.Tests.Sync
                 protected override SyncState ExpectedState => Sleep;
                 protected override void CallMethod() => Orchestrator.Start(Sleep);
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void ShouldNotStartStateMachine()
                 {
                     CallMethod();
@@ -275,7 +275,7 @@ namespace Toggl.Foundation.Tests.Sync
 
         public sealed class TheFreezeMethod : StateMachineOrchestratorBaseTests
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldCallFreezeOnTheStateMachine()
             {
                 Orchestrator.Freeze();

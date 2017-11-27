@@ -12,7 +12,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
     {
         public sealed class TheStartMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsThePushNextTransition()
             {
                 var state = new ResetAPIDelayState(Substitute.For<IRetryDelayService>());
@@ -22,7 +22,7 @@ namespace Toggl.Foundation.Tests.Sync.States.Push
                 transition.Result.Should().Be(state.PushNext);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ResetsTheRetryDelayServiceAfterProcessingThisState()
             {
                 var delay = Substitute.For<IRetryDelayService>();

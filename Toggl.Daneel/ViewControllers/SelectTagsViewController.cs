@@ -1,9 +1,11 @@
 ﻿using MvvmCross.Binding.BindingContext;
+using MvvmCross.Binding.iOS;
 using MvvmCross.iOS.Views;
 using Toggl.Daneel.Presentation.Attributes;
 using Toggl.Daneel.ViewSources;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using UIKit;
+using Toggl.Daneel.Extensions;
 
 namespace Toggl.Daneel.ViewControllers
 {
@@ -24,6 +26,14 @@ namespace Toggl.Daneel.ViewControllers
 
             var bindingSet = this.CreateBindingSet<SelectTagsViewController, SelectTagsViewModel>();
 
+            bindingSet.Bind(EmptyStateImage)
+                      .For(v => v.BindVisible())
+                      .To(vm => vm.IsEmpty);
+                
+            bindingSet.Bind(EmptyStateLabel)
+                      .For(v => v.BindVisible())
+                      .To(vm => vm.IsEmpty);
+
             //Table view
             bindingSet.Bind(source).To(vm => vm.Tags);
 
@@ -41,6 +51,10 @@ namespace Toggl.Daneel.ViewControllers
                            
             //Text
             bindingSet.Bind(TextField).To(vm => vm.Text);
+
+            bindingSet.Bind(TextField)
+                      .For(v => v.BindPlaceholder())
+                      .To(vm => vm.PlaceholderText);
 
             //Commands
             bindingSet.Bind(CloseButton).To(vm => vm.CloseCommand);

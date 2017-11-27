@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using FluentAssertions;
 using Xunit;
 
@@ -8,7 +8,7 @@ namespace Toggl.Multivac.Tests
     {
         public sealed class TheArgumentIsNotNullMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsWhenTheArgumentIsNull()
             {
                 const string argumentName = "argument";
@@ -21,7 +21,7 @@ namespace Toggl.Multivac.Tests
                     .WithMessage("Value cannot be null.\nParameter name: argument");
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotThrowWhenTheArgumentIsNotNull()
             {
                 Action whenTheCalledArgumentIsNull =
@@ -30,7 +30,7 @@ namespace Toggl.Multivac.Tests
                 whenTheCalledArgumentIsNull.ShouldNotThrow();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void WorksForValueTypes()
             {
                 Action whenTheCalledArgumentIsNull =
@@ -42,7 +42,7 @@ namespace Toggl.Multivac.Tests
 
         public sealed class TheArgumentIsNotNullOrWhiteSpaceMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsWhenTheArgumentIsAnEmptyString()
             {
                 Action whenTheCalledArgumentIsNull =
@@ -53,7 +53,7 @@ namespace Toggl.Multivac.Tests
                     .WithMessage("String cannot be empty.\nParameter name: argument");
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsWhenTheArgumentIsABlankString()
             {
                 Action whenTheCalledArgumentIsNull =
@@ -64,7 +64,7 @@ namespace Toggl.Multivac.Tests
                     .WithMessage("String cannot be empty.\nParameter name: argument");
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsWhenTheArgumentIsNull()
             {
                 const string argumentName = "argument";
@@ -77,7 +77,7 @@ namespace Toggl.Multivac.Tests
                     .WithMessage("Value cannot be null.\nParameter name: argument");
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotThrowWhenTheArgumentIsNotNull()
             {
                 Action whenTheCalledArgumentIsNull =
@@ -89,7 +89,7 @@ namespace Toggl.Multivac.Tests
 
         public sealed class TheUriIsAbsoluteMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsWhenTheUriIsNotAbsolute()
             {
                 const string argumentName = "argument";
@@ -102,7 +102,7 @@ namespace Toggl.Multivac.Tests
                     .WithMessage("Uri must be absolute.\nParameter name: argument");
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotThrowWhenUriIsAbsolute()
             {
                 Action whenTheCalledArgumentIsNull =
@@ -111,7 +111,7 @@ namespace Toggl.Multivac.Tests
                 whenTheCalledArgumentIsNull.ShouldNotThrow();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfTheUriIsNull()
             {
                 Action whenTheCalledArgumentIsNull =

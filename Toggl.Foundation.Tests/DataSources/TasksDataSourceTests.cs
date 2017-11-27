@@ -9,7 +9,7 @@ namespace Toggl.Foundation.Tests.DataSources
     {
         public sealed class TheConstructor
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfTheArgumentIsNull()
             {
                 Action tryingToConstructWithEmptyParameters =

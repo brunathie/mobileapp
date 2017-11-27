@@ -117,7 +117,7 @@ namespace Toggl.Ultrawave.Tests.Integration
         {
             private readonly SubscriptionPlanActivator plans = new SubscriptionPlanActivator();
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async void CreatingTaskFailsInTheFreePlan()
             {
                 var (togglApi, user) = await SetupTestUser();
@@ -128,7 +128,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 creatingTask.ShouldThrow<ForbiddenException>();
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(PricingPlans.StarterMonthly)]
             [InlineData(PricingPlans.StarterAnnual)]
             [InlineData(PricingPlans.PremiumMonthly)]

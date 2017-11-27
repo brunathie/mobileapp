@@ -10,7 +10,7 @@ namespace Toggl.Ultrawave.Tests.Network
     {
         public sealed class TheConstructor
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void AddsTheUserAgentToTheProvidedHttpClient()
             {
                 var userAgent = new UserAgent("Test", "1.0");

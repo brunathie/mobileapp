@@ -23,7 +23,7 @@ namespace Toggl.Ultrawave.Tests.Models
             TrackedSeconds = 12
         };
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void HasConstructorWhichCopiesValuesFromInterfaceToTheNewInstance()
         {
             var clonedObject = new Task(validTask);
@@ -32,13 +32,13 @@ namespace Toggl.Ultrawave.Tests.Models
             clonedObject.ShouldBeEquivalentTo(validTask, options => options.IncludingProperties());
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void CanBeDeserialized()
         {
             SerializationHelper.CanBeDeserialized(validJson, validTask);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void CanBeSerialized()
         {
             SerializationHelper.CanBeSerialized(validJson, validTask);

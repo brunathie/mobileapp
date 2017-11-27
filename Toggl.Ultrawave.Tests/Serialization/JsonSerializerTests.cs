@@ -16,7 +16,7 @@ namespace Toggl.Ultrawave.Tests.Serialization
 
         public sealed class TheSerializeMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CreatesSnakeCasedJson()
             {
                 var testObject = new TestModel { FooBar = "Foo", IgnoredWhenPosting = "Baz" };
@@ -28,7 +28,7 @@ namespace Toggl.Ultrawave.Tests.Serialization
                 actual.Should().Be(expectedJson);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void IgnoresPropertiesWithTheIgnoreWhenPostingAttribute()
             {
                 var testObject = new TestModel { FooBar = "Foo", IgnoredWhenPosting = "Baz" };
@@ -43,7 +43,7 @@ namespace Toggl.Ultrawave.Tests.Serialization
 
         public sealed class TheDeserializeMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ExpectsSnakeCasedJson()
             {
                 const string testJson = "{\"foo_bar\":\"Foo\",\"ignored_when_posting\":\"Baz\"}";

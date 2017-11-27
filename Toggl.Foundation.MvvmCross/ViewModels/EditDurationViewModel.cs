@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
+using PropertyChanged;
 using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Multivac;
 
@@ -13,16 +14,21 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private readonly ITimeService timeService;
         private readonly IMvxNavigationService navigationService;
 
-        private bool isRunning;
+        private bool isRunning => defaultResult?.Duration == null;
         private DurationParameter defaultResult;
+        private DurationParameter result
+            => DurationParameter.WithStartAndDuration(StartTime, isRunning ? (TimeSpan?)null : Duration);
 
         public DateTimeOffset StartTime { get; private set; }
 
-        public DateTimeOffset StopTime { get; private set; }
+        [DependsOn(nameof(Duration), nameof(StartTime))]
+        public DateTimeOffset StopTime => StartTime + Duration;
+
+        private TimeSpan duration;
 
         public TimeSpan Duration
         {
-            get => StopTime - StartTime;
+            get => duration;
             set => onDurationChanged(value);
         }
 
@@ -46,37 +52,28 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             defaultResult = parameter;
 
-            isRunning = parameter.Stop == null;
             if (isRunning)
             {
                 timeService.CurrentDateTimeObservable
-                           .Subscribe(currentTime => StopTime = currentTime);
+                           .Subscribe(currentTime => Duration = currentTime - StartTime);
             }
 
             StartTime = parameter.Start;
-            StopTime = isRunning ? timeService.CurrentDateTime : parameter.Stop.Value;
-            Duration = StopTime - StartTime;
+            Duration = parameter.Duration ?? timeService.CurrentDateTime - StartTime;
         }
 
         private Task close()
             => navigationService.Close(this, defaultResult);
 
         private Task save()
-        {
-            DateTimeOffset? stopTimeToBeReturned;
-            if (isRunning)
-                stopTimeToBeReturned = null;
-            else
-                stopTimeToBeReturned = StopTime;
-            return navigationService.Close(this, DurationParameter.WithStartAndStop(StartTime, stopTimeToBeReturned));
-        }
+            => navigationService.Close(this, result);
 
-        private void onDurationChanged(TimeSpan duration)
+        private void onDurationChanged(TimeSpan changedDuration)
         {
             if (isRunning)
-                StartTime = StopTime.Subtract(duration);
-            else
-                StopTime = StartTime.Add(duration);
+                StartTime = timeService.CurrentDateTime - changedDuration;
+
+            duration = changedDuration;
         }
     }
 }

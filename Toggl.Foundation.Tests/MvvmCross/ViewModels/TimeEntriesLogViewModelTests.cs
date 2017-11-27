@@ -30,7 +30,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor : TimeEntriesLogViewModelTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(ThreeParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(bool useDataSource, bool useTimeService, bool useNavigationService)
             {
@@ -48,7 +48,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheEmptyStateTitleProperty : TimeEntriesLogViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsTheWelcomeStringIfTheIsWelcomePropertyIsTrue()
             {
                 ViewModel.IsWelcome = true;
@@ -56,7 +56,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.EmptyStateTitle.Should().Be(Resources.TimeEntriesLogEmptyStateWelcomeTitle);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsTheDefaultStringIfTheIsWelcomePropertyIsFalse()
             {
                 ViewModel.IsWelcome = false;
@@ -67,7 +67,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheEmptyStateTextProperty : TimeEntriesLogViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsTheWelcomeStringIfTheIsWelcomePropertyIsTrue()
             {
                 ViewModel.IsWelcome = true;
@@ -75,7 +75,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.EmptyStateText.Should().Be(Resources.TimeEntriesLogEmptyStateWelcomeText);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsTheDefaultStringIfTheIsWelcomePropertyIsFalse()
             {
                 ViewModel.IsWelcome = false;
@@ -183,7 +183,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
             public sealed class WhenReceivingAnEventFromTheTimeEntryCreatedObservable : TimeEntryDataSourceObservableTest
             {
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public async ThreadingTask AddsTheCreatedTimeEntryToTheList()
                 {
                     await ViewModel.Initialize();
@@ -195,7 +195,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     ViewModel.TimeEntries.Aggregate(0, (acc, te) => acc + te.Count).Should().Be(InitialAmountOfTimeEntries + 1);
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public async ThreadingTask IgnoresTheTimeEntryIfItsStillRunning()
                 {
                     await ViewModel.Initialize();
@@ -209,7 +209,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
             public sealed class WhenReceivingAnEventFromTheTimeEntryUpdatedObservable : TimeEntryDataSourceObservableTest
             {
-                [Fact]
+                [Fact, LogIfTooSlow]
                 //This can happen, for example, if the time entry was just stopped
                 public async ThreadingTask AddsTheTimeEntryIfItWasNotAddedPreviously()
                 {
@@ -222,7 +222,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     ViewModel.TimeEntries.Aggregate(0, (acc, te) => acc + te.Count).Should().Be(InitialAmountOfTimeEntries + 1);
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public async ThreadingTask IgnoresTheTimeEntryIfItWasDeleted()
                 {
                     await ViewModel.Initialize();
@@ -236,7 +236,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             
             public sealed class WhenReceivingAnEventFromTheTimeEntryDeletedObservable : TimeEntryDataSourceObservableTest
             {
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public async ThreadingTask RemovesTheTimeEntryIfItWasNotRemovedPreviously()
                 {
                     await ViewModel.Initialize();
@@ -249,7 +249,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     ViewModel.TimeEntries.Aggregate(0, (acc, te) => acc + te.Count).Should().Be(InitialAmountOfTimeEntries - 1);
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public async ThreadingTask RemovesTheWholeCollectionWhenThereAreNoOtherTimeEntriesLeftForThatDay()
                 {
                     await ViewModel.Initialize();
@@ -268,7 +268,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheEditCommand : TimeEntriesLogViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask NavigatesToTheEditTimeEntryViewModel()
             {
                 var databaseTimeEntry = Substitute.For<IDatabaseTimeEntry>();
@@ -283,7 +283,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheContinueTimeEntryCommand : TimeEntriesLogViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async ThreadingTask StartsATimeEntry()
             {
                 var timeEntry = Substitute.For<IDatabaseTimeEntry>();
@@ -321,7 +321,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 )).Wait();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async void InitiatesPushSyncWhenThereIsARunningTimeEntry()
             {
                 var timeEntryViewModel = createTimeEntryViewModel();
@@ -331,7 +331,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await DataSource.SyncManager.Received().PushSync();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async void DoesNotInitiatePushSyncWhenStartingFails()
             {
                 var timeEntryViewModel = createTimeEntryViewModel();

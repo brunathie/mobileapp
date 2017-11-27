@@ -34,7 +34,7 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
             resolver = new TimeEntryRivalsResolver(timeService);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TimeEntryWhichHasDurationSetToNullCanHaveRivals()
         {
             var a = TimeEntry.Clean(new Ultrawave.Models.TimeEntry { Id = 1, Duration = null });
@@ -54,7 +54,7 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
             canHaveRival.Should().BeFalse();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TwoTimeEntriesAreRivalsIfBothOfThemHaveTheDurationSetToNull()
         {
             var a = TimeEntry.Clean(new Ultrawave.Models.TimeEntry { Id = 1, Duration = null });
@@ -94,7 +94,7 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
             fixedEntityB.Duration.Should().BeNull();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TheStoppedTimeEntryMustBeMarkedAsSyncNeededAndTheStatusOfTheOtherOneShouldNotChange()
         {
             var a = TimeEntry.Clean(new Ultrawave.Models.TimeEntry { Id = 1, Duration = null, At = arbitraryTime.AddDays(10) });
@@ -106,7 +106,7 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
             fixedB.SyncStatus.Should().Be(SyncStatus.InSync);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TheStoppedEntityMustHaveTheStopTimeEqualToTheStartTimeOfTheNextEntryInTheDatabase()
         {
             var a = TimeEntry.Clean(new Ultrawave.Models.TimeEntry { Id = 1, Duration = null, At = arbitraryTime.AddDays(10), Start = arbitraryTime.AddDays(12) });
@@ -117,7 +117,7 @@ namespace Toggl.Foundation.Tests.Sync.ConflictResolution
             fixedA.Duration.Should().Be((long)TimeSpan.FromDays(3).TotalSeconds);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TheStoppedEntityMustHaveTheStopTimeEqualToTheCurrentDateTimeOfTheTimeServiceWhenThereIsNoNextEntryInTheDatabase()
         {
             var now = arbitraryTime.AddDays(25);

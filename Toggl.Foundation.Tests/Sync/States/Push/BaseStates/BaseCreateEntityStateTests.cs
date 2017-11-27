@@ -22,33 +22,33 @@ namespace Toggl.Foundation.Tests.Sync.States
             this.helper = helper;
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsFailTransitionWhenEntityIsNull()
             => helper.ReturnsFailTransitionWhenEntityIsNull();
 
-        [Theory]
+        [Theory, LogIfTooSlow]
         [MemberData(nameof(ApiExceptions.ClientExceptionsWhichAreNotReThrownInSyncStates), MemberType = typeof(ApiExceptions))]
         public void ReturnsClientErrorTransitionWhenHttpFailsWithClientErrorException(ClientErrorException exception)
             => helper.ReturnsClientErrorTransitionWhenHttpFailsWithClientErrorException(exception);
 
-        [Theory]
+        [Theory, LogIfTooSlow]
         [MemberData(nameof(ApiExceptions.ServerExceptions), MemberType = typeof(ApiExceptions))]
         public void ReturnsServerErrorTransitionWhenHttpFailsWithServerErrorException(ServerErrorException reason)
             => helper.ReturnsServerErrorTransitionWhenHttpFailsWithServerErrorException(reason);
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsUnknownErrorTransitionWhenHttpFailsWithNonApi()
             => helper.ReturnsUnknownErrorTransitionWhenHttpFailsWithNonApiException();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsFailTransitionWhenDatabaseOperationFails()
             => helper.ReturnsFailTransitionWhenDatabaseOperationFails();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsSuccessfulTransitionWhenEverythingWorks()
             => helper.ReturnsSuccessfulTransitionWhenEverythingWorks();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void UpdateIsCalledWithCorrectParameters()
             => helper.UpdateIsCalledWithCorrectParameters();
 

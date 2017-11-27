@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using FluentAssertions;
 using Toggl.Ultrawave.Models;
 using Xunit;
@@ -21,7 +21,7 @@ namespace Toggl.Ultrawave.Tests.Models
                 ServerDeletedAt = null
             };
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void HasConstructorWhichCopiesValuesFromInterfaceToTheNewInstance()
             {
                 var clonedObject = new Client(validClient);
@@ -30,13 +30,13 @@ namespace Toggl.Ultrawave.Tests.Models
                 clonedObject.ShouldBeEquivalentTo(validClient, options => options.IncludingProperties());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CanBeDeserialized()
             {
                 SerializationHelper.CanBeDeserialized(validJson, validClient);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CanBeSerialized()
             {
                 SerializationHelper.CanBeSerialized(validJson, validClient);

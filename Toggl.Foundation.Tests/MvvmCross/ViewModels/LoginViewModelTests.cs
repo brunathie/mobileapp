@@ -44,7 +44,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor : LoginViewModelTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(FourParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(bool userLoginManager, bool userNavigationService, bool usePasswordManagerService, bool useAccessRestrictionStorage)
             {
@@ -65,7 +65,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
         {
             public sealed class WhenInTheEmailPage : LoginViewModelTest
             {
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void ReturnsFalseIfTheEmailIsInvalid()
                 {
                     ViewModel.Email = InvalidEmail;
@@ -73,7 +73,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     ViewModel.NextIsEnabled.Should().BeFalse();
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void ReturnsTrueIfTheEmailIsValid()
                 {
                     ViewModel.Email = ValidEmail;
@@ -90,7 +90,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     ViewModel.NextCommand.Execute();
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void ReturnsFalseWhenThePasswordIsNotValid()
                 {
                     ViewModel.Password = InvalidPassword;
@@ -98,7 +98,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     ViewModel.NextIsEnabled.Should().BeFalse();
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void ReturnsTrueIfThePasswordIsValid()
                 {
                     ViewModel.Password = ValidPassword;
@@ -106,7 +106,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     ViewModel.NextIsEnabled.Should().BeTrue();
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void ReturnsFalseWheThePasswordIsValidButTheViewIsLoading()
                 {
                     var scheduler = new TestScheduler();
@@ -124,7 +124,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class ThePrepareMethod : LoginViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SetsTheLoginType()
             {
                 var parameter = LoginType.SignUp;
@@ -134,7 +134,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.IsSignUp.Should().BeTrue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SetsTheTitleToLoginWhenThePassedParameterIsLogin()
             {
                 var parameter = LoginType.Login;
@@ -144,7 +144,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Title.Should().Be(Resources.LoginTitle);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SetsTheTitleToSignupWhenThePassedParameterIsLogin()
             {
                 var parameter = LoginType.SignUp;
@@ -159,7 +159,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
         {
             public sealed class WhenInTheEmailPage : LoginViewModelTest
             {
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void DoesNothingWhenTheEmailIsInvalid()
                 {
                     ViewModel.Email = InvalidEmail;
@@ -169,7 +169,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     ViewModel.CurrentPage.Should().Be(LoginViewModel.EmailPage);
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void ShowsThePasswordPageWhenTheEmailIsValid()
                 {
                     ViewModel.Email = ValidEmail;
@@ -188,7 +188,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     ViewModel.NextCommand.Execute();
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void DoesNotAttemptToLoginWhileThePasswordIsValid()
                 {
                     ViewModel.Password = InvalidPassword;
@@ -198,7 +198,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     LoginManager.DidNotReceive().Login(Arg.Any<Email>(), Arg.Any<string>());
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void CallsTheLoginManagerWhenThePasswordIsValid()
                 {
                     ViewModel.Password = ValidPassword;
@@ -208,7 +208,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     LoginManager.Received().Login(Arg.Any<Email>(), Arg.Any<string>());
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void CallsTheLoginManagerForSignUpWhenThePasswordIsValidAndInSignUpMode()
                 {
                     ViewModel.Prepare(LoginType.SignUp);
@@ -219,7 +219,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     LoginManager.Received().SignUp(Arg.Any<Email>(), Arg.Any<string>());
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void DoesNothingWhenThePageIsCurrentlyLoading()
                 {
                     var scheduler = new TestScheduler();
@@ -234,7 +234,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     LoginManager.Received(1).Login(Arg.Any<Email>(), Arg.Any<string>());
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void NavigatesToTheTimeEntriesViewModelWhenTheLoginSucceeds()
                 {
                     ViewModel.Password = ValidPassword;
@@ -246,7 +246,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     NavigationService.Received().Navigate(typeof(MainViewModel));
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void StopsTheViewModelLoadStateWhenItCompletes()
                 {
                     ViewModel.Password = ValidPassword;
@@ -258,7 +258,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     ViewModel.IsLoading.Should().BeFalse();
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void StopsTheViewModelLoadStateWhenItErrors()
                 {
                     ViewModel.Password = ValidPassword;
@@ -270,7 +270,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     ViewModel.IsLoading.Should().BeFalse();
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void DoesNotNavigateWhenTheLoginFails()
                 {
                     ViewModel.Password = ValidPassword;
@@ -286,7 +286,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheTermsOfServiceCommand : LoginViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void OpensTheBrowserInTheTermsOfServicePage()
             {
                 ViewModel.OpenTermsOfServiceCommand.Execute();
@@ -297,7 +297,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void OpensTheBrowserWithTheAppropriateTitle()
             {
                 ViewModel.OpenTermsOfServiceCommand.Execute();
@@ -311,7 +311,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class ThePrivacyPolicyCommand : LoginViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void OpensTheBrowserInThePrivacyPolicyPage()
             {
                 ViewModel.OpenPrivacyPolicyCommand.Execute();
@@ -322,7 +322,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void OpensTheBrowserWithTheAppropriateTitle()
             {
                 ViewModel.OpenPrivacyPolicyCommand.Execute();
@@ -336,7 +336,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class ThePreviousCommand : LoginViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsToTheEmailPage()
             {
                 ViewModel.Email = ValidEmail;
@@ -347,7 +347,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.CurrentPage.Should().Be(LoginViewModel.EmailPage);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ClosesTheViewModelWhenInTheEmailPage()
             {
                 ViewModel.BackCommand.Execute();
@@ -363,7 +363,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 PasswordManagerService.IsAvailable.Returns(true);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotTryToCallThePasswordManagerServiceIfItIsNotAvailable()
             {
                 PasswordManagerService.IsAvailable.Returns(false);
@@ -373,7 +373,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 PasswordManagerService.DidNotReceive().GetLoginInformation();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CallsThePasswordManagerServiceWhenTheServiceIsAvailable()
             {
                 PasswordManagerService.GetLoginInformation().Returns(Observable.Never<PasswordManagerResult>());
@@ -383,7 +383,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 PasswordManagerService.Received().GetLoginInformation();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNothingWhenCalledASecondTimeBeforeTheObservableFromTheFirstCallReturns()
             {
                 var scheduler = new TestScheduler();
@@ -398,7 +398,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 PasswordManagerService.Received(1).GetLoginInformation();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CallsTheLoginCommandWhenValidCredentialsAreProvided()
             {
                 var scheduler = new TestScheduler();
@@ -416,7 +416,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 LoginManager.Received().Login(Arg.Any<Email>(), Arg.Any<string>());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SetsTheEmailFieldWhenValidCredentialsAreProvided()
             {
                 var scheduler = new TestScheduler();
@@ -434,7 +434,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Email.Should().Be(ValidEmail);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SetsTheEmailFieldWhenInvalidCredentialsAreProvided()
             {
                 var scheduler = new TestScheduler();
@@ -452,7 +452,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Email.Should().Be(InvalidEmail);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SetsThePasswordFieldWhenValidCredentialsAreProvided()
             {
                 var scheduler = new TestScheduler();
@@ -470,7 +470,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Password.Should().Be(ValidPassword);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotSetThePasswordFieldWhenInvalidCredentialsAreProvided()
             {
                 var scheduler = new TestScheduler();
@@ -488,7 +488,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Password.Should().Be("");
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNothingWhenValidCredentialsAreNotProvided()
             {
                 var scheduler = new TestScheduler();
@@ -527,7 +527,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheHasErrorProperty : LoginViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void IsFalseWhenLoginSucceeds()
             {
                 LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
@@ -541,7 +541,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.HasError.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void IsTrueWhenLoginFails()
             {
                 var scheduler = new TestScheduler();
@@ -564,7 +564,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheErrorTextProperty : LoginViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void IsEmptyWhenLoginSucceeds()
             {
                 LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
@@ -578,7 +578,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.ErrorText.Should().Be("");
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void IsWrongPasswordErrorWhenForbiddenExceptionIsThrown()
             {
                 var scheduler = new TestScheduler();
@@ -598,8 +598,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.ErrorText.Should().Be(Resources.IncorrectEmailOrPassword);
             }
 
-            [Fact]
-            public void IsGenericErrorWhenAnyOtherExceptionIsThrown()
+            [Fact, LogIfTooSlow]
+            public void IsGenericLoginErrorWhenAnyOtherExceptionIsThrown()
             {
                 var scheduler = new TestScheduler();
                 var notification = Notification.CreateOnError<ITogglDataSource>(new Exception());
@@ -615,6 +615,48 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 scheduler.AdvanceTo(1);
 
                 ViewModel.ErrorText.Should().Be(Resources.GenericLoginError);
+            }
+
+            [Fact, LogIfTooSlow]
+            public void IsPasswordRequirementsWhenSwitchingFromEmailToPasswordPageInSignUpMode()
+            {
+                ViewModel.Prepare(LoginType.SignUp);
+                ViewModel.Email = ValidEmail;
+
+                ViewModel.NextCommand.Execute();
+
+                ViewModel.ErrorText.Should().Be(Resources.SignUpPasswordRequirements);
+            }
+
+            [Fact, LogIfTooSlow]
+            public void IsEmptyWhenSwitchingFromEmailToPasswordPageInLoginMode()
+            {
+                ViewModel.Prepare(LoginType.Login);
+                ViewModel.Email = ValidEmail;
+
+                ViewModel.NextCommand.Execute();
+
+                ViewModel.ErrorText.Should().Be("");
+            }
+             
+            [Fact, LogIfTooSlow]
+            public void IsGenericSignUpErrorWhenAnyOtherExceptionIsThrown()
+            {
+                var scheduler = new TestScheduler();
+                var notification = Notification.CreateOnError<ITogglDataSource>(new Exception());
+                var message = new Recorded<Notification<ITogglDataSource>>(0, notification);
+                var observable = scheduler.CreateColdObservable(message);
+                LoginManager.SignUp(Arg.Any<Email>(), Arg.Any<string>())
+                            .Returns(observable);
+                ViewModel.Prepare(LoginType.SignUp);
+                ViewModel.Email = ValidEmail;
+                ViewModel.NextCommand.Execute();
+                ViewModel.Password = ValidPassword;
+
+                ViewModel.NextCommand.Execute();
+                scheduler.AdvanceTo(1);
+
+                ViewModel.ErrorText.Should().Be(Resources.GenericSignUpError);
             }
         }
 

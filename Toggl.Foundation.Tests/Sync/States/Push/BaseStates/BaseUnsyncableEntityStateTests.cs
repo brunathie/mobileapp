@@ -26,16 +26,16 @@ namespace Toggl.Foundation.Tests.Sync.States
             this.helper = helper;
         }
 
-        [Theory]
+        [Theory, LogIfTooSlow]
         [ClassData(typeof(TwoParameterConstructorTestData))]
         public void ThrowsWhenArgumentsAreNull(bool hasEntity, bool hasReason)
             => helper.ThrowsWhenArgumentsAreNull(hasEntity, hasReason);
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThrowsWhenDatabaseOperationFails()
             => helper.ThrowsWhenDatabaseOperationFails();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThrowsWhenTheReasonExceptionIsNotAnApiException()
             => helper.ThrowsWhenTheReasonExceptionIsNotAnApiException();
 
@@ -43,15 +43,15 @@ namespace Toggl.Foundation.Tests.Sync.States
         public void TheErrorMessageMatchesTheMessageFromTheReasonException(NonNull<string> message)
             => helper.TheErrorMessageMatchesTheMessageFromTheReasonException(message);
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TheSyncStatusOfTheEntityChangesToSyncFailedWhenEverythingWorks()
             => helper.TheSyncStatusOfTheEntityChangesToSyncFailedWhenEverythingWorks();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TheUpdatedEntityHasTheSameIdAsTheOriginalEntity()
             => helper.TheUpdatedEntityHasTheSameIdAsTheOriginalEntity();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TheOnlyThingThatChangesInTheUnsyncableEntityIsTheSyncStatusAndLastSyncErrorMessage()
             => helper.TheOnlyThingThatChangesInTheUnsyncableEntityIsTheSyncStatusAndLastSyncErrorMessage();
 

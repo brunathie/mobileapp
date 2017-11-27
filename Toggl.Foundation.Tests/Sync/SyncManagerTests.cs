@@ -37,7 +37,7 @@ namespace Toggl.Foundation.Tests.Sync
 
         public sealed class TheConstuctor : SyncManagerTestBase
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(TwoParameterConstructorTestData))]
             public void ThrowsIfAnyArgumentIsNull(bool useQueue, bool useOrchestrator)
             {
@@ -64,7 +64,7 @@ namespace Toggl.Foundation.Tests.Sync
 
         public sealed class TheStateObservable : SyncManagerTestBase
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShouldReturnObservableFromOrchestrator()
             {
                 var expectedObservable = Substitute.For<IObservable<SyncState>>();
@@ -78,7 +78,7 @@ namespace Toggl.Foundation.Tests.Sync
         {
             protected abstract void CallMethod();
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void AgainTellsQueueToStartSyncAfterCompletingPreviousFullSync()
             {
                 Queue.Dequeue().Returns(Pull);
@@ -92,7 +92,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Queue.Received().Dequeue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void AgainTellsQueueToStartSyncAfterCompletingPreviousPushSync()
             {
                 Queue.Dequeue().Returns(Pull);
@@ -106,19 +106,19 @@ namespace Toggl.Foundation.Tests.Sync
                 Queue.Received().Dequeue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task DoesNotQueueUntilOtherCompletedEventReturns()
             {
                 await ensureMethodIsThreadSafeWith(() => OrchestratorSyncComplete.OnNext(new Success(0)));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task DoesNotQueueUntilOtherCallToPushSyncReturns()
             {
                 await ensureMethodIsThreadSafeWith(() => SyncManager.PushSync());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task DoesNotQueueUntilOtherCallToForceFullSyncReturns()
             {
                 await ensureMethodIsThreadSafeWith(() => SyncManager.ForceFullSync());
@@ -180,7 +180,7 @@ namespace Toggl.Foundation.Tests.Sync
             protected override void CallMethod()
                 => OrchestratorSyncComplete.OnNext(new Success(0));
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void TellsQueueToStartSync()
             {
                 CallMethod();
@@ -188,7 +188,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Queue.Received().Dequeue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotQueuePullSync()
             {
                 CallMethod();
@@ -196,7 +196,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Queue.DidNotReceive().QueuePullSync();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotQueuePushSync()
             {
                 CallMethod();
@@ -204,7 +204,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Queue.DidNotReceive().QueuePullSync();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void TellsQueueToStartOrchestratorWhenAlreadyRunningFullSync()
             {
                 Queue.Dequeue().Returns(Pull);
@@ -216,7 +216,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Queue.Received().Dequeue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void TellsQueueToStartOrchestratorWhenAlreadyRunningPushSync()
             {
                 Queue.Dequeue().Returns(Pull);
@@ -228,7 +228,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Queue.Received().Dequeue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void TellsQueueToStartOrchestratorWhenInSecondPartOfMultiPhaseSync()
             {
                 Queue.Dequeue().Returns(Pull);
@@ -241,7 +241,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Queue.Received().Dequeue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsWhenAnUnsupportedSyncResultIsEmittedByTheOrchestrator()
             {
                 Action emittingUnsupportedResult = () => OrchestratorSyncComplete.OnNext(new UnsupportedResult());
@@ -278,7 +278,7 @@ namespace Toggl.Foundation.Tests.Sync
                 actual.ShouldBeEquivalentTo(expectedStates);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotTellQueueToStartOrchestratorWhenAlreadyRunningFullSync()
             {
                 Queue.Dequeue().Returns(Pull);
@@ -290,7 +290,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Queue.DidNotReceive().Dequeue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotTellQueueToStartOrchestratorWhenAlreadyRunningPushSync()
             {
                 Queue.Dequeue().Returns(Pull);
@@ -302,7 +302,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Queue.DidNotReceive().Dequeue();
             }
             
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotTellQueueToStartOrchestratorWhenInSecondPartOfMultiPhaseSync()
             {
                 Queue.Dequeue().Returns(Pull);
@@ -321,7 +321,7 @@ namespace Toggl.Foundation.Tests.Sync
             protected override IObservable<SyncState> CallSyncMethod()
                 => SyncManager.PushSync();
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void TellsQueueToStartSyncAfterQueingPush()
             {
                 CallMethod();
@@ -339,7 +339,7 @@ namespace Toggl.Foundation.Tests.Sync
             protected override IObservable<SyncState> CallSyncMethod()
                 => SyncManager.ForceFullSync();
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void TellsQueueToStartSyncAfterQueingPull()
             {
                 CallMethod();
@@ -354,7 +354,7 @@ namespace Toggl.Foundation.Tests.Sync
 
         public sealed class TheFreezeMethod : SyncManagerTestBase
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotThrowWhenFreezingAFrozenSyncManager()
             {
                 SyncManager.Freeze();
@@ -364,7 +364,7 @@ namespace Toggl.Foundation.Tests.Sync
                 freezing.ShouldNotThrow();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void FreezingAFrozenSyncManagerImmediatellyReturnsSleep()
             {
                 SyncState? firstState = null;
@@ -376,7 +376,7 @@ namespace Toggl.Foundation.Tests.Sync
                 firstState.Should().Be(Sleep);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void FreezingSyncManagerWhenNoSyncIsRunningImmediatellyReturnsSleep()
             {
                 SyncState? firstState = null;
@@ -387,7 +387,7 @@ namespace Toggl.Foundation.Tests.Sync
                 firstState.Should().Be(Sleep);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void RunningPushSyncOnFrozenSyncManagerGoesDirectlyToSleepState()
             {
                 SyncManager.Freeze();
@@ -399,7 +399,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Orchestrator.DidNotReceive().Start(Arg.Is(Pull));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void RunningFullSyncOnFrozenSyncManagerGoesDirectlyToSleepState()
             {
                 SyncManager.Freeze();
@@ -411,7 +411,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Orchestrator.DidNotReceive().Start(Arg.Is(Pull));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void KeepsWaitingWhileNoSleepStateOccursAfterFullSync()
             {
                 bool finished = false;
@@ -426,7 +426,7 @@ namespace Toggl.Foundation.Tests.Sync
                 finished.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void KeepsWaitingWhileNoSleepStateOccursAfterPushSync()
             {
                 bool finished = false;
@@ -440,7 +440,7 @@ namespace Toggl.Foundation.Tests.Sync
                 finished.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CompletesWhenSleepStateOccursAfterFullSync()
             {
                 bool finished = false;
@@ -455,7 +455,7 @@ namespace Toggl.Foundation.Tests.Sync
                 finished.Should().BeTrue();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CompletesWhenSleepStateOccursAfterPushSync()
             {
                 bool finished = false;
@@ -472,7 +472,7 @@ namespace Toggl.Foundation.Tests.Sync
 
         public sealed class TheProgressObservable : SyncManagerTestBase
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EmitsTheUnknownSyncProgressBeforeAnyProgressIsEmitted()
             {
                 SyncProgress? emitted = null;
@@ -484,7 +484,7 @@ namespace Toggl.Foundation.Tests.Sync
                 emitted.Should().Be(SyncProgress.Unknown);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EmitsSyncingWhenStartingPush()
             {
                 SyncProgress? progressAfterPushing = null;
@@ -498,7 +498,7 @@ namespace Toggl.Foundation.Tests.Sync
                 progressAfterPushing.Should().Be(SyncProgress.Syncing);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EmitsSyncingWhenStartingFullSync()
             {
                 SyncProgress? progressAfterFullSync = null;
@@ -512,7 +512,7 @@ namespace Toggl.Foundation.Tests.Sync
                 progressAfterFullSync.Should().Be(SyncProgress.Syncing);
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(Pull)]
             [InlineData(Push)]
             public void DoesNotEmitSyncedWhenSyncCompletesButAnotherSyncIsQueued(SyncState queuedState)
@@ -527,7 +527,7 @@ namespace Toggl.Foundation.Tests.Sync
                 emitted.Should().NotBe(SyncProgress.Synced);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EmitsSyncedWhenSyncCompletesAndQueueIsEmpty()
             {
                 SyncProgress? emitted = null;
@@ -540,7 +540,7 @@ namespace Toggl.Foundation.Tests.Sync
                 emitted.Should().Be(SyncProgress.Synced);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EmitsOfflineModeDetectedWhenSyncFailsWithOfflineException()
             {
                 SyncProgress? emitted = null;
@@ -552,7 +552,7 @@ namespace Toggl.Foundation.Tests.Sync
                 emitted.Should().Be(SyncProgress.OfflineModeDetected);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EmitsFailedWhenSyncFailsWithUnknownException()
             {
                 SyncProgress? emitted = null;
@@ -564,7 +564,7 @@ namespace Toggl.Foundation.Tests.Sync
                 emitted.Should().Be(SyncProgress.Failed);
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [MemberData(nameof(clientErrorAbortedExceptions))]
             public void EmitsFailedWhenAKnownClientErrorExceptionIsReported(ClientErrorException exception)
             {
@@ -577,7 +577,7 @@ namespace Toggl.Foundation.Tests.Sync
                 emitted.Should().Be(SyncProgress.Failed);
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [MemberData(nameof(clientErrorAbortedExceptions))]
             public void ReportsTheErrorWhenAKnownClientErrorExceptionIsReported(ClientErrorException exception)
             {
@@ -590,7 +590,7 @@ namespace Toggl.Foundation.Tests.Sync
                 caughtException.Should().Be(exception);
             }
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [MemberData(nameof(clientErrorAbortedExceptions))]
             public void FreezesTheSyncManagerWhenAKnownClientErrorExceptionIsReported(ClientErrorException exception)
             {
@@ -599,7 +599,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Orchestrator.Received().Freeze();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void EmitsTheLastValueAfterSubscribing()
             {
                 SyncProgress? emitted = null;
@@ -622,7 +622,7 @@ namespace Toggl.Foundation.Tests.Sync
   
         public sealed class ErrorHandling : SyncManagerTestBase
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ClearsTheSyncQueueWhenAnErrorIsReported()
             {
                 OrchestratorSyncComplete.OnNext(new Error(new Exception()));
@@ -630,7 +630,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Queue.Received().Clear();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void UpdatesInternalStateSoItIsNotLockedForFutureSyncsAfterAnErrorIsReported()
             {
                 OrchestratorSyncComplete.OnNext(new Error(new Exception()));
@@ -638,44 +638,48 @@ namespace Toggl.Foundation.Tests.Sync
                 SyncManager.IsRunningSync.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void PerformsThreadSafeClearingOfTheQueue()
             {
                 var startQueueing = new AutoResetEvent(false);
                 var startClearing = new AutoResetEvent(false);
+                var queueCleared = new AutoResetEvent(false);
                 int iterator = 0;
                 int queued = -1;
                 int cleared = -1;
 
-                Queue.When(q => q.QueuePullSync()).Do(async _ =>
+                Queue.When(q => q.QueuePullSync()).Do(_ =>
                 {
                     startClearing.Set();
-                    await Task.Delay(10);
+                    Task.Delay(10).Wait();
                     queued = Interlocked.Increment(ref iterator);
                 });
 
                 Queue.When(q => q.Clear()).Do(_ =>
-                    cleared = Interlocked.Increment(ref iterator));
+                {
+                    cleared = Interlocked.Increment(ref iterator);
+                    queueCleared.Set();
+                });
 
-                var taskA = Task.Run(() =>
+                Task.Run(() =>
                 {
                     startQueueing.WaitOne();
                     SyncManager.ForceFullSync();
                 });
 
-                var taskB = Task.Run(() =>
+                Task.Run(() =>
                 {
                     startClearing.WaitOne();
                     OrchestratorSyncComplete.OnNext(new Error(new Exception()));
                 });
 
                 startQueueing.Set();
-                Task.WaitAll(taskA, taskB);
+                queueCleared.WaitOne();
 
                 queued.Should().BeLessThan(cleared);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void GoesToSleepAfterAnErrorIsReported()
             {
                 OrchestratorSyncComplete.OnNext(new Error(new Exception()));
@@ -683,7 +687,7 @@ namespace Toggl.Foundation.Tests.Sync
                 Orchestrator.Received().Start(Arg.Is(Sleep));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotPreventFurtherSyncingAfterAnErrorWasReported()
             {
                 OrchestratorSyncComplete.OnNext(new Error(new Exception()));

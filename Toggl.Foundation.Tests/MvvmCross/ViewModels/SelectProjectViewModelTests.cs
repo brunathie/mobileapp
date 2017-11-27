@@ -8,6 +8,7 @@ using FsCheck.Xunit;
 using NSubstitute;
 using Toggl.Foundation.Autocomplete;
 using Toggl.Foundation.Autocomplete.Suggestions;
+using Toggl.Foundation.DataSources;
 using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.Tests.Generators;
@@ -26,7 +27,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor : SelectProjectViewModelTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(ThreeParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(bool useDataSource, bool useNavigationService, bool useDialogService)
             {
@@ -44,7 +45,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheCloseCommand : SelectProjectViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ClosesTheViewModel()
             {
                 await ViewModel.CloseCommand.ExecuteAsync();
@@ -82,7 +83,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheSelectProjectCommand : SelectProjectViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ClosesTheViewModel()
             {
                 ViewModel.SelectProjectCommand
@@ -92,7 +93,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     .Close(Arg.Is(ViewModel), Arg.Any<SelectProjectParameter>());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsTheSelectedProjectIdWhenSelectingAProject()
             {
                 var project = Substitute.For<IDatabaseProject>();
@@ -107,7 +108,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                         parameter => parameter.ProjectId == selectedProject.ProjectId));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsNoTaskIdWhenSelectingAProject()
             {
                 var project = Substitute.For<IDatabaseProject>();
@@ -122,7 +123,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                         parameter => parameter.TaskId == null));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsTheSelectedProjectIdWhenSelectingATask()
             {
                 var task = Substitute.For<IDatabaseTask>();
@@ -138,7 +139,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                         parameter => parameter.ProjectId == task.ProjectId));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsTheSelectedTaskIdWhenSelectingATask()
             {
                 var task = Substitute.For<IDatabaseTask>();
@@ -154,7 +155,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                         parameter => parameter.TaskId == task.Id));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsNoProjectIfNoProjectWasSelected()
             {
                 ViewModel.SelectProjectCommand
@@ -166,7 +167,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                         parameter => parameter.ProjectId == null));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsNoTaskIfNoProjectWasSelected()
             {
                 ViewModel.SelectProjectCommand
@@ -178,7 +179,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                         parameter => parameter.TaskId == null));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsWorkspaceIfNoProjectWasSelected()
             {
                 DialogService.Confirm(
@@ -198,7 +199,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                         parameter => parameter.WorkspaceId == workspaceId));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ShowsAlertIfWorkspaceIsGoingToBeChanged()
             {
                 var oldWorkspaceId = 10;
@@ -217,7 +218,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotShowsAlertIfWorkspaceIsNotGoingToBeChanged()
             {
                 var workspaceId = 10;
@@ -235,7 +236,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 );
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsWorkspaceIdOfTheProjectIfProjectWasSelected()
             {
                 var project = Substitute.For<IDatabaseProject>();
@@ -248,7 +249,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await ensureReturnsWorkspaceIdOfSuggestion(projectSuggestion);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsWorksaceIdIfNoProjectWasSelected()
             {
                 var noProjectSuggestion = ProjectSuggestion.NoProject(13, "");
@@ -259,7 +260,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await ensureReturnsWorkspaceIdOfSuggestion(noProjectSuggestion);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsWorkspaceIdOfTheTaskIfTaskWasSelected()
             {
                 var task = Substitute.For<IDatabaseTask>();
@@ -290,7 +291,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheTextProperty : SelectProjectViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task WhenChangedQueriesTheAutocompleteProvider()
             {
                 var text = "Some text";
@@ -324,7 +325,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Prepare();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsFalseIfTheTextIsEmpty()
             {
                 await ViewModel.Initialize();
@@ -334,7 +335,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsFalseIfTheTextIsOnlyWhitespace()
             {
                 await ViewModel.Initialize();
@@ -344,7 +345,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ReturnsFalseIfTheTextIsLongerThanTwoHundredAndFiftyCharacters()
             {
                 await ViewModel.Initialize();
@@ -357,7 +358,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheCreateProjectCommand : SelectProjectViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task DoesNotCloseTheViewModelIfTheProjectIsNotCreated()
             {
                 setupProjectCreationResult(null);
@@ -370,7 +371,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await NavigationService.DidNotReceive().Close(ViewModel, Arg.Any<SelectProjectParameter>());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ClosesTheViewModelReturningTheCreatedIdIfTheProjectIsCreated()
             {
                 const long projectId = 10;
@@ -415,7 +416,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 }
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task IsClearedWhenTextIsChanged()
             {
                 var oldSuggestions = getProjectSuggestions(3, 1);
@@ -438,7 +439,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Suggestions.First().Should().HaveCount(2);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task IsPopulatedAfterInitialization()
             {
                 var projectSuggestions = getProjectSuggestions(10, 0);
@@ -456,7 +457,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Suggestions.First().Should().HaveCount(11);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task PrependsEmptyProjectToEveryGroup()
             {
                 var suggestions = new List<ProjectSuggestion>();
@@ -479,7 +480,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 }
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task GroupsProjectsByWorkspace()
             {
                 var suggestions = new List<ProjectSuggestion>();
@@ -510,7 +511,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 }
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task DoesNotContainSelectedProjectIfProjectIdIsNull()
             {
                 prepareProjects();
@@ -523,7 +524,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     suggestion => ((ProjectSuggestion)suggestion).Selected == false);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task ContainsOnlyOneSelectedProjectIfProjectIdIsSet()
             {
                 prepareProjects();
@@ -558,6 +559,89 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     .Query(Arg.Is<QueryInfo>(
                         arg => arg.SuggestionType == AutocompleteSuggestionType.Projects))
                     .Returns(Observable.Return(projects));
+            }
+        }
+
+        public sealed class TheIsEmptyProperty : SelectProjectViewModelTest
+        {
+            const long workspaceId = 1;
+
+            private IDatabaseProject createArbitraryProject(int id)
+            {
+                var project = Substitute.For<IDatabaseProject>();
+                project.Id.Returns(id);
+                project.WorkspaceId.Returns(workspaceId);
+                project.Name.Returns(Guid.NewGuid().ToString());
+                return project;
+            }
+
+            [Fact, LogIfTooSlow]
+            public async Task ReturnsFalseIfHasProjects()
+            {
+                var projects = Enumerable.Range(0, 5)
+                                         .Select(createArbitraryProject)
+                                         .ToList();
+
+                var projectsSource = Substitute.For<IProjectsSource>();
+                projectsSource.GetAll().Returns(Observable.Return(projects));
+
+                DataSource.Projects.Returns(projectsSource);
+
+                ViewModel.Prepare(SelectProjectParameter.WithIds(null, null, workspaceId));
+                await ViewModel.Initialize();
+
+                ViewModel.IsEmpty.Should().BeFalse();
+            }
+
+            [Fact, LogIfTooSlow]
+            public async Task ReturnsFalseIfHasProjectsButFilteredProjectCollectionDoesNot()
+            {
+                var projects = Enumerable.Range(0, 5)
+                                         .Select(createArbitraryProject)
+                                         .ToList();
+
+                var projectsSource = Substitute.For<IProjectsSource>();
+                projectsSource.GetAll().Returns(Observable.Return(projects));
+
+                DataSource.Projects.Returns(projectsSource);
+
+                DataSource.AutocompleteProvider
+                          .Query(Arg.Is<QueryInfo>(arg => arg.SuggestionType == AutocompleteSuggestionType.Projects))
+                          .Returns(Observable.Return(new List<ProjectSuggestion>()));
+
+                ViewModel.Prepare(SelectProjectParameter.WithIds(null, null, workspaceId));
+                await ViewModel.Initialize();
+
+                ViewModel.Text = "Anything";
+
+                ViewModel.IsEmpty.Should().BeFalse();
+            }
+
+            [Fact, LogIfTooSlow]
+            public async Task ReturnsTrueIfHasNoProjects()
+            {
+                var projectsSource = Substitute.For<IProjectsSource>();
+                projectsSource.GetAll().Returns(Observable.Return(new List<IDatabaseProject>()));
+
+                DataSource.Projects.Returns(projectsSource);
+
+                ViewModel.Prepare(SelectProjectParameter.WithIds(null, null, workspaceId));
+                await ViewModel.Initialize();
+
+                ViewModel.IsEmpty.Should().BeTrue();
+            }
+
+            [Fact, LogIfTooSlow]
+            public void ReturnsFalseBeforeLoadingProjectsFromDatabase()
+            {
+                var projectsSource = Substitute.For<IProjectsSource>();
+                projectsSource.GetAll().Returns(Observable.Return(new List<IDatabaseProject>()));
+
+                DataSource.Projects.Returns(projectsSource);
+
+                ViewModel.Prepare(SelectProjectParameter.WithIds(null, null, workspaceId));
+
+                ViewModel.IsEmpty.Should().BeFalse();
             }
         }
     }

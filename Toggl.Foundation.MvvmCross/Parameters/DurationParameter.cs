@@ -6,9 +6,9 @@ namespace Toggl.Foundation.MvvmCross.Parameters
     {
         public DateTimeOffset Start { get; set; }
 
-        public DateTimeOffset? Stop { get; set; }
+        public TimeSpan? Duration { get; set; }
 
-        public static DurationParameter WithStartAndStop(DateTimeOffset start, DateTimeOffset? stop)
-            => new DurationParameter { Start = start, Stop = stop };
+        public static DurationParameter WithStartAndDuration(DateTimeOffset start, TimeSpan? duration)
+            => new DurationParameter { Start = start, Duration = duration };
     }
 }

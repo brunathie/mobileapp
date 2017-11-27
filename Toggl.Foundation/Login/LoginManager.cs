@@ -12,10 +12,10 @@ namespace Toggl.Foundation.Login
 {
     public sealed class LoginManager : ILoginManager
     {
+        private readonly IScheduler scheduler;
         private readonly IApiFactory apiFactory;
         private readonly ITogglDatabase database;
         private readonly ITimeService timeService;
-        private readonly IScheduler scheduler;
 
         public LoginManager(IApiFactory apiFactory, ITogglDatabase database, ITimeService timeService, IScheduler scheduler)
         {
@@ -43,12 +43,7 @@ namespace Toggl.Foundation.Login
                     .SelectMany(_ => apiFactory.CreateApiWith(credentials).User.Get())
                     .Select(User.Clean)
                     .SelectMany(database.User.Create)
-                    .Select(user =>
-                    {
-                        var newCredentials = Credentials.WithApiToken(user.ApiToken);
-                        var api = apiFactory.CreateApiWith(newCredentials);
-                        return new TogglDataSource(database, api, timeService, scheduler);
-                    });
+                    .Select(dataSourceFromUser);
         }
 
         public IObservable<ITogglDataSource> SignUp(Email email, string password)
@@ -62,12 +57,7 @@ namespace Toggl.Foundation.Login
                     .SelectMany(_ => apiFactory.CreateApiWith(Credentials.None).User.SignUp(email, password))
                     .Select(User.Clean)
                     .SelectMany(database.User.Create)
-                    .Select(user =>
-                    {
-                        var newCredentials = Credentials.WithApiToken(user.ApiToken);
-                        var api = apiFactory.CreateApiWith(newCredentials);
-                        return new TogglDataSource(database, api, timeService, scheduler);
-                    });
+                    .Select(dataSourceFromUser);
         }
 
         public IObservable<string> ResetPassword(Email email)
@@ -80,12 +70,25 @@ namespace Toggl.Foundation.Login
         }
 
         public ITogglDataSource GetDataSourceIfLoggedIn()
+            => database.User
+                .Single()
+                .Select(dataSourceFromUser)
+                .Catch(Observable.Return<ITogglDataSource>(null))
+                .Wait();
+
+        public IObservable<ITogglDataSource> RefreshToken(string password)
         {
+            Ensure.Argument.IsNotNullOrWhiteSpaceString(password, nameof(password));
+
             return database.User
-                       .Single()
-                       .Select(dataSourceFromUser)
-                       .Catch(Observable.Return<ITogglDataSource>(null))
-                       .Wait();
+                .Single()
+                .Select(user => Email.FromString(user.Email))
+                .Select(email => Credentials.WithPassword(email, password))
+                .Select(apiFactory.CreateApiWith)
+                .SelectMany(api => api.User.Get())
+                .Select(User.Clean)
+                .SelectMany(database.User.Update)
+                .Select(dataSourceFromUser);
         }
 
         private ITogglDataSource dataSourceFromUser(IUser user)

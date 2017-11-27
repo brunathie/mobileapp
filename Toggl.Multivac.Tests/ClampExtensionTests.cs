@@ -16,15 +16,15 @@ namespace Toggl.Multivac.Tests
             public abstract T NumLessThanMin { get; }
             public abstract T NumGreaterThanMax { get; }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsMinIfValueIsLessThanMin()
                 => NumLessThanMin.Clamp(Min, Max).Should().Be(Min);
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsMaxIfValueIsGreaterThanMax()
                 => NumGreaterThanMax.Clamp(Min, Max).Should().Be(Max);
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsTheSameValueIfValueIsInInterval()
                 => NumInInterval.Clamp(Min, Max).Should().Be(NumInInterval);
         }

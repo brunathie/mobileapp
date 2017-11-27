@@ -42,7 +42,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
 
         public sealed class TheWithWorkspaceMethod : TextFieldInfoTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsTheSameObjectWhenWorkspaceDoesNotChange()
             {
                 var textFieldInfo = CreateDefaultTextFieldInfo();
@@ -52,7 +52,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
                 changedFieldInfo.Should().Be(textFieldInfo);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void RemovesProjectTaskAndTagsWhenWorkspaceChanges()
             {
                 var tag = createTagSuggestion(123);
@@ -72,7 +72,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
 
         public sealed class TheWithTextAndCursorMethod : TextFieldInfoTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ChangesOnlyTheTextAndCursorPositionWhileMaintainingTheOtherFields()
             {
                 const string newDescription = "Some other text";
@@ -90,7 +90,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
 
         public sealed class TheWithProjectInfoMethod : TextFieldInfoTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ChangesOnlyTheProjectRelatedInfoWhileMaintainingTheOtherFields()
             {
                 const long newProjectId = 11;
@@ -107,7 +107,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
                 textFieldInfo.Should().Be(expected);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void RemovesTheTaskIdAndTaskName()
             {
                 const long newProjectId = 11;
@@ -132,7 +132,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
             private const long taskId = 30;
             private const string taskName = "New task";
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SetsTheProjectInfo()
             {
                 var textFieldInfo = CreateDefaultTextFieldInfo()
@@ -143,7 +143,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
                 textFieldInfo.ProjectColor.Should().Be(projectColor);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SetsTheTaskInfo()
             {
                 var textFieldInfo = CreateDefaultTextFieldInfo()
@@ -156,7 +156,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
 
         public sealed class TheRemoveProjectQueryFromDescriptionIfNeededMethod : TextFieldInfoTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void RemovesTheProjectQueryIfAnyAtSymbolIsPresent()
             {
                 var newDescription = $"{Description}@something";
@@ -169,7 +169,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
                 textFieldInfo.Text.Should().Be(Description);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotChangeAnyPropertyIfThereIsNoProjectQueryInTheDescription()
             {
                 var textFieldInfo = CreateDefaultTextFieldInfo();
@@ -183,7 +183,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
 
         public sealed class RemoveTagQueryFromDescriptionIfNeeded : TextFieldInfoTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void RemovesTheProjectQueryIfAnyHashtagSymbolIsPresent()
             {
                 var newDescription = $"{Description}#something";
@@ -195,7 +195,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
                 textFieldInfo.Text.Should().Be(Description);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotChangeAnyPropertyIfThereIsNoProjectQueryInTheDescription()
             {
                 var textFieldInfo = CreateDefaultTextFieldInfo();
@@ -209,7 +209,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
 
         public sealed class TheRemoveProjectInfoMethod : TextFieldInfoTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void RemovesAllProjectRelatedFields()
             {
                 var newDescription = $"{Description}@something";
@@ -227,7 +227,7 @@ namespace Toggl.Foundation.Tests.Autocomplete
 
         public sealed class TheClearTagsMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void RemovesAllTags()
             {
                 var tags = Enumerable.Range(10, 10)

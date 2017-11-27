@@ -51,7 +51,7 @@ namespace Toggl.Foundation.Tests.Generators
     {
         public sealed class TheGeneratedSequence
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [InlineData(typeof(TwoParameterConstructorTestData))]
             [InlineData(typeof(ThreeParameterConstructorTestData))]
             [InlineData(typeof(FourParameterConstructorTestData))]

@@ -19,7 +19,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor : OutdatedAppViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfTheArgumentIsNull()
             {
                 Action tryingToConstructWithEmptyParameters =
@@ -32,7 +32,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheUpdateAppCommand : OutdatedAppViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CallsTheOpenStoreMethodOfTheBrowserService()
             {
                 ViewModel.UpdateAppCommand.Execute();
@@ -43,7 +43,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheOpenWebsiteCommand : OutdatedAppViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void TogglesTheCurrentValueOfTheToggleUseTwentyFourHourClockProperty()
             {
                 const string togglWebsiteUrl = "https://toggl.com";

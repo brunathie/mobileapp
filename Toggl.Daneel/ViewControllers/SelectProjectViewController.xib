@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SelectProjectViewController">
             <connections>
                 <outlet property="CloseButton" destination="52a-eA-uvh" id="b7I-P1-rvN"/>
+                <outlet property="EmptyStateImage" destination="N4r-0Y-VVU" id="laS-dG-J3I"/>
+                <outlet property="EmptyStateLabel" destination="y7h-xi-13f" id="gg7-fK-8XK"/>
                 <outlet property="ProjectsTableView" destination="Ebm-06-qhS" id="eT2-5d-DQ8"/>
                 <outlet property="TextField" destination="q0w-Zp-Y5Q" id="Onc-5f-hj8"/>
                 <outlet property="view" destination="2" id="RRd-Eg-VrN"/>
@@ -50,12 +52,29 @@
                     <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                 </tableView>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Add/filter projects" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="q0w-Zp-Y5Q">
-                    <rect key="frame" x="36" y="66.5" width="120.5" height="17"/>
+                    <rect key="frame" x="36" y="66.5" width="120" height="17"/>
                     <color key="tintColor" red="0.29803921568627451" green="0.85098039215686272" blue="0.39215686274509803" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create a project and categorize your tracked time." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y7h-xi-13f" userLabel="NoProjectLabel">
+                    <rect key="frame" x="56" y="243" width="209" height="36"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="36" id="Eat-ST-Z0T"/>
+                        <constraint firstAttribute="width" constant="209" id="Tnh-VL-zIL"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.70980392156862748" green="0.73725490196078436" blue="0.75294117647058822" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icIllustrationProject" translatesAutoresizingMaskIntoConstraints="NO" id="N4r-0Y-VVU" userLabel="EmptyStateImage">
+                    <rect key="frame" x="127" y="160" width="77" height="77"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="77" id="1hN-zB-zfq"/>
+                        <constraint firstAttribute="width" constant="77" id="Qtk-a3-KvP"/>
+                    </constraints>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -65,10 +84,14 @@
                 <constraint firstItem="52a-eA-uvh" firstAttribute="top" secondItem="2" secondAttribute="top" id="IzG-Xm-T17"/>
                 <constraint firstItem="ecR-WI-plE" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="LSw-jH-wiu"/>
                 <constraint firstItem="LAW-Wn-H2j" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="Sad-oa-z3z"/>
+                <constraint firstItem="N4r-0Y-VVU" firstAttribute="centerX" secondItem="y7h-xi-13f" secondAttribute="centerX" constant="5" id="SwT-SA-aWo"/>
                 <constraint firstItem="Ebm-06-qhS" firstAttribute="top" secondItem="ecR-WI-plE" secondAttribute="bottom" constant="20" id="TQG-e8-HVs"/>
+                <constraint firstItem="y7h-xi-13f" firstAttribute="top" secondItem="N4r-0Y-VVU" secondAttribute="bottom" constant="6" id="UP7-sf-pDm"/>
+                <constraint firstItem="y7h-xi-13f" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="VbA-Yd-ASM"/>
                 <constraint firstItem="52a-eA-uvh" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="X8m-gg-KoE"/>
                 <constraint firstItem="ecR-WI-plE" firstAttribute="top" secondItem="52a-eA-uvh" secondAttribute="bottom" constant="30" id="eks-wc-Gxx"/>
                 <constraint firstItem="q0w-Zp-Y5Q" firstAttribute="leading" secondItem="ecR-WI-plE" secondAttribute="trailing" constant="10" id="gU8-Y8-X28"/>
+                <constraint firstItem="N4r-0Y-VVU" firstAttribute="top" secondItem="2" secondAttribute="top" constant="160" id="jnE-Ks-K6F"/>
                 <constraint firstAttribute="bottom" secondItem="Ebm-06-qhS" secondAttribute="bottom" id="lmR-W4-yFV"/>
                 <constraint firstItem="q0w-Zp-Y5Q" firstAttribute="centerY" secondItem="ecR-WI-plE" secondAttribute="centerY" id="pEj-Oj-H6v"/>
             </constraints>
@@ -78,6 +101,7 @@
     </objects>
     <resources>
         <image name="icClose" width="10" height="10"/>
+        <image name="icIllustrationProject" width="60" height="63"/>
         <image name="icSearch" width="13" height="12"/>
     </resources>
 </document>

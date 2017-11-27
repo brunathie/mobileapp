@@ -27,7 +27,7 @@ namespace Toggl.Ultrawave.Tests.Models
                 At = new DateTimeOffset(2013, 3, 6, 12, 18, 42, TimeSpan.Zero),
             };
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void HasConstructorWhichCopiesValuesFromInterfaceToTheNewInstance()
             {
                 var clonedObject = new User(validUser);
@@ -36,13 +36,13 @@ namespace Toggl.Ultrawave.Tests.Models
                 clonedObject.ShouldBeEquivalentTo(validUser, options => options.IncludingProperties());
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CanBeDeserialized()
             {
                 SerializationHelper.CanBeDeserialized(validJson, validUser);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void CanBeSerialized()
             {
                 SerializationHelper.CanBeSerialized(validJson, validUser);

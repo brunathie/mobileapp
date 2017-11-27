@@ -10,7 +10,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Converters
     {
         public sealed class TheConvertMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void WorksWithZero()
             {
                 var converter = new TimeSpanToDurationValueConverter();
@@ -20,7 +20,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Converters
                 result.Should().Be("0:00:00");
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void WorksWithMoreThan24Hours()
             {
                 var converter = new TimeSpanToDurationValueConverter();
@@ -31,7 +31,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Converters
                 result.Should().Be("25:00:00");
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void WorksForNormalCase()
             {
                 var converter = new TimeSpanToDurationValueConverter();

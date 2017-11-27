@@ -42,10 +42,15 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public long Id { get; set; }
 
-        public bool DescriptionLimitExceeded
-            => Description.LengthInBytes() > MaxTimeEntryDescriptionLengthInBytes;
-
         public string Description { get; set; }
+
+        [DependsOn(nameof(Description))]
+        public int DescriptionRemainingLength
+            => MaxTimeEntryDescriptionLengthInBytes - Description.LengthInBytes();
+
+        [DependsOn(nameof(DescriptionRemainingLength))]
+        public bool DescriptionLimitExceeded
+            => DescriptionRemainingLength < 0;
 
         public string Project { get; set; }
 
@@ -267,13 +272,13 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         
         private async Task editDuration()
         {
-            var currentDuration = DurationParameter.WithStartAndStop(StartTime, StopTime);
+            var currentDuration = DurationParameter.WithStartAndDuration(StartTime, Duration);
             var selectedDuration = await navigationService
                 .Navigate<EditDurationViewModel, DurationParameter, DurationParameter>(currentDuration)
                 .ConfigureAwait(false);
             
             StartTime = selectedDuration.Start;
-            StopTime = selectedDuration.Stop;
+            StopTime = selectedDuration.Start + (selectedDuration.Duration ?? TimeSpan.Zero);
         }
 
         private async Task selectTags()

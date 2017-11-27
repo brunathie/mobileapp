@@ -38,7 +38,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor : SuggestionsViewModelTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(ThreeParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(bool useDataSource, bool useContainer, bool useTimeService)
             {
@@ -56,7 +56,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheSuggestionsProperty : SuggestionsViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task WorksWithSeveralProviders()
             {
                 var provider1 = Substitute.For<ISuggestionProvider>();
@@ -76,7 +76,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                          .And.Contain(new[] { suggestion1, suggestion2 });
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task WorksIfProviderHasMultipleSuggestions()
             {
                 var scheduler = new TestScheduler();
@@ -96,7 +96,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                          .And.Contain(suggestions);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task WorksIfProvidersAreEmpty()
             {
                 var providers = Enumerable.Range(0, 3)
@@ -154,7 +154,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 )).Wait();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async void InitiatesPushSyncWhenStartingSucceeds()
             {
                 var suggestion = createSuggestion();
@@ -164,7 +164,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await DataSource.SyncManager.Received().PushSync();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async void DoesNotInitiatePushSyncWhenStartingFails()
             {
                 var suggestion = createSuggestion();

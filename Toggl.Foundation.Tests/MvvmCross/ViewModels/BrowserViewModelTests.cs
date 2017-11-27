@@ -17,7 +17,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor : BrowserViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfTheArgumentIsNull()
             {
                 Action tryingToConstructWithEmptyParameters =
@@ -35,7 +35,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 Url = "https://someurl.com"
             };
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SetsTheUrlProperty()
             {
                 ViewModel.Prepare(parameters);
@@ -43,7 +43,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Url.Should().Be(parameters.Url);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void SetsTheTitleProperty()
             {
                 ViewModel.Prepare(parameters);

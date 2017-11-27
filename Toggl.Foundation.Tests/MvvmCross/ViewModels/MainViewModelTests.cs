@@ -1,4 +1,4 @@
-﻿﻿using System;
+using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
@@ -41,7 +41,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheConstructor : MainViewModelTest
         {
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(FourParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(bool useDataSource, bool useTimeService, bool useNavigationService, bool useAccessRestrictionStorage)
             {
@@ -60,7 +60,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheViewAppearedMethod : MainViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void RequestsTheSuggestionsViewModel()
             {
                 ViewModel.ViewAppeared();
@@ -68,7 +68,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 NavigationService.Received().Navigate(typeof(SuggestionsViewModel));
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void RequestsTheLogTimeEntriesViewModel()
             {
                 ViewModel.ViewAppeared();
@@ -79,7 +79,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheStartTimeEntryCommand : MainViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task NavigatesToTheStartTimeEntryViewModel()
             {
                 await ViewModel.StartTimeEntryCommand.ExecuteAsync();
@@ -103,7 +103,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheOpenSettingsCommand : MainViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task NavigatesToTheSettingsViewModel()
             {
                 await ViewModel.OpenSettingsCommand.ExecuteAsync();
@@ -114,7 +114,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
         public sealed class TheStopTimeEntryCommand : MainViewModelTest
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task CallsTheStopMethodOnTheDataSource()
             {
                 var date = DateTimeOffset.UtcNow;
@@ -125,7 +125,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await DataSource.TimeEntries.Received().Stop(date);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task SetsTheElapsedTimeToZero()
             {
                 await ViewModel.StopTimeEntryCommand.ExecuteAsync();
@@ -133,7 +133,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.CurrentTimeEntryElapsedTime.Should().Be(TimeSpan.Zero);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task InitiatesPushSync()
             {
                 ViewModel.StopTimeEntryCommand.Execute();
@@ -141,7 +141,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await DataSource.SyncManager.Received().PushSync();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task DoesNotInitiatePushSyncWhenSavingFails()
             {
                 DataSource.TimeEntries.Stop(Arg.Any<DateTimeOffset>())
@@ -185,7 +185,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 currentTimeEntrySubject.OnNext(timeEntry);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task IsSet()
             {
                 await prepare();
@@ -193,7 +193,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ActualValue.Should().Be(ExpectedValue);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task IsUnset()
             {
                 await prepare();

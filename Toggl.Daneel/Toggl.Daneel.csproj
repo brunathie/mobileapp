@@ -365,6 +365,14 @@
     <ImageAsset Include="Resources\Images.xcassets\search.imageset\search.png" />
     <ImageAsset Include="Resources\Images.xcassets\search.imageset\search%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\search.imageset\search%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationTags.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationTags.imageset\icIllustrationTags.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationTags.imageset\icIllustrationTags%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationTags.imageset\icIllustrationTags%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationProject.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationProject.imageset\icIllustrationProjects.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationProject.imageset\icIllustrationProjects%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationProject.imageset\icIllustrationProjects%403x.png" />
     <ImageAsset Include="Resources\Images.xcassets\icArrowRight.imageset\Contents.json" />
     <ImageAsset Include="Resources\Images.xcassets\icArrowRight.imageset\icArrowRight.png" />
     <ImageAsset Include="Resources\Images.xcassets\icArrowRight.imageset\icArrowRight%402x.png" />
@@ -408,6 +416,7 @@
     <InterfaceDefinition Include="Views\ClientViewCell.xib" />
     <InterfaceDefinition Include="ViewControllers\SelectClientViewController.xib" />
     <InterfaceDefinition Include="ViewControllers\OutdatedAppViewController.xib" />
+    <InterfaceDefinition Include="ViewControllers\TokenResetViewController.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -633,6 +642,8 @@
     <Compile Include="Views\ValueSliderView.cs" />
     <Compile Include="Views\TextViewWithPlaceholder.cs" />
     <Compile Include="Binding\TextViewWithPlaceholderTextTargetBinding.cs" />
+    <Compile Include="Views\TextViewWithCharacterCounter.cs" />
+    <Compile Include="Binding\TextFieldPlaceholderTargetBinding.cs" />
     <Compile Include="Startup\DebugTrace.cs" />
     <Compile Include="Startup\AppDelegate.cs" />
     <Compile Include="Startup\Main.cs" />
@@ -641,6 +652,10 @@
       <DependentUpon>OutdatedAppViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\BrowserService.cs" />
+    <Compile Include="ViewControllers\TokenResetViewController.cs" />
+    <Compile Include="ViewControllers\TokenResetViewController.designer.cs">
+      <DependentUpon>TokenResetViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation.MvvmCross\Toggl.Foundation.MvvmCross.csproj">
@@ -680,6 +695,8 @@
     <Folder Include="Views\Onboarding\" />
     <Folder Include="Views\Interfaces\" />
     <Folder Include="Resources\Images.xcassets\search.imageset\" />
+    <Folder Include="Resources\Images.xcassets\icIllustrationTags.imageset\" />
+    <Folder Include="Resources\Images.xcassets\icIllustrationProject.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />

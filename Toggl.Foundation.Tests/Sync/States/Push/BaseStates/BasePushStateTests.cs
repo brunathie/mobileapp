@@ -19,23 +19,23 @@ namespace Toggl.Foundation.Tests.Sync.States
             this.helper = helper;
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ConstructorThrowsWithNullDatabase()
             => helper.ConstructorThrowsWithNullDatabase();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsNothingToPushTransitionWhenTheRepositoryReturnsNoEntity()
             => helper.ReturnsNothingToPushTransitionWhenTheRepositoryReturnsNoEntity();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsPushEntityTransitionWhenTheRepositoryReturnsSomeEntity()
             => helper.ReturnsPushEntityTransitionWhenTheRepositoryReturnsSomeEntity();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThrowsWhenRepositoryThrows()
             => helper.ThrowsWhenRepositoryThrows();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsPushEntityTransitionWithTheOldestEntity()
             => helper.ReturnsPushEntityTransitionWithTheOldestEntity();
 

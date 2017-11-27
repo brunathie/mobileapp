@@ -144,7 +144,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
 
             CurrentPage = PasswordPage;
-            ErrorText = "";
+            ErrorText = loginType == LoginType.SignUp
+                ? Resources.SignUpPasswordRequirements
+                : "";
         }
 
         private void back()
@@ -232,10 +234,15 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                     ErrorText = Resources.IncorrectEmailOrPassword;
                     break;
                 default:
-                    ErrorText = Resources.GenericLoginError;
+                    ErrorText = getGenericError();
                     break;
             }
         }
+
+        private string getGenericError()
+            => loginType == LoginType.Login
+                ? Resources.GenericLoginError
+                : Resources.GenericSignUpError;
 
         private void onCompleted()
         {

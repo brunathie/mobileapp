@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -12,6 +12,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SelectTagsViewController">
             <connections>
                 <outlet property="CloseButton" destination="E3h-ZA-T3J" id="name-outlet-E3h-ZA-T3J"/>
+                <outlet property="EmptyStateImage" destination="sx4-Gh-vgA" id="kCM-JY-sJs"/>
+                <outlet property="EmptyStateLabel" destination="N1a-u9-986" id="rcs-zk-2KC"/>
                 <outlet property="SaveButton" destination="hjx-0o-EI5" id="name-outlet-hjx-0o-EI5"/>
                 <outlet property="TagsTableView" destination="5dy-Z6-wg6" id="name-outlet-5dy-Z6-wg6"/>
                 <outlet property="TextField" destination="Oy7-SV-cuq" id="name-outlet-Oy7-SV-cuq"/>
@@ -32,13 +34,13 @@
                     <state key="normal" image="icClose"/>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tags" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s6h-5g-H2v">
-                    <rect key="frame" x="145" y="12" width="31.5" height="17"/>
+                    <rect key="frame" x="145" y="12" width="31.666666666666657" height="17"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hjx-0o-EI5">
-                    <rect key="frame" x="272" y="5.5" width="32" height="29"/>
+                    <rect key="frame" x="272" y="5.6666666666666679" width="32" height="29.000000000000004"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                     <state key="normal" title="Save">
                         <color key="titleColor" red="0.29803921568627451" green="0.85098039215686272" blue="0.39215686274509803" alpha="1" colorSpace="calibratedRGB"/>
@@ -52,7 +54,7 @@
                     </constraints>
                 </imageView>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Add/filter tags" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Oy7-SV-cuq">
-                    <rect key="frame" x="36" y="65.5" width="268" height="19"/>
+                    <rect key="frame" x="36" y="65.666666666666671" width="268" height="19"/>
                     <color key="tintColor" red="0.29803921568627451" green="0.85098039215686272" blue="0.39215686274509803" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -64,19 +66,40 @@
                     <color key="separatorColor" red="0.90980392156862744" green="0.90980392156862744" blue="0.90980392156862744" alpha="1" colorSpace="calibratedRGB"/>
                     <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                 </tableView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add keywords to your time entries with tags." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N1a-u9-986" userLabel="NoTagsLabel">
+                    <rect key="frame" x="85" y="243" width="150" height="36"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="150" id="F4P-v1-7Gz"/>
+                        <constraint firstAttribute="height" constant="36" id="zmb-VY-uJW"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.70980392156862748" green="0.73725490196078436" blue="0.75294117647058822" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icIllustrationTags" translatesAutoresizingMaskIntoConstraints="NO" id="sx4-Gh-vgA" userLabel="EmptyStateImage">
+                    <rect key="frame" x="111" y="157" width="74" height="78"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="74" id="70a-cn-cai"/>
+                        <constraint firstAttribute="height" constant="78" id="SCZ-ke-KLt"/>
+                    </constraints>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="E3h-ZA-T3J" firstAttribute="top" secondItem="2" secondAttribute="top" id="2lM-9h-qGV"/>
+                <constraint firstItem="N1a-u9-986" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="5ZP-Cs-rVb"/>
                 <constraint firstAttribute="trailing" secondItem="hjx-0o-EI5" secondAttribute="trailing" constant="16" id="HFX-SX-iaE"/>
+                <constraint firstItem="sx4-Gh-vgA" firstAttribute="centerX" secondItem="N1a-u9-986" secondAttribute="centerX" constant="-12" id="IEy-H0-sAP"/>
                 <constraint firstAttribute="trailing" secondItem="Oy7-SV-cuq" secondAttribute="trailing" constant="16" id="JSR-AA-31h"/>
                 <constraint firstItem="Oy7-SV-cuq" firstAttribute="leading" secondItem="vKP-CL-GPZ" secondAttribute="trailing" constant="10" id="NOB-1k-6bS"/>
                 <constraint firstItem="5dy-Z6-wg6" firstAttribute="top" secondItem="vKP-CL-GPZ" secondAttribute="bottom" constant="20" id="NVG-gY-wAg"/>
                 <constraint firstItem="5dy-Z6-wg6" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="bEz-5B-9CW"/>
+                <constraint firstItem="N1a-u9-986" firstAttribute="top" secondItem="sx4-Gh-vgA" secondAttribute="bottom" constant="8" id="d9e-Jl-bPd"/>
                 <constraint firstItem="hjx-0o-EI5" firstAttribute="centerY" secondItem="E3h-ZA-T3J" secondAttribute="centerY" id="dff-hu-Pt8"/>
                 <constraint firstAttribute="bottom" secondItem="5dy-Z6-wg6" secondAttribute="bottom" id="eha-86-UTU"/>
                 <constraint firstItem="Oy7-SV-cuq" firstAttribute="centerY" secondItem="vKP-CL-GPZ" secondAttribute="centerY" id="f2U-Fa-ZEM"/>
                 <constraint firstItem="vKP-CL-GPZ" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="f5X-ue-fUz"/>
+                <constraint firstItem="sx4-Gh-vgA" firstAttribute="top" secondItem="2" secondAttribute="top" constant="157" id="feW-Xh-Vli"/>
                 <constraint firstItem="E3h-ZA-T3J" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="gcZ-Cv-c7l"/>
                 <constraint firstItem="vKP-CL-GPZ" firstAttribute="top" secondItem="E3h-ZA-T3J" secondAttribute="bottom" constant="30" id="iYk-C4-sIk"/>
                 <constraint firstItem="s6h-5g-H2v" firstAttribute="centerY" secondItem="E3h-ZA-T3J" secondAttribute="centerY" id="nCF-aT-Xqq"/>
@@ -88,6 +111,7 @@
     </objects>
     <resources>
         <image name="icClose" width="10" height="10"/>
+        <image name="icIllustrationTags" width="73" height="78"/>
         <image name="icSearch" width="13" height="12"/>
     </resources>
 </document>

@@ -17,7 +17,7 @@ namespace Toggl.PrimeRadiant.Tests
 
         protected abstract TTestModel GetModelWith(int id);
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TheUpdateMethodThrowsIfThereIsNoEntityWithThatIdInTheRepository()
         {
             Func<Task> callingUpdateInAnEmptyRepository =
@@ -27,7 +27,7 @@ namespace Toggl.PrimeRadiant.Tests
                 .ShouldThrow<EntityNotFoundException>();
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public async Task TheUpdateMethodAlwaysReturnsASingleElement()
         {
             var testEntity = GetModelWith(12345);
@@ -37,7 +37,7 @@ namespace Toggl.PrimeRadiant.Tests
             element.Should().Be(testEntity);
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TheDeleteMethodThrowsIfThereIsNoEntityWithThatIdInTheRepository()
         {
             Func<Task> callingDeleteInAnEmptyRepository =

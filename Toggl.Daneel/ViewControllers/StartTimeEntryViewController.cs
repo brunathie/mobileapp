@@ -62,7 +62,7 @@ namespace Toggl.Daneel.ViewControllers
 
             bindingSet.Bind(source)
                       .For(v => v.CreateCommand)
-                      .To(vm => vm.CreateProjectCommand);
+                      .To(vm => vm.CreateCommand);
             
             bindingSet.Bind(source)
                       .For(v => v.IsSuggestingProjects)

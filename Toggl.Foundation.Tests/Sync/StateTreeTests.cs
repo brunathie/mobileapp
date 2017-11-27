@@ -18,7 +18,7 @@ namespace Toggl.Foundation.Tests.Sync
             protected abstract void CallMethod(TStateResult result, TStateFactory factory);
             protected abstract TStateFactory ToStateFactory(Action action);
 
-            [Theory]
+            [Theory, LogIfTooSlow]
             [ClassData(typeof(TwoParameterConstructorTestData))]
             public void ThrowsIfAnyArgumentIsNull(bool useStateResult, bool useStateFactory)
             {
@@ -30,7 +30,7 @@ namespace Toggl.Foundation.Tests.Sync
                 callingMethod.ShouldThrow<ArgumentNullException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfCalledTwiceWithSameStateResult()
             {
                 var stateResult = new TStateResult();
@@ -42,7 +42,7 @@ namespace Toggl.Foundation.Tests.Sync
                 callingMethodSecondTime.ShouldThrow<Exception>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void DoesNotCallProvidedStateFactory()
             {
                 var factoryWasCalled = false;
@@ -77,7 +77,7 @@ namespace Toggl.Foundation.Tests.Sync
         {
             private TransitionHandlerProvider provider { get; } = new TransitionHandlerProvider();
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ThrowsIfArgumentIsNull()
             {
                 Action callingMethodWithNull = () => provider.GetTransitionHandler(null);
@@ -85,7 +85,7 @@ namespace Toggl.Foundation.Tests.Sync
                 callingMethodWithNull.ShouldThrow<ArgumentNullException>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsNullIfThereAreNoHandlers()
             {
                 var handler = provider.GetTransitionHandler(Substitute.For<IStateResult>());
@@ -93,7 +93,7 @@ namespace Toggl.Foundation.Tests.Sync
                 handler.Should().BeNull();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsNullIfTheStateResultIsUnknown()
             {
                 provider.ConfigureTransition(new StateResult(), () => null);
@@ -104,7 +104,7 @@ namespace Toggl.Foundation.Tests.Sync
                 handler.Should().BeNull();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsHandlerThatCallsProvidedStateFactory()
             {
                 var stateResult = new StateResult();
@@ -117,7 +117,7 @@ namespace Toggl.Foundation.Tests.Sync
                 actualResult.Should().Be(expectedResult);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsHandlerThatCallsProvidedGenericStateFactory()
             {
                 var stateResult = new StateResult<object>();
@@ -130,7 +130,7 @@ namespace Toggl.Foundation.Tests.Sync
                 actualResult.Should().Be(expectedResult);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsHandlerThatCallsProvidedGenericStateFactoryWithCorrectArgument()
             {
                 var stateResult = new StateResult<object>();

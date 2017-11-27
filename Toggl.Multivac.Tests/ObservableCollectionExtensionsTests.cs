@@ -11,7 +11,7 @@ namespace Toggl.Multivac.Tests
     {
         public sealed class TheAddRangeMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void AddsAllItems()
             {
                 int[] initialItems = { 1, 2 };

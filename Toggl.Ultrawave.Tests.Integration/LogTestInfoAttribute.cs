@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Xunit.Sdk;
 
 namespace Toggl.Ultrawave.Tests.Integration
@@ -16,6 +17,12 @@ namespace Toggl.Ultrawave.Tests.Integration
             var methodName = toSentenceCase(methodUnderTest.Name);
             formattedTestName = getFormattedName(methodUnderTest.ReflectedType, methodName);
             Console.WriteLine(formattedTestName.Replace("`1", ""));
+
+            // This is to make integration tests run slightly slower to prevent SecureChannelFailure
+            // errors caused by too many HTTP calls in quick succession in most cases
+            // (combined with limiting the XUnit max parallel threads)
+            // Empirically, a delay of 0.5s is too short, while 2s sees no further improvements
+            Thread.Sleep(TimeSpan.FromSeconds(1));
 
             stopwatch.Start();
         }

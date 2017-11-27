@@ -24,37 +24,37 @@ namespace Toggl.Foundation.Tests.Sync.States
             this.helper = helper;
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsTheFailTransitionWhenEntityIsNull()
             => helper.ReturnsTheFailTransitionWhenEntityIsNull();
 
-        [Theory]
+        [Theory, LogIfTooSlow]
         [MemberData(nameof(ApiExceptions.ServerExceptions), MemberType = typeof(ApiExceptions))]
         public void ReturnsTheServerErrorTransitionWhenHttpFailsWithServerError(ServerErrorException exception)
             => helper.ReturnsTheServerErrorTransitionWhenHttpFailsWithServerError(exception);
 
-        [Theory]
+        [Theory, LogIfTooSlow]
         [MemberData(nameof(ApiExceptions.ClientExceptionsWhichAreNotReThrownInSyncStates), MemberType = typeof(ApiExceptions))]
         public void ReturnsTheClientErrorTransitionWhenHttpFailsWithClientError(ClientErrorException exception)
             => helper.ReturnsTheClientErrorTransitionWhenHttpFailsWithClientError(exception);
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsTheUnknownErrorTransitionWhenHttpFailsWithNonApiError()
             => helper.ReturnsTheUnknownErrorTransitionWhenHttpFailsWithNonApiError();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsTheFailTransitionWhenDatabaseOperationFails()
             => helper.ReturnsTheFailTransitionWhenDatabaseOperationFails();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void UpdateApiCallIsCalledWithTheInputEntity()
             => helper.UpdateApiCallIsCalledWithTheInputEntity();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsTheEntityChangedTransitionWhenEntityChangesLocally()
             => helper.ReturnsTheEntityChangedTransitionWhenEntityChangesLocally();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ReturnsTheUpdatingSuccessfulTransitionWhenEntityDoesNotChangeLocallyAndAllFunctionsAreCalledWithCorrectParameters()
             => helper.ReturnsTheUpdatingSuccessfulTransitionWhenEntityDoesNotChangeLocallyAndAllFunctionsAreCalledWithCorrectParameters();
 

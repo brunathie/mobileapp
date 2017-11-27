@@ -5,6 +5,7 @@ using MvvmCross.Binding.ExtensionMethods;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Plugins.Color.iOS;
 using Toggl.Daneel.Views;
+using Toggl.Foundation;
 using Toggl.Foundation.Autocomplete.Suggestions;
 using Toggl.Foundation.MvvmCross.Helper;
 using UIKit;
@@ -132,6 +133,9 @@ namespace Toggl.Daneel.ViewSources
             return timeEntryCellIdentifier;
         }
 
-        protected override object GetCreateSuggestionItem() => $"Create project \"{Text}\"";
+        protected override object GetCreateSuggestionItem()
+            => IsSuggestingProjects
+                ? $"{Resources.CreateProject} \"{Text}\""
+                : $"{Resources.CreateTag} \"{Text}\"";
     }
 }

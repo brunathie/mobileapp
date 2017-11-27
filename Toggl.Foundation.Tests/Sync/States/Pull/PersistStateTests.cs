@@ -23,43 +23,43 @@ namespace Toggl.Foundation.Tests.Sync.States
             testHelper = helper;
         }
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void EmitsTransitionToPersistFinished()
             => testHelper.EmitsTransitionToPersistFinished();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThrowsIfFetchObservablePublishesTwice()
             => testHelper.ThrowsIfFetchObservablePublishesTwice();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void TriggersBatchUpdate()
             => testHelper.TriggersBatchUpdate();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void DoesNotUpdateSinceParametersWhenNothingIsFetched()
             => testHelper.DoesNotUpdateSinceParametersWhenNothingIsFetched();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void UpdatesSinceParametersOfTheFetchedEntity()
             => testHelper.UpdatesSinceParametersOfTheFetchedEntity();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void HandlesNullValueReceivedFromTheServerAsAnEmptyList()
             => testHelper.HandlesNullValueReceivedFromTheServerAsAnEmptyList();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void SelectsTheLatestAtValue()
             => testHelper.SelectsTheLatestAtValue();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void PassesTheNewSinceParametersThroughTheTransition()
             => testHelper.PassesTheNewSinceParametersThroughTheTransition();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void SinceDatesAreNotUpdatedWhenBatchUpdateThrows()
             => testHelper.SinceDatesAreNotUpdatedWhenBatchUpdateThrows();
 
-        [Fact]
+        [Fact, LogIfTooSlow]
         public void ThrowsWhenBatchUpdateThrows()
             => testHelper.ThrowsWhenBatchUpdateThrows();
 

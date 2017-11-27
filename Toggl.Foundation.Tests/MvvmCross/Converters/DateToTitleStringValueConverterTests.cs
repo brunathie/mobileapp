@@ -12,7 +12,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Converters
     {
         public sealed class TheConvertMethod
         {
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsASpecialCaseStringForTheCurrentDay()
             {
                 var converter = new DateToTitleStringValueConverter();
@@ -23,7 +23,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.Converters
                 result.Should().Be(Resources.Today);
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public void ReturnsASpecialCaseStringForThePreviousDay()
             {
                 var converter = new DateToTitleStringValueConverter();
