@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
+using Newtonsoft.Json;
 using Toggl.Multivac.ReportsModels;
 using Toggl.Ultrawave.ApiClients;
 using Toggl.Ultrawave.Network;
@@ -24,7 +25,7 @@ namespace Toggl.Ultrawave.ReportsApiClients
 
         public IObservable<IProjectsSummary> GetByWorkspace(long workspaceId, DateTimeOffset startDate, DateTimeOffset? endDate)
         {
-            var parameters = new ProjectsSummaryParameters { StartDate = startDate, EndDate = endDate };
+            var parameters = new ProjectsSummaryParameters(startDate, endDate);
             var json = serializer.Serialize(parameters, SerializationReason.Post, null);
             return Observable.Create<IProjectsSummary>(async observer =>
             {
@@ -40,8 +41,18 @@ namespace Toggl.Ultrawave.ReportsApiClients
 
         private sealed class ProjectsSummaryParameters
         {
-            public DateTimeOffset StartDate { get; set; }
-            public DateTimeOffset? EndDate { get; set; }
+            public string StartDate { get; set; }
+
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string EndDate { get; set; }
+
+            public ProjectsSummaryParameters() { }
+
+            public ProjectsSummaryParameters(DateTimeOffset startDate, DateTimeOffset? endDate)
+            {
+                StartDate = startDate.ToString("yyyy-MM-dd");
+                EndDate = endDate?.ToString("yyyy-MM-dd");
+            }
         }
     }
 }
