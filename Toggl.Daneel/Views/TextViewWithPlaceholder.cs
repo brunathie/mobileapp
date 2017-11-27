@@ -14,8 +14,8 @@ namespace Toggl.Daneel.Views
         private readonly UIColor defaultPlaceholderColor = Color.Common.PlaceholderText.ToNativeColor();
 
         private bool isFocused;
-        private UIStringAttributes defaultTextAttributes;
         private UIStringAttributes placeholderAttributes;
+        protected UIStringAttributes DefaultTextAttributes { get; private set; } 
 
         public event EventHandler TextChanged;
 
@@ -67,7 +67,7 @@ namespace Toggl.Daneel.Views
             PlaceholderSize = defaultPlaceholderSize;
             PlaceholderColor = defaultPlaceholderColor;
 
-            defaultTextAttributes = new UIStringAttributes
+            DefaultTextAttributes = new UIStringAttributes
             {
                 ParagraphStyle = new NSMutableParagraphStyle { Alignment = TextAlignment },
                 Font = UIFont.SystemFontOfSize(Font.PointSize)
@@ -103,11 +103,14 @@ namespace Toggl.Daneel.Views
                 return;
             }
 
-            AttributedText = new NSAttributedString(text, defaultTextAttributes);
+            SetText(text);
         }
 
+        protected virtual void SetText(string text)
+            => AttributedText = new NSAttributedString(text, DefaultTextAttributes);
+
         [Export("textView:shouldChangeTextInRange:replacementText:")]
-        public new bool ShouldChangeText(UITextView textView, NSRange range, string text)
+        public virtual new bool ShouldChangeText(UITextView textView, NSRange range, string text)
         {
             if (text == Environment.NewLine)
             {
@@ -119,7 +122,7 @@ namespace Toggl.Daneel.Views
         }
 
         [Export("textViewDidChange:")]
-        public new void Changed(UITextView textView)
+        public virtual new void Changed(UITextView textView)
         {
             Text = base.Text.Replace(Environment.NewLine, " ");
         }

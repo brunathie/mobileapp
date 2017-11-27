@@ -276,5 +276,60 @@ namespace Toggl.Foundation.Tests.Login
                         .SingleAsync();
             }
         }
+
+        public sealed class TheRefreshTokenMethod : LoginManagerTest
+        {
+            public TheRefreshTokenMethod()
+            {
+                var user = Substitute.For<IDatabaseUser>();
+                user.Email.Returns(Email.ToString());
+                Database.User.Single().Returns(Observable.Return(user));
+            }
+
+            [Theory, LogIfTooSlow]
+            [InlineData(null)]
+            [InlineData("")]
+            [InlineData(" ")]
+            public void ThrowsIfYouPassInvalidParameters(string password)
+            {
+                Action tryingToRefreshWithInvalidParameters =
+                    () => LoginManager.RefreshToken(password).Wait();
+
+                tryingToRefreshWithInvalidParameters
+                    .ShouldThrow<ArgumentException>();
+            }
+
+            [Fact, LogIfTooSlow]
+            public async Task CallsTheGetMethodOfTheUserApi()
+            {
+                await LoginManager.RefreshToken(Password);
+
+                await Api.User.Received().Get();
+            }
+
+            [Fact, LogIfTooSlow]
+            public async Task ShouldPersistTheUserToTheDatabase()
+            {
+                await LoginManager.RefreshToken(Password);
+
+                await Database.User.Received().Update(Arg.Is<IDatabaseUser>(receivedUser => receivedUser.Id == User.Id));
+            }
+
+            [Fact, LogIfTooSlow]
+            public async Task TheUserToBePersistedShouldHaveSyncStatusSetToInSync()
+            {
+                await LoginManager.RefreshToken(Password);
+
+                await Database.User.Received().Update(Arg.Is<IDatabaseUser>(receivedUser => receivedUser.SyncStatus == SyncStatus.InSync));
+            }
+
+            [Fact, LogIfTooSlow]
+            public async Task ShouldAlwaysReturnASingleResult()
+            {
+                await LoginManager
+                        .RefreshToken(Password)
+                        .SingleAsync();
+            }
+        }
     }
 }

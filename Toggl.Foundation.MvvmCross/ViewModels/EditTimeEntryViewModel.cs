@@ -42,10 +42,15 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public long Id { get; set; }
 
-        public bool DescriptionLimitExceeded
-            => Description.LengthInBytes() > MaxTimeEntryDescriptionLengthInBytes;
-
         public string Description { get; set; }
+
+        [DependsOn(nameof(Description))]
+        public int DescriptionRemainingLength
+            => MaxTimeEntryDescriptionLengthInBytes - Description.LengthInBytes();
+
+        [DependsOn(nameof(DescriptionRemainingLength))]
+        public bool DescriptionLimitExceeded
+            => DescriptionRemainingLength < 0;
 
         public string Project { get; set; }
 

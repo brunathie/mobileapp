@@ -112,34 +112,21 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             }
         }
 
-        public sealed class TheSuggestCreationProperty : StartTimeEntryViewModelTest
+        public abstract class TheSuggestCreationProperty : StartTimeEntryViewModelTest
         {
-            private const string name = "My project";
+            protected abstract int MaxLength { get; }
+            protected abstract char QuerySymbol { get; }
+            protected abstract string QueryWithExactSuggestionMatch { get; }
 
             public TheSuggestCreationProperty()
             {
-                var project = Substitute.For<IDatabaseProject>();
-                project.Id.Returns(10);
-                project.Name.Returns(name);
-                var suggestion = new ProjectSuggestion(project);
-
                 DataSource.AutocompleteProvider
-                    .Query(Arg.Is<QueryInfo>(info => info.SuggestionType == AutocompleteSuggestionType.Projects))
-                          .Returns(Observable.Return(new List<ProjectSuggestion> { suggestion }));
-
-                DataSource.AutocompleteProvider
-                    .ParseFieldInfo(Arg.Is<TextFieldInfo>(info => info.Text.Contains("@")))
-                          .Returns(x => new QueryInfo(x.Arg<TextFieldInfo>().Text.Replace("@", ""), AutocompleteSuggestionType.Projects));
-
-                DataSource.AutocompleteProvider
-                    .ParseFieldInfo(Arg.Is<TextFieldInfo>(info => !info.Text.Contains("@")))
+                    .ParseFieldInfo(Arg.Is<TextFieldInfo>(info => !info.Text.Contains("@") && !info.Text.Contains("#")))
                     .Returns(x => new QueryInfo(x.Arg<TextFieldInfo>().Text, AutocompleteSuggestionType.TimeEntries));
-
-                ViewModel.Prepare(DateTimeOffset.Now);
             }
 
             [Fact, LogIfTooSlow]
-            public async Task ReturnsFalseIfNotSuggestingProjects()
+            public async Task ReturnsFalseIfSuggestingTimeEntries()
             {
                 await ViewModel.Initialize();
 
@@ -153,7 +140,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             {
                 await ViewModel.Initialize();
 
-                ViewModel.TextFieldInfo = ViewModel.TextFieldInfo.WithTextAndCursor("@", 1);
+                ViewModel.TextFieldInfo = ViewModel.TextFieldInfo.WithTextAndCursor($"{QuerySymbol}", 1);
 
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
@@ -163,73 +150,244 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             {
                 await ViewModel.Initialize();
 
-                ViewModel.TextFieldInfo = ViewModel.TextFieldInfo.WithTextAndCursor("@    ", 1);
+                ViewModel.TextFieldInfo = ViewModel.TextFieldInfo.WithTextAndCursor($"{QuerySymbol}    ", 1);
 
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
             [Fact, LogIfTooSlow]
-            public async Task ReturnsFalseIfTheCurrentQueryIsLongerThanTwoHundredAndFiftyCharacters()
+            public async Task ReturnsFalseIfTheCurrentQueryIsLongerThanMaxLength()
             {
                 await ViewModel.Initialize();
 
-                ViewModel.TextFieldInfo = ViewModel.TextFieldInfo.WithTextAndCursor("@Some absurdly long project name created solely for making sure that the SuggestCreation property returns false when the project name is longer than the previously specified threshold so that the mobile apps behave and avoid crashes in backend and even bigger problems.", 1);
-
+                ViewModel.TextFieldInfo = ViewModel.TextFieldInfo
+                    .WithTextAndCursor($"{QuerySymbol}{createLongString(MaxLength + 1)}", 1);
+                
                 ViewModel.SuggestCreation.Should().BeFalse();
             }
 
             [Fact, LogIfTooSlow]
-            public async Task ReturnsFalseIfAProjectIsAlreadySelected()
+            public async Task ReturnsFalseIfSuchSuggestionAlreadyExists()
             {
                 await ViewModel.Initialize();
-                ViewModel.TextFieldInfo = TextFieldInfo.Empty
-                    .WithProjectInfo(WorkspaceId, ProjectId, ProjectName, ProjectColor);
 
-                ViewModel.TextFieldInfo = ViewModel.TextFieldInfo.WithTextAndCursor("abcde @fgh", 10);
+                ViewModel.TextFieldInfo = ViewModel.TextFieldInfo
+                    .WithTextAndCursor($"{QuerySymbol}{QueryWithExactSuggestionMatch}", 1);
 
                 ViewModel.SuggestCreation.Should().BeFalse();
+            }
+
+            private string createLongString(int length)
+                => Enumerable
+                    .Range(0, length)
+                    .Aggregate(new StringBuilder(), (builder, _) => builder.Append('A'))
+                    .ToString();
+
+
+            public sealed class WhenSuggestingProjects : TheSuggestCreationProperty
+            {
+                protected override int MaxLength => MaxProjectNameLengthInBytes;
+                protected override char QuerySymbol => '@';
+                protected override string QueryWithExactSuggestionMatch => ProjectName;
+
+                public WhenSuggestingProjects()
+                {
+                    var project = Substitute.For<IDatabaseProject>();
+                    project.Id.Returns(10);
+                    project.Name.Returns(ProjectName);
+                    project.WorkspaceId.Returns(40);
+                    project.Workspace.Name.Returns("Some workspace");
+                    var projectSuggestion = new ProjectSuggestion(project);
+
+                    DataSource.AutocompleteProvider
+                        .Query(Arg.Is<QueryInfo>(info => info.SuggestionType == AutocompleteSuggestionType.Projects))
+                              .Returns(Observable.Return(new ProjectSuggestion[] { projectSuggestion }));
+
+                    DataSource.AutocompleteProvider
+                        .ParseFieldInfo(Arg.Is<TextFieldInfo>(info => info.Text.Contains("@")))
+                        .Returns(x => new QueryInfo(x.Arg<TextFieldInfo>().Text.Replace("@", ""), AutocompleteSuggestionType.Projects));
+
+                    ViewModel.Prepare(DateTimeOffset.Now);
+                }
+
+                [Fact, LogIfTooSlow]
+                public async Task ReturnsFalseIfAProjectIsAlreadySelected()
+                {
+                    await ViewModel.Initialize();
+                    ViewModel.TextFieldInfo = TextFieldInfo.Empty
+                        .WithProjectInfo(WorkspaceId, ProjectId, ProjectName, ProjectColor);
+
+                    ViewModel.TextFieldInfo = ViewModel.TextFieldInfo.WithTextAndCursor("abcde @fgh", 10);
+
+                    ViewModel.SuggestCreation.Should().BeFalse();
+                }
+            }
+
+            public sealed class WhenSuggestingTags : TheSuggestCreationProperty
+            {
+                protected override int MaxLength => MaxTagNameLengthInBytes;
+                protected override char QuerySymbol => '#';
+                protected override string QueryWithExactSuggestionMatch => TagName;
+
+                public WhenSuggestingTags()
+                {
+                    var tag = Substitute.For<IDatabaseTag>();
+                    tag.Id.Returns(20);
+                    tag.Name.Returns(TagName);
+                    var tagSuggestion = new TagSuggestion(tag);
+
+                    DataSource.AutocompleteProvider
+                        .Query(Arg.Is<QueryInfo>(info => info.SuggestionType == AutocompleteSuggestionType.Tags))
+                        .Returns(Observable.Return(new TagSuggestion[] { tagSuggestion }));
+
+                    DataSource.AutocompleteProvider
+                        .ParseFieldInfo(Arg.Is<TextFieldInfo>(info => info.Text.Contains("#")))
+                        .Returns(x => new QueryInfo(x.Arg<TextFieldInfo>().Text.Replace("#", ""), AutocompleteSuggestionType.Tags));
+
+                    ViewModel.Prepare(DateTimeOffset.Now);
+                }
             }
         }
 
-
-        public sealed class TheCreateProjectCommand : StartTimeEntryViewModelTest
+        public sealed class TheCreateProjectCommand
         {
-            private const string currentQuery = "My awesome Toggl project";
-
-            public TheCreateProjectCommand()
+            public sealed class WhenSuggestingProjects : StartTimeEntryViewModelTest
             {
-                DataSource.AutocompleteProvider
-                    .ParseFieldInfo(Arg.Is<TextFieldInfo>(info => info.Text.Contains("@")))
-                          .Returns(x => new QueryInfo(x.Arg<TextFieldInfo>().Text.Replace("@", ""), AutocompleteSuggestionType.Projects));
+                private const string currentQuery = "My awesome Toggl project";
 
-                var project = Substitute.For<IDatabaseProject>();
-                project.Id.Returns(10);
-                DataSource.Projects.GetById(Arg.Any<long>()).Returns(Observable.Return(project));
-                ViewModel.TextFieldInfo = TextFieldInfo.Empty.WithTextAndCursor($"@{currentQuery}", 15);
+                public WhenSuggestingProjects()
+                {
+                    DataSource.AutocompleteProvider
+                        .ParseFieldInfo(Arg.Is<TextFieldInfo>(info => info.Text.Contains("@")))
+                              .Returns(x => new QueryInfo(x.Arg<TextFieldInfo>().Text.Replace("@", ""), AutocompleteSuggestionType.Projects));
 
-                ViewModel.Prepare(DateTimeOffset.UtcNow);
+                    var project = Substitute.For<IDatabaseProject>();
+                    project.Id.Returns(10);
+                    DataSource.Projects.GetById(Arg.Any<long>()).Returns(Observable.Return(project));
+                    ViewModel.TextFieldInfo = TextFieldInfo.Empty.WithTextAndCursor($"@{currentQuery}", 15);
+
+                    ViewModel.Prepare(DateTimeOffset.UtcNow);
+                }
+
+                [Fact, LogIfTooSlow]
+                public async Task CallsTheCreateProjectViewModel()
+                {
+                    await ViewModel.Initialize();
+                    
+                    await ViewModel.CreateCommand.ExecuteAsync();
+
+                    await NavigationService.Received()
+                        .Navigate<string, long?>(typeof(EditProjectViewModel), Arg.Any<string>());
+                }
+
+                [Fact, LogIfTooSlow]
+                public async Task UsesTheCurrentQueryAsTheParameterForTheCreateProjectViewModel()
+                {
+                    await ViewModel.Initialize();
+
+                    await ViewModel.CreateCommand.ExecuteAsync();
+
+                    await NavigationService.Received()
+                        .Navigate<string, long?>(typeof(EditProjectViewModel), currentQuery);
+                }
+
+                [Fact, LogIfTooSlow]
+                public async Task SelectsTheCreatedProject()
+                {
+                    long projectId = 200;
+                    NavigationService
+                        .Navigate<string, long?>(typeof(EditProjectViewModel), Arg.Is(currentQuery))
+                        .Returns(projectId);
+                    var project = Substitute.For<IDatabaseProject>();
+                    project.Id.Returns(projectId);
+                    project.Name.Returns(currentQuery);
+                    DataSource.Projects.GetById(Arg.Is(projectId)).Returns(Observable.Return(project));
+                    await ViewModel.Initialize();
+
+                    await ViewModel.CreateCommand.ExecuteAsync();
+
+                    ViewModel.TextFieldInfo.ProjectName.Should().Be(currentQuery);
+                }
             }
 
-            [Fact, LogIfTooSlow]
-            public async Task CallsTheCreateProjectViewModel()
+            public sealed class WhenSuggestingTags : StartTimeEntryViewModelTest
             {
-                await ViewModel.Initialize();
-                
-                await ViewModel.CreateProjectCommand.ExecuteAsync();
+                private const string currentQuery = "My awesome Toggl project";
 
-                await NavigationService.Received()
-                    .Navigate<string, long?>(typeof(EditProjectViewModel), Arg.Any<string>());
-            }
+                public WhenSuggestingTags()
+                {
+                    DataSource.AutocompleteProvider
+                        .ParseFieldInfo(Arg.Is<TextFieldInfo>(info => info.Text.Contains("#")))
+                              .Returns(x => new QueryInfo(x.Arg<TextFieldInfo>().Text.Replace("#", ""), AutocompleteSuggestionType.Tags));
+                    
+                    ViewModel.TextFieldInfo = TextFieldInfo.Empty.WithTextAndCursor($"#{currentQuery}", 1);
 
-            [Fact, LogIfTooSlow]
-            public async Task UsesTheCurrentQueryAsTheParameterForTheCreateProjectViewModel()
-            {
-                await ViewModel.Initialize();
+                    ViewModel.Prepare(DateTimeOffset.UtcNow);
+                }
 
-                await ViewModel.CreateProjectCommand.ExecuteAsync();
+                [Fact, LogIfTooSlow]
+                public async Task CreatesTagWithCurrentQueryAsName()
+                {
+                    await ViewModel.Initialize();
 
-                await NavigationService.Received()
-                    .Navigate<string, long?>(typeof(EditProjectViewModel), currentQuery);
+                    await ViewModel.CreateCommand.ExecuteAsync();
+
+                    await DataSource.Tags.Received()
+                        .Create(Arg.Is(currentQuery), Arg.Any<long>());
+                }
+
+                [Fact, LogIfTooSlow]
+                public async Task CreatesTagInProjectsWorkspaceIfAProjectIsSelected()
+                {
+                    long workspaceId = 100;
+                    long projectId = 101;
+                    var project = Substitute.For<IDatabaseProject>();
+                    project.Id.Returns(projectId);
+                    project.WorkspaceId.Returns(workspaceId);
+                    DataSource.Projects.GetById(Arg.Is(projectId))
+                        .Returns(Observable.Return(project));
+                    await ViewModel.Initialize();
+                    ViewModel.TextFieldInfo = ViewModel.TextFieldInfo
+                        .WithProjectInfo(workspaceId, projectId, "Project", "0000AF");
+
+                    await ViewModel.CreateCommand.ExecuteAsync();
+
+                    await DataSource.Tags.Received()
+                        .Create(Arg.Any<string>(), Arg.Is(workspaceId));
+                }
+
+                [Fact, LogIfTooSlow]
+                public async Task CreatesTagInUsersDefaultWorkspaceIfNoProjectIsSelected()
+                {
+                    long workspaceId = 100;
+                    var user = Substitute.For<IDatabaseUser>();
+                    user.DefaultWorkspaceId.Returns(workspaceId);
+                    DataSource.User.Current().Returns(Observable.Return(user));
+                    await ViewModel.Initialize();
+
+                    await ViewModel.CreateCommand.ExecuteAsync();
+
+                    await DataSource.Tags.Received()
+                        .Create(Arg.Any<string>(), Arg.Is(workspaceId));
+                }
+
+                [Fact, LogIfTooSlow]
+                public async Task SelectsTheCreatedTag()
+                {
+                    DataSource.Tags.Create(Arg.Any<string>(), Arg.Any<long>())
+                        .Returns(callInfo =>
+                        {
+                            var tag = Substitute.For<IDatabaseTag>();
+                            tag.Name.Returns(callInfo.Arg<string>());
+                            return Observable.Return(tag);
+                        });
+                    await ViewModel.Initialize();
+
+                    await ViewModel.CreateCommand.ExecuteAsync();
+
+                    ViewModel.TextFieldInfo.Tags.Should()
+                        .Contain(tag => tag.Name == currentQuery);
+                }
             }
         }
 

@@ -14,12 +14,12 @@ namespace Toggl.Ultrawave.ApiClients
         private readonly UserAgent userAgent;
         private readonly TimeEntryEndpoints endPoints;
 
-        public TimeEntriesApi(TimeEntryEndpoints endPoints, IApiClient apiClient, IJsonSerializer serializer, 
+        public TimeEntriesApi(Endpoints endPoints, IApiClient apiClient, IJsonSerializer serializer, 
             Credentials credentials, UserAgent userAgent)
-            : base(apiClient, serializer, credentials)
+            : base(apiClient, serializer, credentials, endPoints.LoggedIn)
         {
             this.userAgent = userAgent;
-            this.endPoints = endPoints;
+            this.endPoints = endPoints.TimeEntries;
         }
 
         public IObservable<List<ITimeEntry>> GetAll()

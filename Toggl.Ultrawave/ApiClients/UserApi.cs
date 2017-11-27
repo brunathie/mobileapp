@@ -14,11 +14,11 @@ namespace Toggl.Ultrawave.ApiClients
         private readonly UserEndpoints endPoints;
         private readonly IJsonSerializer serializer;
 
-        public UserApi(UserEndpoints endPoints, IApiClient apiClient, IJsonSerializer serializer,
+        public UserApi(Endpoints endPoints, IApiClient apiClient, IJsonSerializer serializer,
             Credentials credentials)
-            : base(apiClient, serializer, credentials)
+            : base(apiClient, serializer, credentials, endPoints.LoggedIn)
         {
-            this.endPoints = endPoints;
+            this.endPoints = endPoints.User;
             this.serializer = serializer;
         }
 

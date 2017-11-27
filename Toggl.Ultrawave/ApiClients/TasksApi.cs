@@ -11,10 +11,10 @@ namespace Toggl.Ultrawave.ApiClients
     {
         private readonly TaskEndpoints endPoints;
 
-        public TasksApi(TaskEndpoints endPoints, IApiClient apiClient, IJsonSerializer serializer, Credentials credentials)
-            : base(apiClient, serializer, credentials)
+        public TasksApi(Endpoints endPoints, IApiClient apiClient, IJsonSerializer serializer, Credentials credentials)
+            : base(apiClient, serializer, credentials, endPoints.LoggedIn)
         {
-            this.endPoints = endPoints;
+            this.endPoints = endPoints.Tasks;
         }
 
         public IObservable<List<ITask>> GetAll()

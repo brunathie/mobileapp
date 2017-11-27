@@ -132,6 +132,7 @@ namespace Toggl.Foundation.MvvmCross.Helper
         public static class EditTimeEntry
         {
             public static readonly MvxColor ClientText = new MvxColor(94, 91, 91);
+            public static readonly MvxColor DescriptionCharacterCounter = new MvxColor(247, 64, 73);
         }
 
         public static class ModalDialog
