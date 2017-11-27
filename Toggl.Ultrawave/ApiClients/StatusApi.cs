@@ -12,9 +12,9 @@ namespace Toggl.Ultrawave.ApiClients
         private readonly StatusEndpoints endpoints;
         private readonly IApiClient apiClient;
 
-        public StatusApi(Endpoints endpoints, IApiClient apiClient)
+        public StatusApi(StatusEndpoints endpoints, IApiClient apiClient)
         {
-            this.endpoints = endpoints.Status;
+            this.endpoints = endpoints;
             this.apiClient = apiClient;
         }
 
