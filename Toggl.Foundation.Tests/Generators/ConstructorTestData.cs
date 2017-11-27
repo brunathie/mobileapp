@@ -47,6 +47,11 @@ namespace Toggl.Foundation.Tests.Generators
         public FourParameterConstructorTestData() : base(4) { }
     }
 
+    public sealed class FiveParameterConstructorTestData : ConstructorTestData
+    {
+        public FiveParameterConstructorTestData() : base(5) { }
+    }
+
     public sealed class ConstructorTestDataTests
     {
         public sealed class TheGeneratedSequence
@@ -55,6 +60,7 @@ namespace Toggl.Foundation.Tests.Generators
             [InlineData(typeof(TwoParameterConstructorTestData))]
             [InlineData(typeof(ThreeParameterConstructorTestData))]
             [InlineData(typeof(FourParameterConstructorTestData))]
+            [InlineData(typeof(FiveParameterConstructorTestData))]
             public void NeverReturnsASequenceWhereAllElementsAreTrue(Type contructorTestDataType)
             {
                 var testData = Activator.CreateInstance(contructorTestDataType) as ConstructorTestData;
@@ -72,12 +78,34 @@ namespace Toggl.Foundation.Tests.Generators
             }
 
             [Property]
-            public void ReturnsAllPossiblePermutationsForThreeoParameters(bool first, bool second, bool third)
+            public void ReturnsAllPossiblePermutationsForThreeParameters(bool first, bool second, bool third)
             {
                 if (first && second && third) return;
 
                 var array = new List<object> { first, second, third };
                 var testData = new ThreeParameterConstructorTestData();
+                testData.Any(x => x.SequenceEqual(array)).Should().BeTrue();
+            }
+
+            [Property]
+            public void ReturnsAllPossiblePermutationsForFourParameters(
+                bool first, bool second, bool third, bool fourth)
+            {
+                if (first && second && third && fourth) return;
+
+                var array = new List<object> { first, second, third, fourth };
+                var testData = new FourParameterConstructorTestData();
+                testData.Any(x => x.SequenceEqual(array)).Should().BeTrue();
+            }
+
+            [Property]
+            public void ReturnsAllPossiblePermutationsForFiveParameters(
+                bool first, bool second, bool third, bool fourth, bool fifth)
+            {
+                if (first && second && third && fourth && fifth) return;
+
+                var array = new List<object> { first, second, third, fourth, fifth };
+                var testData = new FiveParameterConstructorTestData();
                 testData.Any(x => x.SequenceEqual(array)).Should().BeTrue();
             }
         }
