@@ -286,6 +286,7 @@
     <Compile Include="DataSources\TagsDataSourceTests.cs" />
     <Compile Include="DataSources\BaseDataSourceTests.cs" />
     <Compile Include="MvvmCross\ViewModels\OutdatedAppViewModelTests.cs" />
+    <Compile Include="MvvmCross\ViewModels\TokenResetViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MvvmCross\ViewModels\StartTimeEntryViewModelTests.cs" />

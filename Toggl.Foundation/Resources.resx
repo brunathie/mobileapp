@@ -98,7 +98,7 @@ Please try again.</value>
         <value>Unsynced data</value>
     </data>
     <data name="SettingsUnsyncedMessage">
-        <value>You have some unsynced time entries. Any unsynced data will be lost.</value>
+        <value>You have some unsynced data. Any unsynced data will be lost.</value>
     </data>
     <data name="SettingsDialogButtonSignOut">
         <value>Sign out</value>
@@ -194,5 +194,11 @@ time entries will appear here.</value>
     </data>
     <data name="AddProject">
         <value>Add a project</value>
+    </data>
+    <data name="AreYouSure">
+        <value>Are you sure?</value>
+    </data>
+    <data name="IncorrectPassword">
+        <value>Incorrect password. Please, try again</value>
     </data>
 </root>
