@@ -3,8 +3,8 @@ namespace Toggl.Ultrawave.Helpers
 {
     public static class ReportsUrls
     {
-        private const string productionBaseUrl = "https://toggl.com/reports/v3/";
-        private const string stagingBaseUrl = "https://toggl.space/reports/v3/";
+        private const string productionBaseUrl = "https://toggl.com/reports/api/v3/";
+        private const string stagingBaseUrl = "https://toggl.space/reports/api/v3/";
 
         public static Uri ForEnvironment(ApiEnvironment environment)
         {
