@@ -11,6 +11,6 @@ namespace Toggl.Ultrawave.Network
         }
 
         public Endpoint Post(long workspaceId)
-            => Endpoint.Post(baseUrl, $"workspaces/{workspaceId}/projects/summary");
+            => Endpoint.Post(baseUrl, $"workspace/{workspaceId}/projects/summary");
     }
 }
