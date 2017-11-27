@@ -30,7 +30,7 @@ namespace Toggl.Ultrawave.Tests.ApiClients
         {
             var from = new DateTimeOffset(2017, 1, 25, 11, 22, 33, TimeSpan.Zero);
             var to = from.AddDays(1);
-            var expectedBody = $"{{\"start_date\":\"2017-01-25\",\"end_date\":\"2017-01-26\"}}";
+            var expectedBody = "{\"start_date\":\"2017-01-25\",\"end_date\":\"2017-01-26\"}";
             var response = emptyResponse();
             apiClient.Send(Arg.Any<IRequest>()).Returns(response);
 
@@ -43,7 +43,7 @@ namespace Toggl.Ultrawave.Tests.ApiClients
         public async Task IgnoresTheEndDateParameterIfItIsNull()
         {
             var from = new DateTimeOffset(2017, 1, 27, 11, 22, 33, TimeSpan.Zero);
-            var expectedBody = $"{{\"start_date\":\"2017-01-27\"}}";
+            var expectedBody = "{\"start_date\":\"2017-01-27\"}";
             var response = emptyResponse();
             apiClient.Send(Arg.Any<IRequest>()).Returns(response);
 
