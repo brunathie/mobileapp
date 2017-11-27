@@ -42,6 +42,10 @@ namespace Toggl.Daneel.Services
                 var info = new PasswordManagerResult(email, password);
                 observer.OnNext(info);
             }
+            else
+            {
+                observer.OnNext(PasswordManagerResult.None);
+            }
 
             observer.OnCompleted();
         };

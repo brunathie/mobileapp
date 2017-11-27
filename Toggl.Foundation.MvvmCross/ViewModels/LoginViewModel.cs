@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
@@ -28,7 +29,6 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private LoginType loginType;
         private IDisposable loginDisposable;
-        private IDisposable passwordManagerDisposable;
 
         private EmailType email = EmailType.Invalid;
 
@@ -63,7 +63,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public IMvxCommand TogglePasswordVisibilityCommand { get; }
 
-        public IMvxCommand StartPasswordManagerCommand { get; }
+        public IMvxAsyncCommand StartPasswordManagerCommand { get; }
 
         [DependsOn(nameof(CurrentPage))]
         public bool IsEmailPage => CurrentPage == EmailPage;
@@ -94,11 +94,13 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             this.navigationService = navigationService;
             this.passwordManagerService = passwordManagerService;
 
+            ShouldAlwaysRaiseInpcOnUserInterfaceThread(true);
+
             BackCommand = new MvxCommand(back);
             NextCommand = new MvxCommand(next);
-            StartPasswordManagerCommand = new MvxCommand(startPasswordManager);
             OpenPrivacyPolicyCommand = new MvxCommand(openPrivacyPolicyCommand);
             OpenTermsOfServiceCommand = new MvxCommand(openTermsOfServiceCommand);
+            StartPasswordManagerCommand = new MvxAsyncCommand(startPasswordManager);
             TogglePasswordVisibilityCommand = new MvxCommand(togglePasswordVisibility);
         }
 
@@ -133,7 +135,6 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 if (IsLogin) login();
                 if (IsSignUp) signUp();
             }
-
 
             CurrentPage = PasswordPage;
             ErrorText = loginType == LoginType.SignUp
@@ -173,27 +174,20 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                     .Subscribe(onDataSource, onError, onCompleted);
         }
 
-        private void startPasswordManager()
+        private async Task startPasswordManager()
         {
             if (!passwordManagerService.IsAvailable) return;
-            if (passwordManagerDisposable != null) return;
 
-            passwordManagerDisposable =
-                passwordManagerService
-                    .GetLoginInformation()
-                    .Subscribe(onLoginInfo, onError, onCompleted);
-        }
+            var loginInfo = await passwordManagerService.GetLoginInformation();
 
-        private void onLoginInfo(PasswordManagerResult loginInfo)
-        {
             Email = loginInfo.Email;
             if (!NextIsEnabled) return;
-
-            CurrentPage = PasswordPage;
+            
+            next();
             Password = loginInfo.Password;
             if (!NextIsEnabled) return;
-
-            login();
+            
+            next();
         }
 
         private async void onDataSource(ITogglDataSource dataSource)
@@ -224,10 +218,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private void onCompleted()
         {
             loginDisposable?.Dispose();
-            passwordManagerDisposable?.Dispose();
-
             loginDisposable = null;
-            passwordManagerDisposable = null;
         }
     }
 }

@@ -5,6 +5,7 @@
         public string Email { get; }
 
         public string Password { get; }
+        public static PasswordManagerResult None { get; } = new PasswordManagerResult("", "");
 
         public PasswordManagerResult(string email, string password)
         {
