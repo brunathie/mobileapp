@@ -1,4 +1,5 @@
-﻿using MvvmCross.Core.Navigation;
+﻿using System.Threading.Tasks;
+using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using Toggl.Foundation.Login;
@@ -56,12 +57,6 @@ namespace Toggl.Foundation.MvvmCross
                 return;
             }
 
-            if (accessRestrictionStorage.IsUnauthorized())
-            {
-                navigationService.Navigate<TokenResetViewModel>();
-                return;
-            }
-
             var dataSource = loginManager.GetDataSourceIfLoggedIn();
             if (dataSource == null)
             {
@@ -69,9 +64,16 @@ namespace Toggl.Foundation.MvvmCross
                 return;
             }
 
+            Mvx.RegisterSingleton(dataSource);
+
+            if (accessRestrictionStorage.IsUnauthorized())
+            {
+                navigationService.Navigate<TokenResetViewModel>();
+                return;
+            }
+
             dataSource.SyncManager.ForceFullSync();
 
-            Mvx.RegisterSingleton(dataSource);
             navigationService.Navigate<MainViewModel>();
         }
     }
