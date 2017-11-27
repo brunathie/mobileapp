@@ -150,6 +150,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiClients\ProjectsSummaryReportsApiTests.cs" />
     <Compile Include="Models\TimeEntryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\UserTests.cs" />
