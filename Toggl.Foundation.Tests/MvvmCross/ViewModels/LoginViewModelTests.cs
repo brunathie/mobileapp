@@ -667,7 +667,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 private IRequest request => Substitute.For<IRequest>();
                 private IResponse response => Substitute.For<IResponse>();
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void SetsTheOutdatedClientVersionFlag()
                 {
                     CallAndThrow(new ClientDeprecatedException(request, response));
@@ -675,7 +675,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     AccessRestrictionStorage.Received().SetClientOutdated();
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void SetsTheOutdatedApiVersionFlag()
                 {
                     CallAndThrow(new ApiDeprecatedException(request, response));
@@ -683,7 +683,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     AccessRestrictionStorage.Received().SetApiOutdated();
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void NavigatesToTheOutdatedClientScreen()
                 {
                     CallAndThrow(new ClientDeprecatedException(request, response));
@@ -691,7 +691,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     NavigationService.Received().Navigate<OutdatedAppViewModel>();
                 }
 
-                [Fact]
+                [Fact, LogIfTooSlow]
                 public void NavigatesToTheOutdatedApiScreen()
                 {
                     CallAndThrow(new ApiDeprecatedException(request, response));

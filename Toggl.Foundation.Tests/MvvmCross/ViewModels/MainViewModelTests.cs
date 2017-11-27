@@ -271,7 +271,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             private IRequest request => Substitute.For<IRequest>();
             private IResponse response => Substitute.For<IResponse>();
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task SetsTheOutdatedClientVersionFlag()
             {
                 await ViewModel.Initialize();
@@ -281,7 +281,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 AccessRestrictionStorage.Received().SetClientOutdated();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task SetsTheOutdatedApiVersionFlag()
             {
                 await ViewModel.Initialize();
@@ -291,7 +291,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 AccessRestrictionStorage.Received().SetApiOutdated();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task SetsTheUnauthorizedAccessFlag()
             {
                 await ViewModel.Initialize();
@@ -301,7 +301,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 AccessRestrictionStorage.Received().SetUnauthorizedAccess();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task NavigatesToTheOutdatedClientScreen()
             {
                 await ViewModel.Initialize();
@@ -311,7 +311,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await NavigationService.Received().Navigate<OutdatedAppViewModel>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task NavigatesToTheOutdatedApiScreen()
             {
                 await ViewModel.Initialize();
@@ -321,7 +321,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await NavigationService.Received().Navigate<OutdatedAppViewModel>();
             }
 
-            [Fact]
+            [Fact, LogIfTooSlow]
             public async Task NavigatesToTheRepeatLoginScreen()
             {
                 await ViewModel.Initialize();
