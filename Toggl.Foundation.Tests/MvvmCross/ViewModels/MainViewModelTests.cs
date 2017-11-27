@@ -328,7 +328,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ProgressSubject.OnError(new UnauthorizedException(request, response));
 
-                await NavigationService.Received().Navigate<LoginViewModel>(); // TODO: use correct view model
+                await NavigationService.Received().Navigate<TokenResetViewModel>();
             }
         }
     }

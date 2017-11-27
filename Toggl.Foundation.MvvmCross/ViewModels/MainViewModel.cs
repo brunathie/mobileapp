@@ -163,7 +163,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                     return;
                 case UnauthorizedException unauthorized:
                     accessRestrictionStorage.SetUnauthorizedAccess();
-                    navigationService.Navigate<LoginViewModel>(); // TODO: navigate to special page which tells user to update the app
+                    navigationService.Navigate<TokenResetViewModel>();
                     return;
                 default:
                     throw new ArgumentException(nameof(e));

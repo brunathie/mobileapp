@@ -81,7 +81,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
 
                 AppStart.Start();
 
-                NavigationService.Received().Navigate<LoginViewModel>(); // TODO: use repeat login view model when it is ready
+                NavigationService.Received().Navigate<TokenResetViewModel>();
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
@@ -110,7 +110,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
 
                 NavigationService.Received().Navigate<OnboardingViewModel>();
                 NavigationService.Received().Navigate<OutdatedAppViewModel>();
-                NavigationService.DidNotReceive().Navigate<LoginViewModel>(); // TODO: use repeat login view model when it is ready
+                NavigationService.DidNotReceive().Navigate<TokenResetViewModel>();
                 LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 

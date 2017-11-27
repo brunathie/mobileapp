@@ -58,7 +58,7 @@ namespace Toggl.Foundation.MvvmCross
 
             if (accessRestrictionStorage.IsUnauthorized())
             {
-                navigationService.Navigate<LoginViewModel>(); // TODO: navigate user to the correct screen
+                navigationService.Navigate<TokenResetViewModel>();
                 return;
             }
 
