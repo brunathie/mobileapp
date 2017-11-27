@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Mail;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -19,7 +18,6 @@ using Toggl.Foundation.Tests.Generators;
 using Toggl.Multivac.Models;
 using Microsoft.Reactive.Testing;
 using System.Reactive.Concurrency;
-using FsCheck.Xunit;
 
 namespace Toggl.Foundation.Tests.Login
 {
@@ -45,6 +43,7 @@ namespace Toggl.Foundation.Tests.Login
                 LoginManager = new LoginManager(ApiFactory, Database, TimeService, GoogleService, Scheduler);
 
                 Api.User.Get().Returns(Observable.Return(User));
+                Api.User.GetWithGoogle().Returns(Observable.Return(User));
                 Api.User.SignUp(Email, Password).Returns(Observable.Return(User));
                 ApiFactory.CreateApiWith(Arg.Any<Credentials>()).Returns(Api);
                 Database.Clear().Returns(Observable.Return(Unit.Default));
@@ -280,7 +279,7 @@ namespace Toggl.Foundation.Tests.Login
             }
         }
         
-		public sealed class TheRefreshTokenMethod : LoginManagerTest
+        public sealed class TheRefreshTokenMethod : LoginManagerTest
         {
             public TheRefreshTokenMethod()
             {

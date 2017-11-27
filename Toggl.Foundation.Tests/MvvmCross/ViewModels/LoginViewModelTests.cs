@@ -282,9 +282,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             [Fact, LogIfTooSlow]
             public void CallsTheLoginManager()
             {
-                ViewModel.Password = ValidPassword;
-
-                ViewModel.NextCommand.Execute();
+                ViewModel.GoogleLoginCommand.Execute();
 
                 LoginManager.Received().LoginWithGoogle();
             }
