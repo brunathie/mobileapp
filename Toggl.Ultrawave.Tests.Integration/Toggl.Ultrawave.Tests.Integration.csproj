@@ -157,6 +157,7 @@
     <Compile Include="BaseTests\AuthenticatedEndpointBaseTests.cs" />
     <Compile Include="PricingPlansTests.cs" />
     <Compile Include="ProjectsApiTests.cs" />
+    <Compile Include="ProjectsSummaryReportsApiTests.cs" />
     <Compile Include="StatusApiTests.cs" />
     <Compile Include="Helper\SubscriptionPlanActivator.cs" />
     <Compile Include="UserApiTests.cs" />
