@@ -377,6 +377,10 @@
     <ImageAsset Include="Resources\Images.xcassets\icArrowRight.imageset\icArrowRight.png" />
     <ImageAsset Include="Resources\Images.xcassets\icArrowRight.imageset\icArrowRight%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\icArrowRight.imageset\icArrowRight%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icGoogle.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\icGoogle.imageset\icGoogle.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icGoogle.imageset\icGoogle%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icGoogle.imageset\icGoogle%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
