@@ -99,6 +99,38 @@ private TemporaryFileTransformation GetIosAnalyticsServicesConfigurationTransfor
     };
 }
 
+private TemporaryFileTransformation GetIosEntitlementsConfigurationTransformation()
+{
+    const string path = "Toggl.Daneel/Entitlements.plist";
+
+    var reversedClientId = EnvironmentVariable("TOGGL_REVERSED_CLIENT_ID");
+    var filePath = GetFiles(path).Single();
+    var file = TransformTextFile(filePath).ToString();
+
+    return new TemporaryFileTransformation
+    { 
+        Path = path, 
+        Original = file,
+        Temporary = file.Replace("{TOGGL_REVERSED_CLIENT_ID}", reversedClientId)
+    };
+}
+
+private TemporaryFileTransformation GetIosInfoConfigurationTransformation()
+{
+    const string path = "Toggl.Daneel/Info.plist";
+
+    var reversedClientId = EnvironmentVariable("TOGGL_REVERSED_CLIENT_ID");
+    var filePath = GetFiles(path).Single();
+    var file = TransformTextFile(filePath).ToString();
+
+    return new TemporaryFileTransformation
+    { 
+        Path = path, 
+        Original = file,
+        Temporary = file.Replace("{TOGGL_REVERSED_CLIENT_ID}", reversedClientId)
+    };
+}
+
 private TemporaryFileTransformation GetIntegrationTestsConfigurationTransformation()
 {   
     const string path = "Toggl.Ultrawave.Tests.Integration/Helper/Configuration.cs";
@@ -117,7 +149,9 @@ private TemporaryFileTransformation GetIntegrationTestsConfigurationTransformati
 var transformations = new List<TemporaryFileTransformation> 
 {
     GetIntegrationTestsConfigurationTransformation(),
-    GetIosAnalyticsServicesConfigurationTransformation()
+    GetIosAnalyticsServicesConfigurationTransformation(),
+    GetIosEntitlementsConfigurationTransformation(),
+    GetIosInfoConfigurationTransformation()
 };
 
 Setup(context => transformations.ForEach(transformation => System.IO.File.WriteAllText(transformation.Path, transformation.Temporary)));

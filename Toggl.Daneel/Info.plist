@@ -52,7 +52,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>{TOGGL_CLIENT_ID}</string>
+				<string>{TOGGL_REVERSED_CLIENT_ID}</string>
 			</array>
 		</dict>
 	</array>
