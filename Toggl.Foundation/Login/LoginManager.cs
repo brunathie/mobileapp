@@ -59,7 +59,7 @@ namespace Toggl.Foundation.Login
                     });
         }
 
-        public IObservable<ITogglDataSource> LoginUsingGoogle()
+        public IObservable<ITogglDataSource> LoginWithGoogle()
         {
             return database
                 .Clear()
@@ -109,7 +109,7 @@ namespace Toggl.Foundation.Login
                        .Wait();
         }
 
-        public IObservable<ITogglDataSource> SignUpUsingGoogle()
+        public IObservable<ITogglDataSource> SignUpWithGoogle()
             => throw new NotImplementedException();
 
         private ITogglDataSource dataSourceFromUser(IUser user)

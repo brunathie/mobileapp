@@ -5,6 +5,7 @@ using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using PropertyChanged;
 using Toggl.Foundation.DataSources;
+using Toggl.Foundation.Exceptions;
 using Toggl.Foundation.Login;
 using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Foundation.MvvmCross.Services;
@@ -57,6 +58,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public IMvxCommand BackCommand { get; }
 
+        public IMvxCommand GoogleLoginCommand { get; }
+
         public IMvxCommand OpenPrivacyPolicyCommand { get; }
 
         public IMvxCommand OpenTermsOfServiceCommand { get; }
@@ -96,6 +99,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
             BackCommand = new MvxCommand(back);
             NextCommand = new MvxCommand(next);
+            GoogleLoginCommand = new MvxCommand(googleLogin);
             StartPasswordManagerCommand = new MvxCommand(startPasswordManager);
             OpenPrivacyPolicyCommand = new MvxCommand(openPrivacyPolicyCommand);
             OpenTermsOfServiceCommand = new MvxCommand(openTermsOfServiceCommand);
@@ -163,6 +167,18 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                     .Subscribe(onDataSource, onError, onCompleted);
         }
 
+        private void googleLogin()
+        {
+            if (IsLoading) return;
+
+            IsLoading = true;
+
+            loginDisposable =
+                loginManager
+                    .LoginWithGoogle()
+                    .Subscribe(onDataSource, onError, onCompleted);
+        }
+
         private void signUp()
         {
             IsLoading = true;
@@ -209,17 +225,26 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private void onError(Exception ex)
         {
-            ErrorText = ex is ForbiddenException ? Resources.IncorrectEmailOrPassword
-                                                 : getGenericError();
+            ErrorText = getErrorMessage(ex);
 
             IsLoading = false;
             onCompleted();
         }
 
-        private string getGenericError()
-            => loginType == LoginType.Login
-                ? Resources.GenericLoginError
-                : Resources.GenericSignUpError;
+        private string getErrorMessage(Exception ex)
+        {
+            switch (ex)
+            {
+                case GoogleLoginException googleEx when googleEx.LoginWasCanceled:
+                    return "";
+
+                case ForbiddenException forbiddenException:
+                    return Resources.IncorrectEmailOrPassword;
+
+                default:
+                    return loginType == LoginType.Login ? Resources.GenericLoginError : Resources.GenericSignUpError;
+            }
+        }
 
         private void onCompleted()
         {

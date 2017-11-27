@@ -290,7 +290,7 @@ namespace Toggl.Foundation.Tests.Login
             [Fact, LogIfTooSlow]
             public async Task EmptiesTheDatabaseBeforeTryingToCreateTheUser()
             {
-                await LoginManager.LoginUsingGoogle();
+                await LoginManager.LoginWithGoogle();
 
                 Received.InOrder(async () =>
                 {
@@ -302,7 +302,7 @@ namespace Toggl.Foundation.Tests.Login
             [Fact, LogIfTooSlow]
             public async Task UsesTheGoogleServiceToGetTheToken()
             {
-                await LoginManager.LoginUsingGoogle();
+                await LoginManager.LoginWithGoogle();
 
                 await GoogleService.Received().GetAuthToken();
             }
@@ -310,7 +310,7 @@ namespace Toggl.Foundation.Tests.Login
             [Fact, LogIfTooSlow]
             public async Task CallsTheGetWithGoogleOfTheUserApi()
             {
-                await LoginManager.LoginUsingGoogle();
+                await LoginManager.LoginWithGoogle();
 
                 await Api.User.Received().GetWithGoogle();
             }
@@ -318,7 +318,7 @@ namespace Toggl.Foundation.Tests.Login
             [Fact, LogIfTooSlow]
             public async Task ShouldPersistTheUserToTheDatabase()
             {
-                await LoginManager.LoginUsingGoogle();
+                await LoginManager.LoginWithGoogle();
 
                 await Database.User.Received().Create(Arg.Is<IDatabaseUser>(receivedUser => receivedUser.Id == User.Id));
             }
@@ -326,7 +326,7 @@ namespace Toggl.Foundation.Tests.Login
             [Fact, LogIfTooSlow]
             public async Task TheUserToBePersistedShouldHaveSyncStatusSetToInSync()
             {
-                await LoginManager.LoginUsingGoogle();
+                await LoginManager.LoginWithGoogle();
 
                 await Database.User.Received().Create(Arg.Is<IDatabaseUser>(receivedUser => receivedUser.SyncStatus == SyncStatus.InSync));
             }
@@ -335,7 +335,7 @@ namespace Toggl.Foundation.Tests.Login
             public async Task ShouldAlwaysReturnASingleResult()
             {
                 await LoginManager
-                        .LoginUsingGoogle()
+                        .LoginWithGoogle()
                         .SingleAsync();
             }
         }
