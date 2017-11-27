@@ -54,6 +54,7 @@ namespace Toggl.Daneel.ViewControllers
                       .To(vm => vm.IsPasswordMasked);
 
             //Commands
+            bindingSet.Bind(GoogleSignInButton).To(vm => vm.GoogleLoginCommand);
             bindingSet.Bind(PrivacyPolicyButton).To(vm => vm.OpenPrivacyPolicyCommand);
             bindingSet.Bind(TermsOfServiceButton).To(vm => vm.OpenTermsOfServiceCommand);
 

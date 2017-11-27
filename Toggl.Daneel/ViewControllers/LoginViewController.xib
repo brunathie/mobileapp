@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -16,36 +16,37 @@
                 <outlet property="EmailTextField" destination="WxQ-t5-Zte" id="name-outlet-WxQ-t5-Zte"/>
                 <outlet property="ErrorLabel" destination="3Dj-pA-An9" id="name-outlet-3Dj-pA-An9"/>
                 <outlet property="ForgotPasswordButton" destination="8lc-P8-x4K" id="name-outlet-8lc-P8-x4K"/>
+                <outlet property="GoogleSignInButton" destination="x5K-OB-Bjr" id="Wce-wm-bdW"/>
                 <outlet property="PasswordManagerButton" destination="zrB-CR-ZBC" id="name-outlet-zrB-CR-ZBC"/>
                 <outlet property="PasswordTextField" destination="965-7g-Gu6" id="name-outlet-965-7g-Gu6"/>
                 <outlet property="PrivacyPolicyButton" destination="bMY-bL-aat" id="name-outlet-bMY-bL-aat"/>
                 <outlet property="ShowPasswordButton" destination="IEZ-w2-ebJ" id="name-outlet-IEZ-w2-ebJ"/>
+                <outlet property="SignUpLabels" destination="Eh2-5Y-rzg" id="name-outlet-Eh2-5Y-rzg"/>
                 <outlet property="TermsOfServiceButton" destination="9df-sA-oTS" id="name-outlet-9df-sA-oTS"/>
                 <outlet property="view" destination="2" id="RRd-Eg-VrN"/>
-                <outlet property="SignUpLabels" destination="Eh2-5Y-rzg" id="name-outlet-Eh2-5Y-rzg"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="2">
-            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WxQ-t5-Zte">
-                    <rect key="frame" x="16" y="159" width="528" height="24"/>
+                    <rect key="frame" x="16" y="159" width="303" height="24"/>
                     <accessibility key="accessibilityConfiguration" label="LoginEmail"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                     <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress"/>
                 </textField>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="965-7g-Gu6">
-                    <rect key="frame" x="16" y="159" width="528" height="24"/>
+                    <rect key="frame" x="16" y="159" width="303" height="24"/>
                     <accessibility key="accessibilityConfiguration" label="LoginPassword"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                     <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
                 </textField>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icPassword" translatesAutoresizingMaskIntoConstraints="NO" id="IEZ-w2-ebJ">
-                    <rect key="frame" x="544" y="143" width="56" height="56"/>
+                    <rect key="frame" x="319" y="143" width="56" height="56"/>
                     <accessibility key="accessibilityConfiguration" label="LoginShowPassword"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="56" id="rK3-aW-F5C"/>
@@ -53,7 +54,7 @@
                     </constraints>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8lc-P8-x4K">
-                    <rect key="frame" x="451" y="552" width="133" height="27"/>
+                    <rect key="frame" x="226" y="619" width="133" height="27"/>
                     <accessibility key="accessibilityConfiguration" label="LoginForgotPassword"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                     <state key="normal" title="Forgot your password?">
@@ -61,7 +62,7 @@
                     </state>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icOnePassword" translatesAutoresizingMaskIntoConstraints="NO" id="zrB-CR-ZBC">
-                    <rect key="frame" x="544" y="143" width="56" height="56"/>
+                    <rect key="frame" x="319" y="143" width="56" height="56"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="56" id="JZo-wX-zs8"/>
                         <constraint firstAttribute="width" constant="56" id="aaj-mV-LSy"/>
@@ -75,7 +76,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l7S-as-iux" customClass="ActivityIndicatorView">
-                    <rect key="frame" x="560" y="159" width="24" height="24"/>
+                    <rect key="frame" x="335" y="159" width="24" height="24"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="24" id="Zzj-Z7-HWz"/>
@@ -83,7 +84,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eh2-5Y-rzg">
-                    <rect key="frame" x="16" y="504" width="584" height="30"/>
+                    <rect key="frame" x="16" y="571" width="359" height="30"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="By signing up you agree to our" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aEI-B1-235">
                             <rect key="frame" x="0.0" y="1" width="176" height="14.5"/>
@@ -98,7 +99,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9df-sA-oTS">
-                            <rect key="frame" x="179" y="1.5" width="94" height="14"/>
+                            <rect key="frame" x="179" y="1.5" width="88" height="14"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="14" id="Gf7-7V-bX7"/>
                             </constraints>
@@ -115,7 +116,7 @@
                             </state>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bMY-bL-aat">
-                            <rect key="frame" x="25" y="16" width="82" height="14"/>
+                            <rect key="frame" x="25" y="16" width="78" height="14"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="14" id="xCB-qz-aoJ"/>
                             </constraints>
@@ -144,11 +145,27 @@
                     </constraints>
                     <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
                 </view>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icGoogle" translatesAutoresizingMaskIntoConstraints="NO" id="7r0-y0-wAi">
+                    <rect key="frame" x="16" y="627.5" width="10" height="10"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="10" id="323-CZ-EUU"/>
+                        <constraint firstAttribute="height" constant="10" id="rMo-EQ-brC"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x5K-OB-Bjr">
+                    <rect key="frame" x="29" y="619" width="108" height="27"/>
+                    <accessibility key="accessibilityConfiguration" label="LoginForgotPassword"/>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                    <state key="normal" title="Log in with Google">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
             </subviews>
             <color key="backgroundColor" red="0.023529411764705882" green="0.66666666666666663" blue="0.96078431372549022" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="8lc-P8-x4K" secondAttribute="trailing" constant="16" id="0k3-pK-CqH"/>
                 <constraint firstItem="zrB-CR-ZBC" firstAttribute="centerY" secondItem="WxQ-t5-Zte" secondAttribute="centerY" id="0zi-N5-DYH"/>
+                <constraint firstItem="7r0-y0-wAi" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="1V9-8X-Xk1"/>
                 <constraint firstItem="zrB-CR-ZBC" firstAttribute="leading" secondItem="WxQ-t5-Zte" secondAttribute="trailing" id="7xD-Gs-o2Y"/>
                 <constraint firstAttribute="trailing" secondItem="Eh2-5Y-rzg" secondAttribute="trailing" id="AlC-NS-wCO"/>
                 <constraint firstItem="965-7g-Gu6" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="CeJ-bb-SPH"/>
@@ -156,11 +173,14 @@
                 <constraint firstItem="IEZ-w2-ebJ" firstAttribute="centerY" secondItem="965-7g-Gu6" secondAttribute="centerY" id="EGn-Lh-RBk"/>
                 <constraint firstItem="8lc-P8-x4K" firstAttribute="top" secondItem="W8s-Uc-eM2" secondAttribute="bottom" constant="18" id="F5O-m2-Nrj"/>
                 <constraint firstItem="3Dj-pA-An9" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="FQL-QJ-siE"/>
+                <constraint firstItem="7r0-y0-wAi" firstAttribute="centerY" secondItem="8lc-P8-x4K" secondAttribute="centerY" id="HD4-Yb-zbn"/>
                 <constraint firstItem="8lc-P8-x4K" firstAttribute="top" secondItem="Eh2-5Y-rzg" secondAttribute="bottom" constant="18" id="Jfa-6v-Zn6"/>
                 <constraint firstItem="Eh2-5Y-rzg" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="ME2-Ai-gil"/>
+                <constraint firstItem="x5K-OB-Bjr" firstAttribute="leading" secondItem="7r0-y0-wAi" secondAttribute="trailing" constant="3" id="RRW-dN-edD"/>
                 <constraint firstItem="W8s-Uc-eM2" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="Y7f-dy-vw7"/>
                 <constraint firstAttribute="trailing" secondItem="zrB-CR-ZBC" secondAttribute="trailing" id="Ydm-yz-dwx"/>
                 <constraint firstAttribute="trailing" secondItem="IEZ-w2-ebJ" secondAttribute="trailing" id="YeE-vP-BMl"/>
+                <constraint firstItem="x5K-OB-Bjr" firstAttribute="centerY" secondItem="7r0-y0-wAi" secondAttribute="centerY" id="f8z-dT-yg3"/>
                 <constraint firstItem="l7S-as-iux" firstAttribute="centerY" secondItem="IEZ-w2-ebJ" secondAttribute="centerY" id="k2I-EZ-o9O"/>
                 <constraint firstAttribute="bottom" secondItem="8lc-P8-x4K" secondAttribute="bottom" constant="21" id="kx6-14-c06"/>
                 <constraint firstItem="WxQ-t5-Zte" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="16" id="mOc-SS-Q8l"/>
@@ -173,40 +193,8 @@
         </view>
     </objects>
     <resources>
+        <image name="icGoogle" width="11" height="11"/>
         <image name="icOnePassword" width="15" height="15"/>
         <image name="icPassword" width="15" height="10"/>
-        <image name="icArrowUp" width="10" height="6"/>
-        <image name="icBillable" width="8" height="16"/>
-        <image name="icClose" width="10" height="10"/>
-        <image name="icContinue" width="10" height="11"/>
-        <image name="icDatetime" width="14" height="14"/>
-        <image name="icDone" width="16" height="12"/>
-        <image name="icDownS" width="8" height="5"/>
-        <image name="icProjects" width="16" height="12"/>
-        <image name="icRefresh" width="20" height="14"/>
-        <image name="icReports" width="16" height="18"/>
-        <image name="icSettings" width="16" height="16"/>
-        <image name="icSyncerror" width="16" height="16"/>
-        <image name="icTags" width="14" height="13"/>
-        <image name="icUpS" width="8" height="5"/>
-        <image name="playIcon" width="50" height="50"/>
-        <image name="stopIcon" width="34" height="34"/>
-        <image name="togglLogoWhite" width="111" height="35"/>
-        <image name="notebook" width="95" height="85"/>
-        <image name="togglCronometer" width="126" height="140"/>
-        <image name="togglLogo" width="63" height="19"/>
-        <image name="line" width="2" height="14"/>
-        <image name="icLoader" width="24" height="24"/>
-        <image name="icAdd" width="10" height="10"/>
-        <image name="icProjectDot" width="6" height="6"/>
-        <image name="icIllustrationTimer" width="89" height="90"/>
-        <image name="icIllustrationPaws" width="112" height="41"/>
-        <image name="duration" width="13" height="16"/>
-        <image name="icIllustrationSpider" width="60" height="205"/>
-        <image name="icDoneSmall" width="12" height="9"/>
-        <image name="icSearch" width="13" height="12"/>
-        <image name="icCheckBoxChecked" width="14" height="14"/>
-        <image name="icCheckBoxUnchecked" width="14" height="14"/>
-        <image name="icUnsynced" width="16" height="14"/>
     </resources>
 </document>
