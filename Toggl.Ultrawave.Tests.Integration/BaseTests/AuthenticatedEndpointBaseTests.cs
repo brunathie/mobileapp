@@ -45,7 +45,7 @@ namespace Toggl.Ultrawave.Tests.Integration.BaseTests
             var email = $"non-existing-email-{Guid.NewGuid()}@ironicmocks.toggl.com".ToEmail();
             var wrongCredentials = Credentials.WithPassword(email, "123456789");
 
-            CallingEndpointWith(TogglApiWith(wrongCredentials)).ShouldThrow<ForbiddenException>();
+            CallingEndpointWith(TogglApiWith(wrongCredentials)).ShouldThrow<UnauthorizedException>();
         }
 
         [Fact, LogTestInfo]
@@ -56,7 +56,7 @@ namespace Toggl.Ultrawave.Tests.Integration.BaseTests
             var wrongCredentials = Credentials.WithPassword(email, $"{password}1");
             ValidApi = TogglApiWith(correctCredentials);
 
-            CallingEndpointWith(TogglApiWith(wrongCredentials)).ShouldThrow<ForbiddenException>();
+            CallingEndpointWith(TogglApiWith(wrongCredentials)).ShouldThrow<UnauthorizedException>();
         }
 
         [Fact, LogTestInfo]
@@ -67,7 +67,7 @@ namespace Toggl.Ultrawave.Tests.Integration.BaseTests
             var wrongApiToken = Guid.NewGuid().ToString("N");
             var wrongApiTokenCredentials = Credentials.WithApiToken(wrongApiToken);
 
-            CallingEndpointWith(TogglApiWith(wrongApiTokenCredentials)).ShouldThrow<ForbiddenException>();
+            CallingEndpointWith(TogglApiWith(wrongApiTokenCredentials)).ShouldThrow<UnauthorizedException>();
         }
 
         [Fact, LogTestInfo]
@@ -76,7 +76,7 @@ namespace Toggl.Ultrawave.Tests.Integration.BaseTests
             var (validApi, _) = await SetupTestUser();
             ValidApi = validApi;
 
-            CallingEndpointWith(TogglApiWith(Credentials.None)).ShouldThrow<ForbiddenException>();
+            CallingEndpointWith(TogglApiWith(Credentials.None)).ShouldThrow<UnauthorizedException>();
         }
     }
 }

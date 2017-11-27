@@ -12,8 +12,8 @@ namespace Toggl.Ultrawave.Tests.ApiClients
         private readonly Endpoint endpoint;
 
         public TestApi(Endpoint endpoint, IApiClient apiClient, IJsonSerializer serializer,
-            Credentials credentials)
-            : base(apiClient, serializer, credentials)
+            Credentials credentials, Endpoint loggedEndpoint)
+            : base(apiClient, serializer, credentials, loggedEndpoint)
         {
             Ensure.Argument.IsNotNull(endpoint, nameof(endpoint));
 

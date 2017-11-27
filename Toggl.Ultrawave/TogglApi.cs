@@ -23,15 +23,15 @@ namespace Toggl.Ultrawave
             var apiClient = new ApiClient(httpClient, userAgent);
             var endpoints = new Endpoints(configuration.Environment);
 
-            Tags = new TagsApi(endpoints.Tags, apiClient, serializer, credentials);
-            User = new UserApi(endpoints.User, apiClient, serializer, credentials);
-            Tasks = new TasksApi(endpoints.Tasks, apiClient, serializer, credentials);
-            Status = new StatusApi(endpoints.Status, apiClient);
-            Clients = new ClientsApi(endpoints.Clients, apiClient, serializer, credentials);
-            Projects = new ProjectsApi(endpoints.Projects, apiClient, serializer, credentials);
-            Workspaces = new WorkspacesApi(endpoints.Workspaces, apiClient, serializer, credentials);
-            TimeEntries = new TimeEntriesApi(endpoints.TimeEntries, apiClient, serializer, credentials, userAgent);
-            WorkspaceFeatures = new WorkspaceFeaturesApi(endpoints.WorkspaceFeatures, apiClient, serializer, credentials);
+            Tags = new TagsApi(endpoints, apiClient, serializer, credentials);
+            User = new UserApi(endpoints, apiClient, serializer, credentials);
+            Tasks = new TasksApi(endpoints, apiClient, serializer, credentials);
+            Status = new StatusApi(endpoints, apiClient);
+            Clients = new ClientsApi(endpoints, apiClient, serializer, credentials);
+            Projects = new ProjectsApi(endpoints, apiClient, serializer, credentials);
+            Workspaces = new WorkspacesApi(endpoints, apiClient, serializer, credentials);
+            TimeEntries = new TimeEntriesApi(endpoints, apiClient, serializer, credentials, userAgent);
+            WorkspaceFeatures = new WorkspaceFeaturesApi(endpoints, apiClient, serializer, credentials);
         }
 
         public ITagsApi Tags { get; }

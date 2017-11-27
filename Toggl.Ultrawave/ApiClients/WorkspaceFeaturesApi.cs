@@ -11,11 +11,11 @@ namespace Toggl.Ultrawave.ApiClients
     {
         private readonly WorkspaceFeaturesEndpoints endPoints;
 
-        public WorkspaceFeaturesApi(WorkspaceFeaturesEndpoints endPoints, IApiClient apiClient, IJsonSerializer serializer,
+        public WorkspaceFeaturesApi(Endpoints endPoints, IApiClient apiClient, IJsonSerializer serializer,
             Credentials credentials)
-            : base(apiClient, serializer, credentials)
+            : base(apiClient, serializer, credentials, endPoints.LoggedIn)
         {
-            this.endPoints = endPoints;
+            this.endPoints = endPoints.WorkspaceFeatures;
         }
 
         public IObservable<List<IWorkspaceFeatureCollection>> GetAll()
