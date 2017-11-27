@@ -23,7 +23,7 @@ namespace Toggl.Ultrawave.Tests.Clients
 
             public TheIsAvailableMethod()
             {
-                var endpoints = new StatusEndpoints(ApiUrls.ForEnvironment(ApiEnvironment.Staging));
+                var endpoints = new Endpoints(ApiEnvironment.Staging);
                 statusApi = new StatusApi(endpoints, apiClient);
             }
 
