@@ -33,7 +33,7 @@ namespace Toggl.Ultrawave
             TimeEntries = new TimeEntriesApi(endpoints, apiClient, serializer, credentials, userAgent);
             WorkspaceFeatures = new WorkspaceFeaturesApi(endpoints, apiClient, serializer, credentials);
 
-            ReportsApi = new ReportsApi(apiClient, serializer, configuration.Environment, credentials);
+            ReportsApi = new ReportsApi(apiClient, serializer, endpoints, credentials);
         }
 
         public ITagsApi Tags { get; }

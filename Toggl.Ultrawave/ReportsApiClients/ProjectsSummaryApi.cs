@@ -15,10 +15,10 @@ namespace Toggl.Ultrawave.ReportsApiClients
         private readonly IJsonSerializer serializer;
         private readonly Credentials credentials;
 
-        public ProjectsSummaryApi(ProjectsSummaryEndpoints endPoints, IApiClient apiClient, IJsonSerializer serializer, Credentials credentials)
-            : base(apiClient, serializer, credentials)
+        public ProjectsSummaryApi(Endpoints endPoints, IApiClient apiClient, IJsonSerializer serializer, Credentials credentials)
+            : base(apiClient, serializer, credentials, endPoints.LoggedIn)
         {
-            this.endPoints = endPoints;
+            this.endPoints = endPoints.ReportsEndpoints.ProjectsSummary;
             this.serializer = serializer;
             this.credentials = credentials;
         }

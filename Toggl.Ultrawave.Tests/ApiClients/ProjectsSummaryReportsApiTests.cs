@@ -19,7 +19,7 @@ namespace Toggl.Ultrawave.Tests.ApiClients
 
         public ProjectsSummaryReportsApiTests()
         {
-            var endpoints = new ProjectsSummaryEndpoints(new Uri("https://toggl.space/reports/api/v3/"));
+            var endpoints = new Endpoints(ApiEnvironment.Staging);
             apiClient = Substitute.For<IApiClient>();
             serializer = new JsonSerializer();
             client = new ProjectsSummaryApi(endpoints, apiClient, serializer, Credentials.None);
