@@ -7,6 +7,7 @@ using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Login;
 using Toggl.Foundation.MvvmCross;
 using Toggl.Foundation.MvvmCross.ViewModels;
+using Toggl.Foundation.Sync;
 using Toggl.Foundation.Tests.Generators;
 using Toggl.PrimeRadiant;
 using Xunit;
@@ -18,6 +19,8 @@ namespace Toggl.Foundation.Tests.MvvmCross
         public abstract class AppStartTest : BaseMvvmCrossTests
         {
             protected AppStart AppStart { get; }
+            protected ISyncManager SyncManager { get; } = Substitute.For<ISyncManager>();
+            protected ITogglDataSource DataSource { get; } = Substitute.For<ITogglDataSource>();
             protected ILoginManager LoginManager { get; } = Substitute.For<ILoginManager>();
             protected IAccessRestrictionStorage AccessRestrictionStorage { get; } =
                 Substitute.For<IAccessRestrictionStorage>();
@@ -25,6 +28,8 @@ namespace Toggl.Foundation.Tests.MvvmCross
             protected AppStartTest()
             {
                 AppStart = new AppStart(LoginManager, NavigationService, AccessRestrictionStorage);
+                DataSource.SyncManager.Returns(SyncManager);
+                LoginManager.GetDataSourceIfLoggedIn().Returns(DataSource);
             }
         }
 
@@ -81,8 +86,8 @@ namespace Toggl.Foundation.Tests.MvvmCross
 
                 AppStart.Start();
 
+                SyncManager.DidNotReceive().ForceFullSync();
                 NavigationService.Received().Navigate<TokenResetViewModel>();
-                LoginManager.DidNotReceive().GetDataSourceIfLoggedIn();
             }
 
             [Fact, LogIfTooSlow]
