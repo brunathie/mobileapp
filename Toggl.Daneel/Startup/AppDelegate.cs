@@ -30,9 +30,20 @@ namespace Toggl.Daneel
             #if USE_ANALYTICS
             Firebase.Core.App.Configure();
             Firebase.CrashReporting.Loader.ForceLoad();
+            Google.SignIn.SignIn.SharedInstance.ClientID =
+                Firebase.Core.App.DefaultInstance.Options.ClientId;
             #endif
+            
 
             return true;
         }
+
+        #if USE_ANALYTICS
+        public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
+        {
+            var openUrlOptions = new UIApplicationOpenUrlOptions(options);
+            return SignIn.SharedInstance.HandleUrl(url, openUrlOptions.SourceApplication, openUrlOptions.Annotation);
+        }
+        #endif
     }
 }

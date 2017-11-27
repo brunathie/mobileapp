@@ -71,8 +71,9 @@ namespace Toggl.Daneel
             var version = NSBundle.MainBundle.InfoDictionary["CFBundleShortVersionString"];
             var userAgent = new UserAgent("Daneel", version.ToString());
 
+            var googleService = new GoogleService();
             var apiFactory = new ApiFactory(environment, userAgent);
-            var loginManager = new LoginManager(apiFactory, database, timeService, TaskPoolScheduler.Default);
+            var loginManager = new LoginManager(apiFactory, database, timeService, googleService, TaskPoolScheduler.Default);
 
             Mvx.RegisterSingleton<ITimeService>(timeService);
             Mvx.RegisterSingleton<IDialogService>(new DialogService());
