@@ -230,7 +230,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                     accessRestrictionStorage.SetClientOutdated();
                     navigationService.Navigate<OutdatedAppViewModel>();
                     return;
-                case ForbiddenException forbidden:
+                case UnauthorizedException forbidden:
                     ErrorText = Resources.IncorrectEmailOrPassword;
                     break;
                 default:
