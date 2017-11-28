@@ -118,8 +118,8 @@ namespace Toggl.Foundation.Sync
                 || error is ApiDeprecatedException
                 || error is UnauthorizedException)
             {
-                progress.OnError(error);
                 Freeze();
+                progress.OnError(error);
             }
         }
 
