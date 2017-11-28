@@ -56,6 +56,10 @@ namespace Toggl.Foundation.Tests.Sync.States
         public void DoesNotDeleteTheEntityLocallyIfTheApiOperationFails()
             => helper.DoesNotDeleteTheEntityLocallyIfTheApiOperationFails();
 
+        [Fact, LogIfTooSlow]
+        public void MakesApiCallWithCorrectParameter()
+            => helper.MakesApiCallWithCorrectParameter();
+
         [Theory, LogIfTooSlow]
         [MemberData(nameof(ApiExceptions.ExceptionsWhichCauseRethrow), MemberType = typeof(ApiExceptions))]
         public void ThrowsWhenCertainExceptionsAreCaught(Exception exception)
@@ -69,6 +73,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             void ReturnsUnknownErrorTransitionWhenHttpFailsWithNonApiException();
             void ReturnsFailTransitionWhenDatabaseOperationFails();
             void ReturnsSuccessfulTransitionWhenEverythingWorks();
+            void MakesApiCallWithCorrectParameter();
             void CallsDatabaseDeleteOperationWithCorrectParameter();
             void DoesNotDeleteTheEntityLocallyIfTheApiOperationFails();
             void ThrowsWhenCertainExceptionsAreCaught(Exception exception);
@@ -112,12 +117,18 @@ namespace Toggl.Foundation.Tests.Sync.States
             {
                 var state = createDeleteState(api, repository);
                 var entity = CreateDirtyEntityWithNegativeId();
-                GetDeleteFunction(api)(entity)
-                    .Returns(Observable.Return(Unit.Default));
+                var deleteFunction = GetDeleteFunction(api);
+                var calledDelete = false;
+                deleteFunction(Arg.Is(entity))
+                    .Returns(_ =>
+                    {
+                        calledDelete = true;
+                        return Observable.Return(Unit.Default);
+                    });
 
                 state.Start(entity).SingleAsync().Wait();
 
-                GetDeleteFunction(api).Received().Invoke(entity);
+                calledDelete.Should().BeTrue();
             }
 
             public void CallsDatabaseDeleteOperationWithCorrectParameter()
