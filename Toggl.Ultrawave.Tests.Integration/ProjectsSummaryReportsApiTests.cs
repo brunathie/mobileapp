@@ -55,7 +55,7 @@ namespace Toggl.Ultrawave.Tests.Integration
 
                 var summary = await api.ReportsApi.ProjectsSummary.GetByWorkspace(user.DefaultWorkspaceId, start, DateTimeOffset.UtcNow);
 
-                summary.ProjectsSummaries.ForEach(project => project.BilledSeconds.Should().BeNull());
+                summary.ProjectsSummaries.ForEach(project => project.BillableSeconds.Should().BeNull());
             }
 
             [Fact, LogIfTooSlow]
@@ -110,7 +110,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 var projectSummary = summary.ProjectsSummaries.Single(s => s.ProjectId == project.Id);
 
                 projectSummary.TrackedSeconds.Should().Be(30);
-                projectSummary.BilledSeconds.Should().Be(20);
+                projectSummary.BillableSeconds.Should().Be(20);
             }
 
             [Fact, LogIfTooSlow]

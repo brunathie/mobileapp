@@ -5,6 +5,6 @@
         long UserId { get; }
         long? ProjectId { get; }
         long TrackedSeconds { get; }
-        long? BilledSeconds { get; }
+        long? BillableSeconds { get; }
     }
 }

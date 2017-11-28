@@ -10,6 +10,6 @@ namespace Toggl.Ultrawave.ReportsModels
 
         public long TrackedSeconds { get; set; }
 
-        public long? BilledSeconds { get; set; }
+        public long? BillableSeconds { get; set; }
     }
 }
