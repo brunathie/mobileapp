@@ -35,6 +35,15 @@ namespace Toggl.Foundation.Tests.Helpers
                 new object[] { new TooManyRequestsException(request, response) }
             };
 
+        public static object[] ExceptionsWhichCauseRethrow()
+            => new[]
+            {
+                new object[] { new ClientDeprecatedException(Substitute.For<IRequest>(), Substitute.For<IResponse>()), },
+                new object[] { new ApiDeprecatedException(Substitute.For<IRequest>(), Substitute.For<IResponse>()), },
+                new object[] { new UnauthorizedException(Substitute.For<IRequest>(), Substitute.For<IResponse>()), },
+                new object[] { new OfflineException() }
+            };
+
         public static object[] ServerExceptions
             => new[]
             {

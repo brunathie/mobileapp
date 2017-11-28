@@ -58,6 +58,11 @@ namespace Toggl.Foundation.Tests.Sync.States
         public void ReturnsTheUpdatingSuccessfulTransitionWhenEntityDoesNotChangeLocallyAndAllFunctionsAreCalledWithCorrectParameters()
             => helper.ReturnsTheUpdatingSuccessfulTransitionWhenEntityDoesNotChangeLocallyAndAllFunctionsAreCalledWithCorrectParameters();
 
+        [Theory, LogIfTooSlow]
+        [MemberData(nameof(ApiExceptions.ExceptionsWhichCauseRethrow), MemberType = typeof(ApiExceptions))]
+        public void ThrowsWhenCertainExceptionsAreCaught(Exception exception)
+            => helper.ThrowsWhenCertainExceptionsAreCaught(exception);
+
         public interface TheStartMethodHelper
         {
             void ReturnsTheFailTransitionWhenEntityIsNull();
@@ -68,6 +73,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             void UpdateApiCallIsCalledWithTheInputEntity();
             void ReturnsTheEntityChangedTransitionWhenEntityChangesLocally();
             void ReturnsTheUpdatingSuccessfulTransitionWhenEntityDoesNotChangeLocallyAndAllFunctionsAreCalledWithCorrectParameters();
+            void ThrowsWhenCertainExceptionsAreCaught(Exception exception);
         }
 
         internal abstract class TheStartMethod<TModel, TApiModel> : BasePushEntityStateTests<TModel, TApiModel>, TheStartMethodHelper

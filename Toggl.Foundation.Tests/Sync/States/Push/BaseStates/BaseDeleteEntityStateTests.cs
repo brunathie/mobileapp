@@ -56,6 +56,11 @@ namespace Toggl.Foundation.Tests.Sync.States
         public void DoesNotDeleteTheEntityLocallyIfTheApiOperationFails()
             => helper.DoesNotDeleteTheEntityLocallyIfTheApiOperationFails();
 
+        [Theory, LogIfTooSlow]
+        [MemberData(nameof(ApiExceptions.ExceptionsWhichCauseRethrow), MemberType = typeof(ApiExceptions))]
+        public void ThrowsWhenCertainExceptionsAreCaught(Exception exception)
+            => helper.ThrowsWhenCertainExceptionsAreCaught(exception);
+
         public interface IStartMethodTestHelper
         {
             void ReturnsFailTransitionWhenEntityIsNull();
@@ -66,6 +71,7 @@ namespace Toggl.Foundation.Tests.Sync.States
             void ReturnsSuccessfulTransitionWhenEverythingWorks();
             void CallsDatabaseDeleteOperationWithCorrectParameter();
             void DoesNotDeleteTheEntityLocallyIfTheApiOperationFails();
+            void ThrowsWhenCertainExceptionsAreCaught(Exception exception);
         }
 
         internal abstract class TheStartMethod<TModel, TApiModel> : BasePushEntityStateTests<TModel, TApiModel>, IStartMethodTestHelper

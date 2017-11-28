@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using FluentAssertions;
 using NSubstitute;
@@ -9,8 +8,6 @@ using Toggl.Multivac.Models;
 using Toggl.PrimeRadiant;
 using Toggl.Ultrawave;
 using Toggl.Ultrawave.Exceptions;
-using Toggl.Ultrawave.Network;
-using Xunit;
 
 namespace Toggl.Foundation.Tests.Sync.States
 {
@@ -26,7 +23,6 @@ namespace Toggl.Foundation.Tests.Sync.States
             this.repository = repository;
         }
 
-        [Fact, LogIfTooSlow]
         public void ReturnsFailTransitionWhenEntityIsNull()
         {
             var state = CreateState(api, repository);
@@ -38,7 +34,6 @@ namespace Toggl.Foundation.Tests.Sync.States
             parameter.Reason.Should().BeOfType<ArgumentNullException>();
         }
 
-        [Fact, LogIfTooSlow]
         public void ReturnsClientErrorTransitionWhenHttpFailsWithClientErrorException(ClientErrorException exception)
         {
             var state = CreateState(api, repository);
@@ -52,7 +47,6 @@ namespace Toggl.Foundation.Tests.Sync.States
             parameter.Reason.Should().BeAssignableTo<ClientErrorException>();
         }
 
-        [Fact, LogIfTooSlow]
         public void ReturnsServerErrorTransitionWhenHttpFailsWithServerErrorException(ServerErrorException exception)
         {
             var state = CreateState(api, repository);
@@ -66,7 +60,6 @@ namespace Toggl.Foundation.Tests.Sync.States
             parameter.Reason.Should().BeAssignableTo<ServerErrorException>();
         }
 
-        [Fact, LogIfTooSlow]
         public void ReturnsUnknownErrorTransitionWhenHttpFailsWithNonApiException()
         {
             var state = CreateState(api, repository);
@@ -80,7 +73,6 @@ namespace Toggl.Foundation.Tests.Sync.States
             parameter.Reason.Should().BeOfType<TestException>();
         }
 
-        [Fact, LogIfTooSlow]
         public void ReturnsFailTransitionWhenDatabaseOperationFails()
         {
             var state = CreateState(api, repository);
@@ -94,8 +86,6 @@ namespace Toggl.Foundation.Tests.Sync.States
             parameter.Reason.Should().BeOfType<TestException>();
         }
 
-        [Theory, LogIfTooSlow]
-        [MemberData(nameof(exceptionsWhichCauseRethrow))]
         public void ThrowsWhenCertainExceptionsAreCaught(Exception exception)
         {
             var state = CreateState(api, repository); ;
@@ -104,24 +94,16 @@ namespace Toggl.Foundation.Tests.Sync.States
 
             try
             {
-                state.Start(Substitute.For<TModel>());
+                state.Start(Substitute.For<TModel>()).Wait();
             }
             catch (Exception e)
             {
                 caughtException = e;
             }
 
-            caughtException.Should().ShouldBeEquivalentTo(exception);
+            caughtException.Should().NotBeNull();
+            caughtException.Should().BeAssignableTo(exception.GetType());
         }
-
-        private static IEnumerable<object[]> exceptionsWhichCauseRethrow()
-            => new[]
-            {
-                new object[] { new ClientDeprecatedException(Substitute.For<IRequest>(), Substitute.For<IResponse>()), },
-                new object[] { new ApiDeprecatedException(Substitute.For<IRequest>(), Substitute.For<IResponse>()), },
-                new object[] { new UnauthorizedException(Substitute.For<IRequest>(), Substitute.For<IResponse>()), },
-                new object[] { new OfflineException() }
-            };
 
         protected abstract BasePushEntityState<TModel> CreateState(ITogglApi api, IRepository<TModel> repository);
 
