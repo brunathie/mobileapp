@@ -545,8 +545,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             public void IsTrueWhenLoginFails()
             {
                 var scheduler = new TestScheduler();
-                var forbiddenException = new ForbiddenException(Substitute.For<IRequest>(), Substitute.For<IResponse>());
-                var notification = Notification.CreateOnError<ITogglDataSource>(forbiddenException);
+                var exception = new UnauthorizedException(Substitute.For<IRequest>(), Substitute.For<IResponse>());
+                var notification = Notification.CreateOnError<ITogglDataSource>(exception);
                 var message = new Recorded<Notification<ITogglDataSource>>(0, notification);
                 var observable = scheduler.CreateColdObservable(message);
                 LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
@@ -579,11 +579,11 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             }
 
             [Fact, LogIfTooSlow]
-            public void IsWrongPasswordErrorWhenForbiddenExceptionIsThrown()
+            public void IsWrongPasswordErrorWhenUnauthorizedExceptionIsThrown()
             {
                 var scheduler = new TestScheduler();
-                var forbiddenException = new ForbiddenException(Substitute.For<IRequest>(), Substitute.For<IResponse>());
-                var notification = Notification.CreateOnError<ITogglDataSource>(forbiddenException);
+                var exception = new UnauthorizedException(Substitute.For<IRequest>(), Substitute.For<IResponse>());
+                var notification = Notification.CreateOnError<ITogglDataSource>(exception);
                 var message = new Recorded<Notification<ITogglDataSource>>(0, notification);
                 var observable = scheduler.CreateColdObservable(message);
                 LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
