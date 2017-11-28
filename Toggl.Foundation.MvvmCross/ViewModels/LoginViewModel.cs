@@ -215,12 +215,12 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             await navigationService.Navigate<MainViewModel>();
         }
 
-        private void onError(Exception ex)
+        private void onError(Exception exception)
         {
             IsLoading = false;
             onCompleted();
 
-            switch (ex)
+            switch (exception)
             {
                 case ApiDeprecatedException apiDeprecated:
                     accessRestrictionStorage.SetApiOutdated();

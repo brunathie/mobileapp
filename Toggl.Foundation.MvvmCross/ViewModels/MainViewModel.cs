@@ -149,9 +149,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private Task editTimeEntry()
             => navigationService.Navigate<EditTimeEntryViewModel, long>(CurrentTimeEntryId.Value);
 
-        private void onSyncingError(Exception e)
+        private void onSyncingError(Exception exception)
         {
-            switch (e)
+            switch (exception)
             {
                 case ApiDeprecatedException apiDeprecated:
                     accessRestrictionStorage.SetApiOutdated();
@@ -166,7 +166,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                     navigationService.Navigate<TokenResetViewModel>();
                     return;
                 default:
-                    throw new ArgumentException(nameof(e));
+                    throw new ArgumentException(nameof(exception));
             }
         }
     }
