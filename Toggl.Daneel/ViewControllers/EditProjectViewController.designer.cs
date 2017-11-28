@@ -31,6 +31,12 @@ namespace Toggl.Daneel.ViewControllers
 		UIKit.UISwitch PrivateProjectSwitch { get; set; }
 
 		[Outlet]
+		UIKit.NSLayoutConstraint ProjectNameUsedErrorTextHeight { get; set; }
+
+		[Outlet]
+		UIKit.UIView ProjectNameUsedErrorView { get; set; }
+
+		[Outlet]
 		UIKit.UILabel TemplateLabel { get; set; }
 
 		[Outlet]
@@ -46,14 +52,14 @@ namespace Toggl.Daneel.ViewControllers
 				ClientLabel = null;
 			}
 
-			if (ColorCircleView != null) {
-				ColorCircleView.Dispose ();
-				ColorCircleView = null;
-			}
-
 			if (CloseButton != null) {
 				CloseButton.Dispose ();
 				CloseButton = null;
+			}
+
+			if (ColorCircleView != null) {
+				ColorCircleView.Dispose ();
+				ColorCircleView = null;
 			}
 
 			if (DoneButton != null) {
@@ -71,6 +77,11 @@ namespace Toggl.Daneel.ViewControllers
 				PrivateProjectSwitch = null;
 			}
 
+			if (ProjectNameUsedErrorView != null) {
+				ProjectNameUsedErrorView.Dispose ();
+				ProjectNameUsedErrorView = null;
+			}
+
 			if (TemplateLabel != null) {
 				TemplateLabel.Dispose ();
 				TemplateLabel = null;
@@ -84,6 +95,11 @@ namespace Toggl.Daneel.ViewControllers
 			if (WorkspaceLabel != null) {
 				WorkspaceLabel.Dispose ();
 				WorkspaceLabel = null;
+			}
+
+			if (ProjectNameUsedErrorTextHeight != null) {
+				ProjectNameUsedErrorTextHeight.Dispose ();
+				ProjectNameUsedErrorTextHeight = null;
 			}
 		}
 	}

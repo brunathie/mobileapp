@@ -377,6 +377,10 @@
     <ImageAsset Include="Resources\Images.xcassets\icArrowRight.imageset\icArrowRight.png" />
     <ImageAsset Include="Resources\Images.xcassets\icArrowRight.imageset\icArrowRight%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\icArrowRight.imageset\icArrowRight%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icErrorSmall.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\icErrorSmall.imageset\icErrorSmall.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icErrorSmall.imageset\icErrorSmall%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icErrorSmall.imageset\icErrorSmall%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -697,6 +701,7 @@
     <Folder Include="Resources\Images.xcassets\search.imageset\" />
     <Folder Include="Resources\Images.xcassets\icIllustrationTags.imageset\" />
     <Folder Include="Resources\Images.xcassets\icIllustrationProject.imageset\" />
+    <Folder Include="Resources\Images.xcassets\icErrorSmall.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />

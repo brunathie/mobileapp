@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ using Toggl.Multivac;
 using Toggl.PrimeRadiant.Models;
 using static Toggl.Foundation.Helper.Constants;
 using static Toggl.Multivac.Extensions.StringExtensions;
+using Toggl.Multivac.Extensions;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels
 {
@@ -27,12 +29,16 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private bool isPro;
         private long? clientId;
         private long workspaceId;
+        private HashSet<string> projectNames = new HashSet<string>();
 
         public bool IsPrivate { get; set; }
+        public bool IsNameAlreadyTaken { get; set; }
 
-        [DependsOn(nameof(Name))]
+        [DependsOn(nameof(Name), nameof(IsNameAlreadyTaken))]
         public bool SaveEnabled => 
-            !string.IsNullOrWhiteSpace(Name) && Name.LengthInBytes() <= MaxProjectNameLengthInBytes;
+            !IsNameAlreadyTaken
+            && !string.IsNullOrWhiteSpace(Name) 
+            && Name.LengthInBytes() <= MaxProjectNameLengthInBytes;
 
         public string Name { get; set; } = "";
 
@@ -87,7 +93,24 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             isPro = await dataSource.Workspaces.WorkspaceHasFeature(workspace.Id, WorkspaceFeatureId.Pro);
             workspaceId = workspace.Id;
             WorkspaceName = workspace.Name;
+
+            await setupNameAlreadyTakenError();
         }
+
+        private async Task setupNameAlreadyTakenError() 
+        {
+            var existingProjectNames = await dataSource.Projects
+                                        .GetAll(project => project.WorkspaceId == workspaceId)
+                                        .Select(projects => projects.Select(p => p.Name));
+
+            projectNames.Clear();
+            projectNames.AddRange(existingProjectNames);
+
+            IsNameAlreadyTaken = projectNames.Contains(TrimmedName);
+        }
+
+        private void OnNameChanged() 
+            => IsNameAlreadyTaken = projectNames.Contains(TrimmedName);
 
         private async Task pickColor()
         {
@@ -137,6 +160,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             ClientName = "";
             workspaceId = selectedWorkspaceId;
             WorkspaceName = workspace.Name;
+
+            await setupNameAlreadyTakenError();
 
             isPro = await dataSource.Workspaces.WorkspaceHasFeature(workspaceId, WorkspaceFeatureId.Pro);
             if (isPro || Array.IndexOf(Helper.Color.DefaultProjectColors, Color) >= 0) return;

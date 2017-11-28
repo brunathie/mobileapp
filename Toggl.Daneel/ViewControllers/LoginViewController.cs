@@ -34,8 +34,6 @@ namespace Toggl.Daneel.ViewControllers
         {
             base.ViewDidLoad();
   
-            Title = ViewModel.Title;
-
             prepareViews();
 
             UIKeyboard.Notifications.ObserveWillShow(keyboardWillShow);
@@ -48,12 +46,17 @@ namespace Toggl.Daneel.ViewControllers
             //Text
             bindingSet.Bind(EmailTextField).To(vm => vm.Email);
             bindingSet.Bind(PasswordTextField).To(vm => vm.Password);
-            bindingSet.Bind(ErrorLabel).To(vm => vm.ErrorText);
+            bindingSet.Bind(InfoLabel).To(vm => vm.InfoText);
             bindingSet.Bind(PasswordTextField)
                       .For(v => v.BindSecureTextEntry())
                       .To(vm => vm.IsPasswordMasked);
 
+            bindingSet.Bind(this)
+                      .For(v => v.Title)
+                      .To(vm => vm.Title);
+
             //Commands
+            bindingSet.Bind(ForgotPasswordButton).To(vm => vm.ForgotPasswordCommand);
             bindingSet.Bind(PrivacyPolicyButton).To(vm => vm.OpenPrivacyPolicyCommand);
             bindingSet.Bind(TermsOfServiceButton).To(vm => vm.OpenTermsOfServiceCommand);
 
@@ -99,7 +102,7 @@ namespace Toggl.Daneel.ViewControllers
             //Visibility
             bindingSet.Bind(EmailTextField)
                       .For(v => v.BindAnimatedVisibility())
-                      .To(vm => vm.IsEmailPage);
+                      .To(vm => vm.EmailFieldVisible);
 
             bindingSet.Bind(PasswordTextField)
                       .For(v => v.BindAnimatedVisibility())
@@ -109,9 +112,9 @@ namespace Toggl.Daneel.ViewControllers
                       .For(v => v.BindAnimatedVisibility())
                       .To(vm => vm.ShowPasswordButtonVisible);
 
-            bindingSet.Bind(ErrorLabel)
+            bindingSet.Bind(InfoLabel)
                       .For(v => v.BindAnimatedVisibility())
-                      .To(vm => vm.HasError);
+                      .To(vm => vm.HasInfoText);
 
             bindingSet.Bind(ActivityIndicator)
                       .For(v => v.BindVisible())

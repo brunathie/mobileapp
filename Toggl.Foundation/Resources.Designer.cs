@@ -395,6 +395,36 @@ namespace Toggl.Foundation {
             }
         }
         
+        public static string PasswordResetExplanation {
+            get {
+                return ResourceManager.GetString("PasswordResetExplanation", resourceCulture);
+            }
+        }
+        
+        public static string PasswordResetSuccess {
+            get {
+                return ResourceManager.GetString("PasswordResetSuccess", resourceCulture);
+            }
+        }
+        
+        public static string PasswordResetEmailDoesNotExistError {
+            get {
+                return ResourceManager.GetString("PasswordResetEmailDoesNotExistError", resourceCulture);
+            }
+        }
+        
+        public static string PasswordResetGeneralError {
+            get {
+                return ResourceManager.GetString("PasswordResetGeneralError", resourceCulture);
+            }
+        }
+        
+        public static string PasswordResetOfflineError {
+            get {
+                return ResourceManager.GetString("PasswordResetOfflineError", resourceCulture);
+            }
+        }
+
         public static string AreYouSure {
             get {
                 return ResourceManager.GetString("AreYouSure", resourceCulture);

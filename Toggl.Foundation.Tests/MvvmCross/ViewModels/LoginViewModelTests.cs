@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Reactive;
 using System.Reactive.Linq;
 using FluentAssertions;
@@ -109,11 +107,48 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 [Fact, LogIfTooSlow]
                 public void ReturnsFalseWheThePasswordIsValidButTheViewIsLoading()
                 {
-                    var scheduler = new TestScheduler();
                     var never = Observable.Never<ITogglDataSource>();
                     LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>()).Returns(never);
                     ViewModel.Password = ValidPassword;
                     ViewModel.NextCommand.Execute();
+
+                    ViewModel.NextCommand.Execute();
+
+                    ViewModel.NextIsEnabled.Should().BeFalse();
+                }
+            }
+
+            public sealed class WhenInForgotPasswordPage : LoginViewModelTest
+            {
+                public WhenInForgotPasswordPage()
+                {
+                    ViewModel.Prepare(LoginType.Login);
+                    ViewModel.Email = ValidEmail;
+                    ViewModel.NextCommand.Execute();
+                    ViewModel.ForgotPasswordCommand.Execute();
+                }
+
+                [Fact, LogIfTooSlow]
+                public void ReturnsFalseWhenTheEmailIsInvalid()
+                {
+                    ViewModel.Email = InvalidEmail;
+
+                    ViewModel.NextIsEnabled.Should().BeFalse();
+                }
+
+                [Fact, LogIfTooSlow]
+                public void ReturnsTrueWhenTheEmailIsValid()
+                {
+                    ViewModel.NextIsEnabled.Should().BeTrue();
+                }
+
+                [Fact, LogIfTooSlow]
+                public void ReturnsFalseWheTheEmailIsValidButTheViewIsLoading()
+                {
+                    var scheduler = new TestScheduler();
+                    var never = Observable.Never<string>();
+                    LoginManager.ResetPassword(Arg.Any<Email>()).Returns(never);
+                    ViewModel.Email = ValidEmail;
 
                     ViewModel.NextCommand.Execute();
 
@@ -282,6 +317,82 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     NavigationService.DidNotReceive().Navigate(typeof(MainViewModel));
                 }
             }
+
+            public sealed class WhenInForgotPasswordPage : LoginViewModelTest
+            {
+                public WhenInForgotPasswordPage()
+                {
+                    ViewModel.Prepare(LoginType.Login);
+                    ViewModel.Email = ValidEmail;
+                    ViewModel.NextCommand.Execute();
+                    ViewModel.ForgotPasswordCommand.Execute();
+                }
+
+                [Fact, LogIfTooSlow]
+                public void SetsTheIsLoadingFlagToTrueWhileLoginManagerIsWorking()
+                {
+                    var never = Observable.Never<string>();
+                    LoginManager.ResetPassword(Arg.Any<Email>()).Returns(never);
+
+                    ViewModel.NextCommand.Execute();
+
+                    ViewModel.IsLoading.Should().BeTrue();
+                }
+
+                [Fact, LogIfTooSlow]
+                public void SetsTheIsLoadingFlagToFalseWhenTheResetSucceeds()
+                {
+                    var observable = Observable.Return("Some api response");
+                    LoginManager.ResetPassword(Arg.Any<Email>()).Returns(observable);
+
+                    ViewModel.NextCommand.Execute();
+
+                    ViewModel.IsLoading.Should().BeFalse();
+                }
+
+                [Fact, LogIfTooSlow]
+                public void SetsTheIsLoadingFlagToFalseWhenTheResetFails()
+                {
+                    var scheduler = new TestScheduler();
+                    prepareException(scheduler);
+
+                    ViewModel.NextCommand.Execute();
+                    scheduler.AdvanceTo(1);
+
+                    ViewModel.IsLoading.Should().BeFalse();
+                }
+
+                [Fact, LogIfTooSlow]
+                public void SetsCurrentPageToPasswordPageWhenTheResetSucceeds()
+                {
+                    LoginManager.ResetPassword(Arg.Any<Email>())
+                        .Returns(Observable.Return("Great success"));
+
+                    ViewModel.NextCommand.Execute();
+
+                    ViewModel.CurrentPage.Should().Be(LoginViewModel.PasswordPage);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void DoesNotUpdateCurrentPageIfTheResetFeails()
+                {
+                    var scheduler = new TestScheduler();
+                    prepareException(scheduler);
+
+                    ViewModel.NextCommand.Execute();
+                    scheduler.AdvanceTo(1);
+
+                    ViewModel.CurrentPage.Should().Be(LoginViewModel.ForgotPasswordPage);
+                }
+
+                private void prepareException(TestScheduler scheduler)
+                {
+                    var message = Notification.CreateOnError<string>(new Exception("Some api error"));
+                    var recorded = new Recorded<Notification<string>>(1, message);
+                    var observable = scheduler.CreateColdObservable(recorded);
+                    LoginManager.ResetPassword(Arg.Any<Email>()).Returns(observable);
+                }
+            }
         }
 
         public sealed class TheTermsOfServiceCommand : LoginViewModelTest
@@ -337,7 +448,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
         public sealed class ThePreviousCommand : LoginViewModelTest
         {
             [Fact, LogIfTooSlow]
-            public void ReturnsToTheEmailPage()
+            public void ReturnsToTheEmailPageWhenInPasswordPage()
             {
                 ViewModel.Email = ValidEmail;
                 ViewModel.NextCommand.Execute();
@@ -353,6 +464,36 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.BackCommand.Execute();
 
                 NavigationService.Received().Close(Arg.Is(ViewModel));
+            }
+
+            public sealed class WhenInForgotPasswordPage : LoginViewModelTest
+            {
+                public WhenInForgotPasswordPage()
+                {
+                    ViewModel.Prepare(LoginType.Login);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void ReturnsToEmailPageIfForgotPasswordCommandWasExecutedWhileInEmailPage()
+                {
+                    ViewModel.ForgotPasswordCommand.Execute();
+
+                    ViewModel.BackCommand.Execute();
+
+                    ViewModel.CurrentPage.Should().Be(LoginViewModel.EmailPage);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void ReturnsToPasswordPageIfForgotpasswordCommandWasExecutedWhileInPasswordPage()
+                {
+                    ViewModel.Email = ValidEmail;
+                    ViewModel.NextCommand.Execute();
+                    ViewModel.ForgotPasswordCommand.Execute();
+
+                    ViewModel.BackCommand.Execute();
+
+                    ViewModel.CurrentPage.Should().Be(LoginViewModel.PasswordPage);
+                }
             }
         }
 
@@ -525,7 +666,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             }
         }
 
-        public sealed class TheHasErrorProperty : LoginViewModelTest
+        public sealed class TheHasInfoTextProperty : LoginViewModelTest
         {
             [Fact, LogIfTooSlow]
             public void IsFalseWhenLoginSucceeds()
@@ -538,7 +679,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ViewModel.NextCommand.Execute();
 
-                ViewModel.HasError.Should().BeFalse();
+                ViewModel.HasInfoText.Should().BeFalse();
             }
 
             [Fact, LogIfTooSlow]
@@ -558,11 +699,11 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.NextCommand.Execute();
                 scheduler.AdvanceTo(1);
 
-                ViewModel.HasError.Should().BeTrue();
+                ViewModel.HasInfoText.Should().BeTrue();
             }
         }
 
-        public sealed class TheErrorTextProperty : LoginViewModelTest
+        public sealed class TheInfoTextProperty : LoginViewModelTest
         {
             [Fact, LogIfTooSlow]
             public void IsEmptyWhenLoginSucceeds()
@@ -575,7 +716,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ViewModel.NextCommand.Execute();
 
-                ViewModel.ErrorText.Should().Be("");
+                ViewModel.InfoText.Should().Be("");
             }
 
             [Fact, LogIfTooSlow]
@@ -595,7 +736,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.NextCommand.Execute();
                 scheduler.AdvanceTo(1);
 
-                ViewModel.ErrorText.Should().Be(Resources.IncorrectEmailOrPassword);
+                ViewModel.InfoText.Should().Be(Resources.IncorrectEmailOrPassword);
             }
 
             [Fact, LogIfTooSlow]
@@ -614,7 +755,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.NextCommand.Execute();
                 scheduler.AdvanceTo(1);
 
-                ViewModel.ErrorText.Should().Be(Resources.GenericLoginError);
+                ViewModel.InfoText.Should().Be(Resources.GenericLoginError);
             }
 
             [Fact, LogIfTooSlow]
@@ -625,7 +766,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ViewModel.NextCommand.Execute();
 
-                ViewModel.ErrorText.Should().Be(Resources.SignUpPasswordRequirements);
+                ViewModel.InfoText.Should().Be(Resources.SignUpPasswordRequirements);
             }
 
             [Fact, LogIfTooSlow]
@@ -636,7 +777,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ViewModel.NextCommand.Execute();
 
-                ViewModel.ErrorText.Should().Be("");
+                ViewModel.InfoText.Should().Be("");
             }
              
             [Fact, LogIfTooSlow]
@@ -656,7 +797,285 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.NextCommand.Execute();
                 scheduler.AdvanceTo(1);
 
-                ViewModel.ErrorText.Should().Be(Resources.GenericSignUpError);
+                ViewModel.InfoText.Should().Be(Resources.GenericSignUpError);
+            }
+
+            public sealed class WhenInForgotPasswordPage : LoginViewModelTest
+            {
+                public WhenInForgotPasswordPage()
+                {
+                    ViewModel.Prepare(LoginType.Login);
+                    ViewModel.Email = ValidEmail;
+                    ViewModel.NextCommand.Execute();
+                }
+
+                [Theory, LogIfTooSlow]
+                [InlineData("")]
+                [InlineData("something@")]
+                [InlineData("something@something")]
+                public void IsForgotPasswordExplanationWhenEnteredEmailisntValid(string email)
+                {
+                    ViewModel.Email = email;
+                    ViewModel.ForgotPasswordCommand.Execute();
+
+                    ViewModel.InfoText.Should().Be(Resources.PasswordResetExplanation);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsEmptyWhenEmailIsValid()
+                {
+                    ViewModel.ForgotPasswordCommand.Execute();
+
+                    ViewModel.InfoText.Should().Be("");
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsTheSuccessMessageIfResetSucceeds()
+                {
+                    ViewModel.ForgotPasswordCommand.Execute();
+                    LoginManager.ResetPassword(Arg.Any<Email>())
+                        .Returns(Observable.Return("Api response"));
+
+                    ViewModel.NextCommand.Execute();
+
+                    ViewModel.InfoText.Should().Be(Resources.PasswordResetSuccess);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsWrongEmailErrorIfLoginManagerReturnsBadRequestException()
+                {
+                    ViewModel.ForgotPasswordCommand.Execute();
+                    var scheduler = new TestScheduler();
+                    prepareException(
+                        scheduler,
+                        new BadRequestException(
+                            Substitute.For<IRequest>(),
+                            Substitute.For<IResponse>()));
+
+                    ViewModel.NextCommand.Execute();
+                    scheduler.AdvanceTo(1);
+
+                    ViewModel.InfoText.Should()
+                        .Be(Resources.PasswordResetEmailDoesNotExistError);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsOfflineErrorIfLoginManagerReturnsOfflineException()
+                {
+                    ViewModel.ForgotPasswordCommand.Execute();
+                    var scheduler = new TestScheduler();
+                    prepareException(
+                        scheduler,
+                        new OfflineException());
+
+                    ViewModel.NextCommand.Execute();
+                    scheduler.AdvanceTo(1);
+
+                    ViewModel.InfoText.Should()
+                        .Be(Resources.PasswordResetOfflineError);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsApiErrorMessageIfLoginManagerReturnsApiException()
+                {
+                    ViewModel.ForgotPasswordCommand.Execute();
+                    var message = "Some api error";
+                    var response = Substitute.For<IResponse>();
+                    response.RawData.Returns(message);
+                    var scheduler = new TestScheduler();
+                    prepareException(
+                        scheduler,
+                        new ApiException(
+                            Substitute.For<IRequest>(),
+                            response,
+                            message));
+
+                    ViewModel.NextCommand.Execute();
+                    scheduler.AdvanceTo(1);
+
+                    ViewModel.InfoText.Should().Be(message);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsGeneralErrorForAnyOtherException()
+                {
+                    ViewModel.ForgotPasswordCommand.Execute();
+                    var scheduler = new TestScheduler();
+                    prepareException(
+                        scheduler,
+                        new Exception());
+
+                    ViewModel.NextCommand.Execute();
+                    scheduler.AdvanceTo(1);
+
+                    ViewModel.InfoText.Should()
+                        .Be(Resources.PasswordResetGeneralError);
+                }
+
+                private void prepareException(
+                    TestScheduler scheduler, Exception exception)
+                {
+                    var notification = Notification.CreateOnError<string>(exception);
+                    var message = new Recorded<Notification<string>>(1, notification);
+                    var observable = scheduler.CreateColdObservable(message);
+                    LoginManager.ResetPassword(Arg.Any<Email>()).Returns(observable);
+                }
+            }
+        }
+
+        public sealed class TheTitleProperty : LoginViewModelTest
+        {
+            [Fact, LogIfTooSlow]
+            public void IsSignUpTitleWhenInLoginTypeIsSignUp()
+            {
+                ViewModel.Prepare(LoginType.SignUp);
+
+                ViewModel.Title.Should().Be(Resources.SignUpTitle);
+            }
+
+            public sealed class WhenInLoginTypeIsLogin : LoginViewModelTest
+            {
+                public WhenInLoginTypeIsLogin()
+                {
+                    ViewModel.Prepare(LoginType.Login);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsLoginTitleWhenInEmailPage()
+                {
+                    ViewModel.Title.Should().Be(Resources.LoginTitle);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsLoginTitleWhenInPasswordPage()
+                {
+                    ViewModel.Email = ValidEmail;
+                    ViewModel.NextCommand.Execute();
+
+                    ViewModel.Title.Should().Be(Resources.LoginTitle);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsForgotPassWordTitleWhenIsForgotPasswordPage()
+                {
+                    ViewModel.Email = ValidEmail;
+                    ViewModel.NextCommand.Execute();
+                    ViewModel.ForgotPasswordCommand.Execute();
+
+                    ViewModel.Title.Should().Be(Resources.LoginForgotPassword);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void GetsProperlyUpdatedAfterPreviousCommand()
+                {
+                    ViewModel.Email = ValidEmail;
+                    ViewModel.NextCommand.Execute();
+                    ViewModel.ForgotPasswordCommand.Execute();
+                    ViewModel.BackCommand.Execute();
+
+                    ViewModel.Title.Should().Be(Resources.LoginTitle);
+                }
+            }
+        }
+
+        public sealed class TheForgotPasswordCommand : LoginViewModelTest
+        {
+            public TheForgotPasswordCommand()
+            {
+                ViewModel.Prepare(LoginType.Login);
+                ViewModel.Email = ValidEmail;
+                ViewModel.NextCommand.Execute();
+            }
+
+            [Fact, LogIfTooSlow]
+            public void ShowsTheForgotPasswordPage()
+            {
+                ViewModel.ForgotPasswordCommand.Execute();
+
+                ViewModel.CurrentPage.Should().Be(LoginViewModel.ForgotPasswordPage);
+                ViewModel.IsForgotPasswordPage.Should().BeTrue();
+            }
+        }
+
+        public sealed class TheEmailFieldVisibleProperty : LoginViewModelTest
+        {
+            [Theory, LogIfTooSlow]
+            [InlineData(LoginType.Login)]
+            [InlineData(LoginType.SignUp)]
+            public void ReturnsTrueWhenInEmailPage(LoginType loginType)
+            {
+                ViewModel.Prepare(loginType);
+
+                ViewModel.EmailFieldVisible.Should().BeTrue();
+            }
+
+            [Fact, LogIfTooSlow]
+            public void ReturnsTrueWhenInForgotPasswordPage()
+            {
+                ViewModel.Prepare(LoginType.Login);
+                ViewModel.Email = ValidEmail;
+                ViewModel.NextCommand.Execute();
+                ViewModel.ForgotPasswordCommand.Execute();
+
+                ViewModel.EmailFieldVisible.Should().BeTrue();
+            }
+        }
+
+        public sealed class TheShowForgotPasswordProperty
+        {
+            public sealed class WhenLoginTypeIsSignUp : LoginViewModelTest
+            {
+                public WhenLoginTypeIsSignUp()
+                {
+                    ViewModel.Prepare(LoginType.SignUp);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsFlaseWhenInEmailPage()
+                {
+                    ViewModel.ShowForgotPassword.Should().BeFalse();
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsFlaseWhenInPasswordPage()
+                {
+                    ViewModel.Email = ValidEmail;
+                    ViewModel.NextCommand.Execute();
+
+                    ViewModel.ShowForgotPassword.Should().BeFalse();
+                }
+            }
+
+            public sealed class WhenLoginTypeIsLogin : LoginViewModelTest
+            {
+                public WhenLoginTypeIsLogin()
+                {
+                    ViewModel.Prepare(LoginType.Login);
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsTrueWhenInEmailPage()
+                {
+                    ViewModel.ShowForgotPassword.Should().BeTrue();
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsTrueWhenInPasswordPage()
+                {
+                    ViewModel.Email = ValidEmail;
+                    ViewModel.NextCommand.Execute();
+
+                    ViewModel.ShowForgotPassword.Should().BeTrue();
+                }
+
+                [Fact, LogIfTooSlow]
+                public void IsFlaseWhenInForgotPasswordPage()
+                {
+                    ViewModel.Email = ValidEmail;
+                    ViewModel.ForgotPasswordCommand.Execute();
+
+                    ViewModel.ShowForgotPassword.Should().BeFalse();
+                }
             }
         }
 

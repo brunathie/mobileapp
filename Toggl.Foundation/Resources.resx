@@ -195,6 +195,21 @@ time entries will appear here.</value>
     <data name="AddProject">
         <value>Add a project</value>
     </data>
+    <data name="PasswordResetExplanation">
+        <value>Please enter your email to reset your password.</value>
+    </data>
+    <data name="PasswordResetSuccess">
+        <value>We just sent you an email. Please follow the link in the email to reset your password.</value>
+    </data>
+    <data name="PasswordResetEmailDoesNotExistError">
+        <value>Oops! Unknown email. Please check that it's entered correctly.</value>
+    </data>
+    <data name="PasswordResetGeneralError">
+        <value>Sorry, we’re having trouble resetting your password. Please try again.</value>
+    </data>
+    <data name="PasswordResetOfflineError">
+        <value>You're offline. Please connect to the internet and try again.</value>
+    </data>
     <data name="AreYouSure">
         <value>Are you sure?</value>
     </data>

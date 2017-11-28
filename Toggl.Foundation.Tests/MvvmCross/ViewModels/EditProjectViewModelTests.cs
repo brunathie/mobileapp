@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -11,6 +13,7 @@ using Toggl.Foundation.Tests.Generators;
 using Toggl.Multivac;
 using Toggl.PrimeRadiant.Models;
 using Xunit;
+using ProjectPredicate = System.Func<Toggl.PrimeRadiant.Models.IDatabaseProject, bool>;
 
 namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 {
@@ -31,6 +34,108 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 => new EditProjectViewModel(DataSource, NavigationService);
         }
 
+        public abstract class EditProjectWithSpecificNameViewModelTest : EditProjectViewModelTest
+        {
+            private const long otherWorkspaceId = WorkspaceId + 1;
+            private const long projectId = 12345;
+
+            protected string ProjectName { get; } = "A random project";
+
+            protected void SetupDataSource(bool isFromSameWorkspace)
+            {
+                var project = Substitute.For<IDatabaseProject>();
+                project.Id.Returns(projectId);
+                project.Name.Returns(ProjectName);
+                project.WorkspaceId.Returns(isFromSameWorkspace ? WorkspaceId : otherWorkspaceId);
+
+                var defaultWorkspace = Substitute.For<IDatabaseWorkspace>();
+                defaultWorkspace.Id.Returns(WorkspaceId);
+                defaultWorkspace.Name.Returns(Guid.NewGuid().ToString());
+
+                DataSource.Workspaces
+                          .GetDefault()
+                          .Returns(Observable.Return(defaultWorkspace));
+
+                DataSource.Workspaces
+                          .WorkspaceHasFeature(Arg.Is(WorkspaceId), Arg.Is(WorkspaceFeatureId.Pro))
+                          .Returns(Observable.Return(false));
+
+                DataSource.Projects
+                          .GetAll(Arg.Any<ProjectPredicate>())
+                          .Returns(callInfo => Observable.Return(new[] { project })
+                                                         .Select(projects => projects.Where(callInfo.Arg<ProjectPredicate>())));
+            }
+
+            private void setupChangingWorkspaceScenario()
+            {
+                List<IDatabaseWorkspace> workspaces = new List<IDatabaseWorkspace>();
+                List<IDatabaseProject> projects = new List<IDatabaseProject>();
+
+                for (long workspaceId = 0; workspaceId < 2; workspaceId++)
+                {
+                    var workspace = Substitute.For<IDatabaseWorkspace>();
+                    workspace.Id.Returns(workspaceId);
+                    workspace.Name.Returns(Guid.NewGuid().ToString());
+                    workspaces.Add(workspace);
+
+                    DataSource.Workspaces
+                        .GetById(Arg.Is(workspaceId))
+                        .Returns(Observable.Return(workspace));
+
+                    for (long projectId = 0; projectId < 3; projectId++)
+                    {
+                        var project = Substitute.For<IDatabaseProject>();
+                        project.Id.Returns(10 * workspaceId + projectId);
+                        project.Name.Returns($"Project-{workspaceId}-{projectId}");
+                        project.WorkspaceId.Returns(workspaceId);
+                        projects.Add(project);
+                    }
+
+                    var sameNameProject = Substitute.For<IDatabaseProject>();
+                    sameNameProject.Id.Returns(10 + workspaceId);
+                    sameNameProject.Name.Returns("Project");
+                    sameNameProject.WorkspaceId.Returns(workspaceId);
+                    projects.Add(sameNameProject);
+                }
+
+                var defaultWorkspace = workspaces[0];
+
+                DataSource.Workspaces
+                          .GetDefault()
+                          .Returns(Observable.Return(defaultWorkspace));
+
+                DataSource.Workspaces
+                          .WorkspaceHasFeature(Arg.Any<long>(), Arg.Is(WorkspaceFeatureId.Pro))
+                          .Returns(Observable.Return(false));
+
+                DataSource.Projects
+                          .GetAll(Arg.Any<ProjectPredicate>())
+                          .Returns(callInfo => Observable.Return(projects)
+                                                         .Select(p => p.Where(callInfo.Arg<ProjectPredicate>())));
+
+            }
+
+            protected async Task TestChangeAfterWorkspaceChange(
+                string projectName, Func<EditProjectViewModel, bool> valueSelector, bool before, bool after)
+            {
+                setupChangingWorkspaceScenario();
+
+                NavigationService
+                    .Navigate<WorkspaceParameters, long>(typeof(SelectWorkspaceViewModel), Arg.Any<WorkspaceParameters>())
+                    .Returns(Task.FromResult(1L));
+
+                ViewModel.Prepare(projectName);
+
+                await ViewModel.Initialize();
+
+                valueSelector(ViewModel).Should().Be(before);
+
+                await ViewModel.PickWorkspaceCommand.ExecuteAsync();
+
+                valueSelector(ViewModel).Should().Be(after);
+            }
+        }
+
         public sealed class TheConstructor : EditProjectViewModelTest
         {
             [Theory, LogIfTooSlow]
@@ -48,7 +153,70 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             }
         }
 
-        public sealed class TheSaveEnabledProperty : EditProjectViewModelTest
+        public sealed class TheIsNameAlreadyTakenProperty : EditProjectWithSpecificNameViewModelTest
+        {
+            [Fact]
+            public async Task IsTrueWhenProjectWithSameNameAlreadyExistsInSameWorkspace()
+            {
+                SetupDataSource(isFromSameWorkspace: true);
+
+                ViewModel.Prepare(ProjectName);
+
+                await ViewModel.Initialize();
+
+                ViewModel.IsNameAlreadyTaken.Should().BeTrue();
+            }
+
+            [Fact]
+            public async Task IsFalseWhenProjectWithSameNameAlreadyExistsOnlyInAnotherWorkspace()
+            {
+                SetupDataSource(isFromSameWorkspace: false);
+
+                ViewModel.Prepare(ProjectName);
+
+                await ViewModel.Initialize();
+
+                ViewModel.IsNameAlreadyTaken.Should().BeFalse();
+            }
+
+            [Fact]
+            public async Task IsCorrectAfterWorkspaceChangeWhenNameDoesNotExistInAny()
+            {
+                await TestChangeAfterWorkspaceChange("NotUsedProject",
+                                                     vm => vm.IsNameAlreadyTaken,
+                                                     before: false,
+                                                     after: false);
+            }
+
+            [Fact]
+            public async Task IsCorrectAfterWorkspaceChangeWhenNameExistOnlyInDestinationWorkspace()
+            {
+                await TestChangeAfterWorkspaceChange("Project-1-1",
+                                                     vm => vm.IsNameAlreadyTaken,
+                                                     before: false,
+                                                     after: true);
+            }
+
+            [Fact]
+            public async Task IsCorrectAfterWorkspaceChangeWhenNameExistOnlyInDefaultWorkspace()
+            {
+                await TestChangeAfterWorkspaceChange("Project-0-2",
+                                                     vm => vm.IsNameAlreadyTaken,
+                                                     before: true,
+                                                     after: false);
+            }
+
+            [Fact]
+            public async Task IsCorrectAfterWorkspaceChangeWhenNameExistInBothWorkspaces()
+            {
+                await TestChangeAfterWorkspaceChange("Project",
+                                                     vm => vm.IsNameAlreadyTaken,
+                                                     before: true,
+                                                     after: true);
+            }
+        }
+
+        public sealed class TheSaveEnabledProperty : EditProjectWithSpecificNameViewModelTest
         {
             [Fact, LogIfTooSlow]
             public void IsFalseWhenTheNameIsEmpty()
@@ -72,6 +240,66 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.Name = "This is a ridiculously big project name made solely with the purpose of testing whether or not Toggl apps UI has validation logic that prevents such a large name to be persisted or, even worse, pushed to the api, an event that might end up in crashes and whatnot";
 
                 ViewModel.SaveEnabled.Should().BeFalse();
+            }
+
+            [Fact]
+            public async Task IsFalseWhenProjectWithSameNameAlreadyExistsInSameWorkspace()
+            {
+                SetupDataSource(isFromSameWorkspace: true);
+
+                ViewModel.Prepare(ProjectName);
+
+                await ViewModel.Initialize();
+
+                ViewModel.SaveEnabled.Should().BeFalse();
+            }
+
+            [Fact]
+            public async Task IsTrueWhenProjectWithSameNameAlreadyExistsOnlyInAnotherWorkspace()
+            {
+                SetupDataSource(isFromSameWorkspace: false);
+
+                ViewModel.Prepare(ProjectName);
+
+                await ViewModel.Initialize();
+
+                ViewModel.SaveEnabled.Should().BeTrue();
+            }
+
+            [Fact]
+            public async Task IsCorrectAfterWorkspaceChangeWhenNameDoesNotExistInAny()
+            {
+                await TestChangeAfterWorkspaceChange("NotUsedProject",
+                                                     vm => vm.SaveEnabled,
+                                                     before: true,
+                                                     after: true);
+            }
+
+            [Fact]
+            public async Task IsCorrectAfterWorkspaceChangeWhenNameExistOnlyInDestinationWorkspace()
+            {
+                await TestChangeAfterWorkspaceChange("Project-1-1",
+                                                     vm => vm.SaveEnabled,
+                                                     before: true,
+                                                     after: false);
+            }
+
+            [Fact]
+            public async Task IsCorrectAfterWorkspaceChangeWhenNameExistOnlyInDefaultWorkspace()
+            {
+                await TestChangeAfterWorkspaceChange("Project-0-2",
+                                                     vm => vm.SaveEnabled,
+                                                     before: false,
+                                                     after: true);
+            }
+
+            [Fact]
+            public async Task IsCorrectAfterWorkspaceChangeWhenNameExistInBothWorkspaces()
+            {
+                await TestChangeAfterWorkspaceChange("Project",
+                                                     vm => vm.SaveEnabled,
+                                                     before: false,
+                                                     after: false);
             }
         }
 
@@ -316,7 +544,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 DataSource.Workspaces.GetDefault()
                     .Returns(Observable.Return(defaultWorkspace));
-                
+
                 DataSource.Workspaces.GetById(workspaceId)
                     .Returns(Observable.Return(workspace));
 

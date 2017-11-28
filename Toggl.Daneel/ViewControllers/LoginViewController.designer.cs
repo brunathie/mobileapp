@@ -1,119 +1,116 @@
 // WARNING
 //
-// This file has been generated automatically by Visual Studio from the outlets and
-// actions declared in your storyboard file.
-// Manual changes to this file will not be maintained.
+// This file has been generated automatically by Visual Studio to store outlets and
+// actions made in the UI designer. If it is removed, they will be lost.
+// Manual changes to this file may not be handled correctly.
 //
 using Foundation;
-using System;
 using System.CodeDom.Compiler;
-using UIKit;
 
 namespace Toggl.Daneel.ViewControllers
 {
-    [Register ("LoginView")]
-    partial class LoginViewController
-    {
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        Toggl.Daneel.Views.ActivityIndicatorView ActivityIndicator { get; set; }
+	[Register ("LoginView")]
+	partial class LoginViewController
+	{
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		Toggl.Daneel.Views.ActivityIndicatorView ActivityIndicator { get; set; }
 
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.NSLayoutConstraint BottomConstraint { get; set; }
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIKit.NSLayoutConstraint BottomConstraint { get; set; }
 
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UITextField EmailTextField { get; set; }
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIKit.UITextField EmailTextField { get; set; }
 
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UILabel ErrorLabel { get; set; }
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIKit.UIButton ForgotPasswordButton { get; set; }
 
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UIButton ForgotPasswordButton { get; set; }
+		[Outlet]
+		UIKit.UILabel InfoLabel { get; set; }
 
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UIImageView PasswordManagerButton { get; set; }
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIKit.UIImageView PasswordManagerButton { get; set; }
 
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UITextField PasswordTextField { get; set; }
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIKit.UITextField PasswordTextField { get; set; }
 
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UIButton PrivacyPolicyButton { get; set; }
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIKit.UIButton PrivacyPolicyButton { get; set; }
 
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UIImageView ShowPasswordButton { get; set; }
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIKit.UIImageView ShowPasswordButton { get; set; }
 
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UIView SignUpLabels { get; set; }
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIKit.UIView SignUpLabels { get; set; }
 
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UIButton TermsOfServiceButton { get; set; }
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIKit.UIButton TermsOfServiceButton { get; set; }
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (ActivityIndicator != null) {
+				ActivityIndicator.Dispose ();
+				ActivityIndicator = null;
+			}
 
-        void ReleaseDesignerOutlets ()
-        {
-            if (ActivityIndicator != null) {
-                ActivityIndicator.Dispose ();
-                ActivityIndicator = null;
-            }
+			if (BottomConstraint != null) {
+				BottomConstraint.Dispose ();
+				BottomConstraint = null;
+			}
 
-            if (BottomConstraint != null) {
-                BottomConstraint.Dispose ();
-                BottomConstraint = null;
-            }
+			if (EmailTextField != null) {
+				EmailTextField.Dispose ();
+				EmailTextField = null;
+			}
 
-            if (EmailTextField != null) {
-                EmailTextField.Dispose ();
-                EmailTextField = null;
-            }
+			if (InfoLabel != null) {
+				InfoLabel.Dispose ();
+				InfoLabel = null;
+			}
 
-            if (ErrorLabel != null) {
-                ErrorLabel.Dispose ();
-                ErrorLabel = null;
-            }
+			if (ForgotPasswordButton != null) {
+				ForgotPasswordButton.Dispose ();
+				ForgotPasswordButton = null;
+			}
 
-            if (ForgotPasswordButton != null) {
-                ForgotPasswordButton.Dispose ();
-                ForgotPasswordButton = null;
-            }
+			if (PasswordManagerButton != null) {
+				PasswordManagerButton.Dispose ();
+				PasswordManagerButton = null;
+			}
 
-            if (PasswordManagerButton != null) {
-                PasswordManagerButton.Dispose ();
-                PasswordManagerButton = null;
-            }
+			if (PasswordTextField != null) {
+				PasswordTextField.Dispose ();
+				PasswordTextField = null;
+			}
 
-            if (PasswordTextField != null) {
-                PasswordTextField.Dispose ();
-                PasswordTextField = null;
-            }
+			if (PrivacyPolicyButton != null) {
+				PrivacyPolicyButton.Dispose ();
+				PrivacyPolicyButton = null;
+			}
 
-            if (PrivacyPolicyButton != null) {
-                PrivacyPolicyButton.Dispose ();
-                PrivacyPolicyButton = null;
-            }
+			if (ShowPasswordButton != null) {
+				ShowPasswordButton.Dispose ();
+				ShowPasswordButton = null;
+			}
 
-            if (ShowPasswordButton != null) {
-                ShowPasswordButton.Dispose ();
-                ShowPasswordButton = null;
-            }
+			if (SignUpLabels != null) {
+				SignUpLabels.Dispose ();
+				SignUpLabels = null;
+			}
 
-            if (SignUpLabels != null) {
-                SignUpLabels.Dispose ();
-                SignUpLabels = null;
-            }
-
-            if (TermsOfServiceButton != null) {
-                TermsOfServiceButton.Dispose ();
-                TermsOfServiceButton = null;
-            }
-        }
-    }
+			if (TermsOfServiceButton != null) {
+				TermsOfServiceButton.Dispose ();
+				TermsOfServiceButton = null;
+			}
+		}
+	}
 }
